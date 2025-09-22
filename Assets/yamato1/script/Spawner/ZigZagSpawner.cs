@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class ZigZagSpawner : MonoBehaviour
 {
@@ -6,9 +7,12 @@ public class ZigZagSpawner : MonoBehaviour
     public float interval = 3f;
     private float timer;
 
-    internal static void Unregister(GameObject gameObject)
+    private List<GameObject> activeEnemies = new List<GameObject>();
+    public static ZigZagSpawner Instance;
+
+    void Awake()
     {
-        throw new System.NotImplementedException();
+        Instance = this;
     }
 
     void Update()
@@ -18,8 +22,19 @@ public class ZigZagSpawner : MonoBehaviour
         {
             float x = Random.Range(-10f, 10f);
             Vector3 pos = new Vector3(x, 10f, 0f);
-            Instantiate(zigZagPrefab, pos, Quaternion.identity);
+            GameObject enemy = Instantiate(zigZagPrefab, pos, Quaternion.identity);
+            activeEnemies.Add(enemy);
             timer = 0f;
+        }
+
+        activeEnemies.RemoveAll(e => e == null);
+    }
+
+    public static void Unregister(GameObject enemy)
+    {
+        if (Instance != null && Instance.activeEnemies.Contains(enemy))
+        {
+            Instance.activeEnemies.Remove(enemy);
         }
     }
 }
