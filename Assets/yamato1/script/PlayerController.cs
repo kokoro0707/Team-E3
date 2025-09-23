@@ -42,8 +42,11 @@ public class PlayerController2D : MonoBehaviour
         {
             Debug.Log("敵に攻撃！: " + enemy.name);
             Destroy(enemy.gameObject); // 敵を破壊
+            FindObjectOfType<StageManager>().OnEnemyDestroyed(); // 敵撃破通知
         }
+
     }
+
 
     void OnDrawGizmosSelected()
     {
