@@ -53,4 +53,9 @@ public class StageManager : MonoBehaviour
     {
         throw new NotImplementedException();
     }
+
+    internal void StartStage(object stageIndex)
+    {
+        throw new NotImplementedException();
+    }
 }
