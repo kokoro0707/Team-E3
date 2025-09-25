@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class PlayerController2D : MonoBehaviour
 {
-    public float moveSpeed = 5f;             // 横移動速度
-    public float jumpForce = 7f;             // ジャンプ力
-    public Transform attackPoint;            // 攻撃の起点
-    public float attackRange = 1f;           // 攻撃範囲
-    public LayerMask enemyLayer;             // 敵レイヤー
+    public float moveSpeed = 5f;
+    public float jumpForce = 7f;
+    public Transform attackPoint;
+    public float attackRange = 1.5f;
+    public LayerMask enemyLayer;
 
     private Rigidbody2D rb;
     private bool isGrounded = false;
@@ -16,6 +16,7 @@ public class PlayerController2D : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
     }
 
+    [System.Obsolete]
     void Update()
     {
         // 横移動（A/Dキー）
@@ -35,14 +36,22 @@ public class PlayerController2D : MonoBehaviour
         }
     }
 
+    [System.Obsolete]
     void Attack()
     {
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
         foreach (Collider2D enemy in hitEnemies)
         {
-            Debug.Log("敵に攻撃！: " + enemy.name);
-            Destroy(enemy.gameObject); // 敵を破壊
-            FindObjectOfType<StageManager>().OnEnemyDestroyed(); // 敵撃破通知
+            SplittingEnemy split = enemy.GetComponent<SplittingEnemy>();
+            if (split != null)
+            {
+                split.OnHit(); // 分裂 or 破壊
+            }
+            else
+            {
+                Destroy(enemy.gameObject); // 通常敵は即破壊
+                FindObjectOfType<StageManager>().OnEnemyDestroyed();
+            }
         }
 
     }
@@ -70,4 +79,5 @@ public class PlayerController2D : MonoBehaviour
             isGrounded = false;
         }
     }
+  
 }
