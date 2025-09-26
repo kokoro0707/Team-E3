@@ -1,5 +1,5 @@
+using System.Collections;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -16,6 +16,11 @@ public class PlayerClr : MonoBehaviour
     [Header("攻撃設定")]
     public GameObject slashPrehab;
     public Transform attackSpawn;
+
+    [Header("必殺技")]
+    public GameObject specialSlashPrefab;
+    public float specialDuration = 1.0f; // 表示時間
+    public ScreenFade screenFade;  // インスペクタで黒パネルのスクリプトを設定する
 
     private Rigidbody2D rb;
     private float targetAngularVel = 0f;
@@ -69,9 +74,57 @@ public class PlayerClr : MonoBehaviour
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
 
-        if(Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire1"))
         {
             Attack();
+        }
+        if (Input.GetButtonDown("Fire2"))
+        {
+            StartCoroutine(DoSpecialAttack());
+        }
+    }
+    IEnumerator DoSpecialAttack()
+    {
+        // 1. 画面暗転
+        yield return StartCoroutine(screenFade.FadeIn());
+
+        // 2. 必殺技オブジェクトをカメラ中央に表示
+        GameObject slash = Instantiate(
+            specialSlashPrefab,
+            Camera.main.transform.position + new Vector3(0, 0, 10f), // カメラの前面
+            Quaternion.identity
+        );
+
+        // 3. 黒背景のままエフェクトを見せる
+        yield return new WaitForSeconds(specialDuration);
+
+        Destroy(slash);
+
+        // 4. フェードアウトで元の画面に戻る
+        yield return StartCoroutine(screenFade.FadeOut());
+    }
+    void DamageAllEnemiesOnScreen(int damage = 999)
+    {
+        Enemy[] enemies = FindObjectsOfType<Enemy>();
+        Camera cam = Camera.main;
+
+        float height = cam.orthographicSize * 2f;
+        float width = height * cam.aspect;
+        Rect screenRect = new Rect(
+            cam.transform.position.x - width / 2f,
+            cam.transform.position.y - height / 2f,
+            width,
+            height
+        );
+
+        foreach (var e in enemies)
+        {
+            if (e == null) continue;
+            Vector2 pos = e.transform.position;
+            if (screenRect.Contains(pos))
+            {
+                e.TakeDamage(damage); // ここで Enemy の TakeDamage が呼ばれる
+            }
         }
     }
     void Attack()
@@ -89,12 +142,29 @@ public class PlayerClr : MonoBehaviour
             slash.transform.rotation = Quaternion.identity;
         }
     }
+
+    void SpecialAttack()
+    {
+        if (specialSlashPrefab != null)
+        {
+            Camera cam = Camera.main;
+            Vector3 spawnPos = cam.transform.position + new Vector3(0, 0, 5);
+            GameObject slash = Instantiate(specialSlashPrefab, spawnPos, Quaternion.identity);
+
+            slash.transform.SetParent(cam.transform);
+            slash.transform.localRotation = Quaternion.Euler(0, 0, -20f);
+
+            Destroy(slash, specialDuration);
+        }
+
+        DamageAllEnemiesOnScreen();
+    }
     void OnDrawGizmosSelected()
     {
-           if (groundCheck != null)
-           {
-               Gizmos.color = Color.red;
-               Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
-           }
+        if (groundCheck != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         }
     }
+}
