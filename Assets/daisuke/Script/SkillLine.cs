@@ -16,7 +16,7 @@ public class SkillLine : MonoBehaviour
         lineImage.color = startColor;
     }
 
-    public void SetFillProgres(float t)
+    public void SetFillProgress(float t)
     {
         lineImage.fillAmount = t;
         lineImage.color = Color.Lerp(startColor, endColor, t);
