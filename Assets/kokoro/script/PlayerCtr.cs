@@ -94,6 +94,8 @@ public class PlayerClr : MonoBehaviour
             Camera.main.transform.position + new Vector3(0, 0, 10f), // カメラの前面
             Quaternion.identity
         );
+        //ダメージ
+        DamageAllEnemiesOnScreen();
 
         // 3. 黒背景のままエフェクトを見せる
         yield return new WaitForSeconds(specialDuration);
@@ -143,22 +145,6 @@ public class PlayerClr : MonoBehaviour
         }
     }
 
-    void SpecialAttack()
-    {
-        if (specialSlashPrefab != null)
-        {
-            Camera cam = Camera.main;
-            Vector3 spawnPos = cam.transform.position + new Vector3(0, 0, 5);
-            GameObject slash = Instantiate(specialSlashPrefab, spawnPos, Quaternion.identity);
-
-            slash.transform.SetParent(cam.transform);
-            slash.transform.localRotation = Quaternion.Euler(0, 0, -20f);
-
-            Destroy(slash, specialDuration);
-        }
-
-        DamageAllEnemiesOnScreen();
-    }
     void OnDrawGizmosSelected()
     {
         if (groundCheck != null)
