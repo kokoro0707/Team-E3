@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -5,6 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerClr : MonoBehaviour
 {
+    public float hp = 1;
     public float moveSpeed = 5f;
     public float maxAngularSpeed = 360f;//��b�Ԃɉ���]��
     public float angularAccel = 720f;//�؂�ւ��X�s�[�h  
@@ -29,6 +31,15 @@ public class PlayerClr : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        SkillManager.instance.OnSkillLearned += ApplySkill;
+    }
+
+    private void ApplySkill(SkillType skillType)
+    {
+        if (skillType == SkillType.Shield2)
+        {
+            hp += 1;
+        }
     }
 
     bool CheckGrounded()
