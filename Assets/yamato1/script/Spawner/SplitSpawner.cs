@@ -3,17 +3,11 @@ using System.Collections.Generic;
 
 public class SplitSpawner : MonoBehaviour
 {
-    public GameObject splitEnemyPrefab;   // 分裂する敵のプレハブ
-    public float interval = 3f;           // スポーン間隔
-    private float timer;
+    public GameObject splitEnemyPrefab;   // 敵プレハブ
+    public float interval = 3f;            // スポーン間隔
+    private float timer = 0f;
 
     private List<GameObject> activeEnemies = new List<GameObject>();
-    public static SplitSpawner Instance;
-
-    void Awake()
-    {
-        Instance = this;
-    }
 
     void Update()
     {
@@ -24,6 +18,7 @@ public class SplitSpawner : MonoBehaviour
             timer = 0f;
         }
 
+        // 消えた敵をリストから除去
         activeEnemies.RemoveAll(e => e == null);
     }
 
@@ -31,31 +26,25 @@ public class SplitSpawner : MonoBehaviour
     {
         if (splitEnemyPrefab == null) return;
 
-        // カメラの左右端と上端を取得
-        Vector2 left = Camera.main.ViewportToWorldPoint(new Vector2(0f, 1f));
-        Vector2 right = Camera.main.ViewportToWorldPoint(new Vector2(1f, 1f));
-        Vector2 top = Camera.main.ViewportToWorldPoint(new Vector2(0.5f, 1f));
+        float camX = Camera.main.transform.position.x;
+        float camY = Camera.main.transform.position.y;
 
-        float spawnX = Random.Range(left.x, right.x);
-        float spawnY = top.y + 1f; // 画面外から出現
+        float orthoSize = Camera.main.orthographicSize;
+        float aspect = Camera.main.aspect;
 
-        Vector3 pos = new Vector3(spawnX, spawnY, 0f);
-        GameObject enemy = Instantiate(splitEnemyPrefab, pos, Quaternion.identity);
+        float camHalfHeight = orthoSize; // 9
+        float camHalfWidth = orthoSize * aspect; // 9 * 16/9 = 16
 
-        SplittingEnemy split = enemy.GetComponent<SplittingEnemy>();
-        if (split != null)
-        {
-            split.splitCount = 0; // 初期状態
-        }
+        float leftX = camX - camHalfWidth;
+        float rightX = camX + camHalfWidth;
+        float topY = camY + camHalfHeight;
 
-        activeEnemies.Add(enemy);
+        float spawnX = Random.Range(leftX, rightX);
+        float spawnY = topY + 1f;  // 1ユニット上
+
+        Vector3 spawnPos = new Vector3(spawnX, spawnY, 0f);
+
+        Instantiate(splitEnemyPrefab, spawnPos, Quaternion.identity);
     }
 
-    public static void Unregister(GameObject enemy)
-    {
-        if (Instance != null && Instance.activeEnemies.Contains(enemy))
-        {
-            Instance.activeEnemies.Remove(enemy);
-        }
-    }
 }
