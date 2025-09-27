@@ -1,5 +1,3 @@
-using System;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -35,8 +33,9 @@ public class SkillBlock : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             // ü‚ğXV
             if (nextLine != null)
 
-            nextLine.SetFillProgres(progress);
-            if(progress >= 1f)
+                nextLine.SetFillProgress(progress);
+
+            if (progress >= 1f)
             {
                 // ’·‰Ÿ‚µŠ®—¹‚ÅƒXƒLƒ‹æ“¾
                 LearnSkill();
@@ -47,22 +46,23 @@ public class SkillBlock : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if(SkillManager.instance.HasSkill(skilltype)) return; // ‚·‚Å‚Éæ“¾Ï‚İ‚È‚ç–³‹
+        if (SkillManager.instance.HasSkill(skilltype)) return; // ‚·‚Å‚Éæ“¾Ï‚İ‚È‚ç–³‹
 
-        if(!SkillManager.instance.CanLearnSkill(cost,skilltype)) return; // K“¾•s‰Â‚È‚ç–³‹
-
+        if (!SkillManager.instance.CanLearnSkill(cost, skilltype)) return; // K“¾•s‰Â‚È‚ç–³‹
+        Debug.Log("onPointerDown");
         isHolding = true;
         holdCounter = 0;
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
+        Debug.Log("onPointerUp");
         isHolding = false;
         holdCounter = 0f;
 
         // ü‚ğƒŠƒZƒbƒg
         if (nextLine != null)
-            nextLine.SetFillProgres(0f);
+            nextLine.SetFillProgress(0f);
     }
 
     private void LearnSkill()
@@ -70,14 +70,14 @@ public class SkillBlock : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         if (SkillManager.instance.HasSkill(skilltype)) return;
 
         SkillManager.instance.LearnSkill(this.skilltype);
-        Debug.Log("${ skilltype} K“¾Š®—¹");
+        Debug.Log($"{ skilltype} K“¾Š®—¹");
         ChangeLearnedBlock(Color.blue);
     }
 
     //public void OnClick()
     //{
     //    // K“¾Ï‚İ‚È‚ç‰½‚à‚µ‚È‚¢
-    //    if(SkillManager.instance.HasSkill(this.skilltype))
+    //    if (SkillManager.instance.HasSkill(this.skilltype))
     //    {
     //        Debug.Log("K“¾Ï‚İ");
     //        return;
