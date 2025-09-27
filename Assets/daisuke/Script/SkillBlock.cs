@@ -1,43 +1,104 @@
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class SkillBlock : MonoBehaviour
+public class SkillBlock : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     [SerializeField] SkillType skilltype;
     [SerializeField] int cost;
     [SerializeField] new string name;
     [SerializeField] string info;
     [SerializeField] GameObject hidePanel;
+    [SerializeField] SkillLine nextLine; // Ÿ‚ÌƒXƒLƒ‹‚Ö‚Â‚È‚ª‚éü
+    [SerializeField] float holdTime = 1.5f;
+
+    private bool isHolding = false;
+    private float holdCounter = 0;
+
+    private Image image;
 
     void Start()
     {
+        image = GetComponent<Image>();
         CheckActiveBlock();
     }
 
-    public void OnClick()
+    private void Update()
     {
-        // K“¾Ï‚İ‚È‚ç‰½‚à‚µ‚È‚¢
-        if(SkillManager.instance.HasSkill(this.skilltype))
+        if(isHolding && SkillManager.instance.CanLearnSkill(cost,skilltype))
         {
-            Debug.Log("K“¾Ï‚İ");
-            return;
-        }
+            holdCounter += Time.deltaTime;
+            float progress = Mathf.Clamp01(holdCounter / holdTime);
 
-        // K“¾‰Â”\H
-        if (SkillManager.instance.CanLearnSkill(cost, skilltype))
-        {
-            // K“¾‰Â”\‚È‚çK“¾‚·‚é
-            SkillManager.instance.LearnSkill(this.skilltype);
-            Debug.Log("K“¾");
-            ChangeLearnedBlock(Color.blue);
-        }
-        else
-        {
-            // K“¾•s‰Â”\‚È‚çƒƒO‚ğo‚·
-            Debug.Log("K“¾NG");
+            // ü‚ğXV
+            if (nextLine != null)
+
+            nextLine.SetFillProgres(progress);
+            if(progress >= 1f)
+            {
+                // ’·‰Ÿ‚µŠ®—¹‚ÅƒXƒLƒ‹æ“¾
+                LearnSkill();
+                isHolding = false;
+            }
         }
     }
 
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        if(SkillManager.instance.HasSkill(skilltype)) return; // ‚·‚Å‚Éæ“¾Ï‚İ‚È‚ç–³‹
+
+        if(!SkillManager.instance.CanLearnSkill(cost,skilltype)) return; // K“¾•s‰Â‚È‚ç–³‹
+
+        isHolding = true;
+        holdCounter = 0;
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        isHolding = false;
+        holdCounter = 0f;
+
+        // ü‚ğƒŠƒZƒbƒg
+        if (nextLine != null)
+            nextLine.SetFillProgres(0f);
+    }
+
+    private void LearnSkill()
+    {
+        if (SkillManager.instance.HasSkill(skilltype)) return;
+
+        SkillManager.instance.LearnSkill(this.skilltype);
+        Debug.Log("${ skilltype} K“¾Š®—¹");
+        ChangeLearnedBlock(Color.blue);
+    }
+
+    //public void OnClick()
+    //{
+    //    // K“¾Ï‚İ‚È‚ç‰½‚à‚µ‚È‚¢
+    //    if(SkillManager.instance.HasSkill(this.skilltype))
+    //    {
+    //        Debug.Log("K“¾Ï‚İ");
+    //        return;
+    //    }
+
+    //    // K“¾‰Â”\H
+    //    if (SkillManager.instance.CanLearnSkill(cost, skilltype))
+    //    {
+    //        // K“¾‰Â”\‚È‚çK“¾‚·‚é
+    //        SkillManager.instance.LearnSkill(this.skilltype);
+    //        Debug.Log("K“¾");
+    //        ChangeLearnedBlock(Color.blue);
+    //    }
+    //    else
+    //    {
+    //        // K“¾•s‰Â”\‚È‚çƒƒO‚ğo‚·
+    //        Debug.Log("K“¾NG");
+    //    }
+    //}
+
+    // K“¾‚µ‚½ê‡ hidepanelŠO‚·
     public void CheckActiveBlock()
     {
         if (SkillManager.instance.CanLearnSkill(cost, skilltype))
@@ -52,7 +113,6 @@ public class SkillBlock : MonoBehaviour
 
     void ChangeLearnedBlock(Color color)
     {
-        Image image = GetComponent<Image>();
         image.color = color;
     }
 }

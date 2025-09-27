@@ -57,13 +57,21 @@ public class SkillManager : MonoBehaviour
         return true;
     }
 
+    public delegate void SkillLearnHandler(SkillType skillType);
+    public event SkillLearnHandler OnSkillLearned;
+
     // スキル習得
     public void LearnSkill(SkillType skillType)
     {
-        skillList.Add(skillType);
-        CehckActiveBlocks();
+        if(!skillList.Contains(skillType))
+        {
+            skillList.Add(skillType);
+            OnSkillLearned?.Invoke(skillType);
+            CehckActiveBlocks();
+        }
     }
 
+    // スキル習得済パネル確認
     void CehckActiveBlocks()
     {
         foreach (SkillBlock skillBlock in skillBlocks)
