@@ -25,31 +25,30 @@ public class SkillBlock : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     private void Update()
     {
-        if(isHolding && SkillManager.instance.CanLearnSkill(cost,skilltype))
+        if (!isHolding) return;
+        if(!SkillManager.instance.CanLearnSkill(cost,skilltype)) return;
+
+        holdCounter += Time.unscaledDeltaTime;
+        float progress = Mathf.Clamp01(holdCounter / holdTime);
+
+        nextLine?.SetFillProgress(progress);
+        if (progress >= 1f)
         {
-            holdCounter += Time.deltaTime;
-            float progress = Mathf.Clamp01(holdCounter / holdTime);
-
-            // 線を更新
-            if (nextLine != null)
-
-                nextLine.SetFillProgress(progress);
-
-            if (progress >= 1f)
-            {
-                // 長押し完了でスキル取得
-                LearnSkill();
-                isHolding = false;
-            }
+            LearnSkill();
         }
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        Debug.Log("onPointerDown");
         if (SkillManager.instance.HasSkill(skilltype)) return; // すでに取得済みなら無視
 
-        if (!SkillManager.instance.CanLearnSkill(cost, skilltype)) return; // 習得不可なら無視
-        Debug.Log("onPointerDown");
+        if (!SkillManager.instance.CanLearnSkill(cost, skilltype))
+        {
+            Debug.Log("CanLearnSkill == false");
+            return;
+        }
+        Debug.Log("CanLearnSkill == true");
         isHolding = true;
         holdCounter = 0;
     }
@@ -59,10 +58,7 @@ public class SkillBlock : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         Debug.Log("onPointerUp");
         isHolding = false;
         holdCounter = 0f;
-
-        // 線をリセット
-        if (nextLine != null)
-            nextLine.SetFillProgress(0f);
+        nextLine?.ResetLine();
     }
 
     private void LearnSkill()
@@ -72,6 +68,12 @@ public class SkillBlock : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         SkillManager.instance.LearnSkill(this.skilltype);
         Debug.Log($"{ skilltype} 習得完了");
         ChangeLearnedBlock(Color.blue);
+
+        // ラインを塗り切った状態に固定
+        nextLine?.SetComplete();
+
+        //// 長押しを解除
+        isHolding = false;
     }
 
     //public void OnClick()
