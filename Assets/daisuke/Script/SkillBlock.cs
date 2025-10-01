@@ -58,7 +58,10 @@ public class SkillBlock : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         Debug.Log("onPointerUp");
         isHolding = false;
         holdCounter = 0f;
-        nextLine?.ResetLine();
+        if(!SkillManager.instance.HasSkill(skilltype))
+        {
+            nextLine?.ResetLine();
+        }
     }
 
     private void LearnSkill()
@@ -70,7 +73,7 @@ public class SkillBlock : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         ChangeLearnedBlock(Color.blue);
 
         // ƒ‰ƒCƒ“‚ğ“h‚èØ‚Á‚½ó‘Ô‚ÉŒÅ’è
-        nextLine?.SetComplete();
+        if(nextLine != null) nextLine.SetComplete();
 
         //// ’·‰Ÿ‚µ‚ğ‰ğœ
         isHolding = false;
