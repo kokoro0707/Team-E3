@@ -51,8 +51,6 @@ public class PlayerClr : MonoBehaviour
 
         return hit.collider != null;
     }
-
-
     void Update()
     {
         float inputX = Input.GetAxisRaw("Horizontal"); // -1 or 0 or +1
