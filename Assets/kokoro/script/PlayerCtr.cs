@@ -6,6 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerClr : MonoBehaviour
 {
+    [Header("プレイヤー設定")]
     public float hp = 1;
     public float moveSpeed = 5f;
     public float maxAngularSpeed = 360f;//��b�Ԃɉ���]��
@@ -14,6 +15,12 @@ public class PlayerClr : MonoBehaviour
     public LayerMask groundLayer;
     public Transform groundCheck;
     public float groundCheckRadius = 0.2f;
+    private bool Invncble=false;
+    [Header("シールド")]
+    public  GameObject targetSprite;
+    [SerializeField] private Sprite Nomal;
+    [SerializeField] private Sprite Shield;
+    [SerializeField] private Sprite Shield2;
 
     [Header("攻撃設定")]
     public GameObject slashPrehab;
@@ -25,20 +32,30 @@ public class PlayerClr : MonoBehaviour
     public ScreenFade screenFade;  // インスペクタで黒パネルのスクリプトを設定する
 
     private Rigidbody2D rb;
+    private Collider2D Col;
     private float targetAngularVel = 0f;
     private bool isGrounded;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        Col = GetComponent<Collider2D>();
         SkillManager.instance.OnSkillLearned += ApplySkill;
     }
 
     private void ApplySkill(SkillType skillType)
     {
+        if (skillType == SkillType.Shield)
+        {
+            hp += 1;
+            var spriteRenderer = targetSprite.GetComponent<SpriteRenderer>();
+            spriteRenderer.sprite = Shield;
+        }
         if (skillType == SkillType.Shield2)
         {
             hp += 1;
+            var spriteRenderer = targetSprite.GetComponent<SpriteRenderer>();
+            spriteRenderer.sprite = Shield2;
         }
     }
 
@@ -162,4 +179,51 @@ public class PlayerClr : MonoBehaviour
             Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         }
     }
+    // ===== 通常攻撃などの当たり判定 =====
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Enemy")) // 斬撃や攻撃エフェクトに "" タグをつける
+        {
+            Debug.Log("atat");
+            TakeDamage(1); // 通常攻撃のダメージを 1 とする
+        }
+    }
+
+    // ===== ダメージ処理 =====
+    public void TakeDamage(int damage)
+    {
+        hp -= damage;
+        if(hp==2)
+        {
+            var spriteRenderer = targetSprite.GetComponent<SpriteRenderer>();
+            spriteRenderer.sprite = Shield;
+        }
+        if(hp==1)
+        {
+            var spriteRenderer = targetSprite.GetComponent<SpriteRenderer>();
+            spriteRenderer.sprite = Nomal;
+        }
+        if (hp == 0)
+        {
+            Die();
+        }
+        StartCoroutine(InvncbleCoroutine());
+    }
+    private IEnumerator InvncbleCoroutine()
+    {
+        Debug.Log("無敵");
+        Invncble = true;
+        Col.enabled = false;
+
+        yield return new WaitForSeconds(1f);
+
+        Col.enabled = true;
+        Invncble = false;
+    }
+    void Die()
+    {
+        // ここで死亡エフェクトやスコア加算もできる
+        Destroy(gameObject);
+    }
+
 }
