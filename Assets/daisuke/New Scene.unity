@@ -250,9 +250,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SkillTreePanel: {fileID: 347440167}
-  slideDistance: 800
   slideSpeed: 5
-  slideDelay: 0.3
 --- !u!114 &347440171
 MonoBehaviour:
   m_ObjectHideFlags: 0

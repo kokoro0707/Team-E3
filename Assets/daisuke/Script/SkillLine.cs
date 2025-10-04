@@ -26,7 +26,7 @@ public class SkillLine : MonoBehaviour
         if (fillLine != null)
         {
             fillLine.fillAmount = t;
-            Debug.Log("fillAmount" +  t);
+            //Debug.Log("fillAmount" +  t);
         }
     }
     public void SetComplete()
