@@ -16,6 +16,7 @@ public class Enemy : MonoBehaviour
     {
         if (other.CompareTag("Saw")) // 斬撃や攻撃エフェクトに "Saw" タグをつける
         {
+            Debug.Log("itata");
             TakeDamage(1); // 通常攻撃のダメージを 1 とする
         }
     }
