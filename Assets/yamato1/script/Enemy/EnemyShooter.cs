@@ -59,19 +59,19 @@ public class EnemyShooter : MonoBehaviour
                 Vector2 direction = (player.position - transform.position).normalized;
 
                 // その方向へ突進速度を設定
-                rb.velocity = direction * shootSpeed;
+                rb.linearVelocity = direction * shootSpeed;
 
                 // クールタイムをリセット
                 cooldownTimer = cooldownTime;
             }
 
             // 突進中に少しずつ下方向に速度を加える（カーブ演出）
-            rb.velocity += Vector2.down * verticalSpeed * Time.deltaTime;
+            rb.linearVelocity += Vector2.down * verticalSpeed * Time.deltaTime;
         }
         else
         {
             // プレイヤーが範囲外に出たら、停止＆クールタイムをリセット
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             cooldownTimer = cooldownTime;
         }
     }
