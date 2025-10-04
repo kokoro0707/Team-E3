@@ -50,9 +50,9 @@ public class SkillManager : MonoBehaviour
         }
 
         // ここに追加
-        if(skilltype == SkillType.Shield2)
+        if(skilltype == SkillType.Shield2) // 取得したいスキル
         {
-            return HasSkill(SkillType.Shield);
+            return HasSkill(SkillType.Shield); // 取得するために必要な前提スキル
         }
         return true;
     }
