@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 
 public class Scaler: MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    public Vector3 ChangeScale = new Vector3(1.2f, 1.2f, 1);
+    [SerializeField] private float scaleratio = 1.2f; // Šg‘å”{—¦
     private Vector3 originalScale;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -19,7 +19,7 @@ public class Scaler: MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        transform.localScale = ChangeScale;
+        transform.localScale = originalScale * scaleratio;
     }
 
     public void OnPointerExit(PointerEventData eventData)
