@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class SkillBlock : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     [SerializeField] SkillType skilltype;
-    [SerializeField] int cost;
+    [SerializeField] int cost = 1;
     [SerializeField] new string name;
     [SerializeField] string info;
     [SerializeField] GameObject hidePanel;
@@ -66,9 +66,14 @@ public class SkillBlock : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     private void LearnSkill()
     {
+        // すでに取得済みならスキップ
         if (SkillManager.instance.HasSkill(skilltype)) return;
 
-        SkillManager.instance.LearnSkill(this.skilltype);
+        // スキルポイント・前提スキルがなければスキップ
+        if (!SkillManager.instance.CanLearnSkill(cost, skilltype)) return;
+
+        // スキル習得
+        SkillManager.instance.LearnSkill(skilltype);
         Debug.Log($"{ skilltype} 習得完了");
         ChangeLearnedBlock(Color.blue);
 
@@ -79,33 +84,17 @@ public class SkillBlock : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         isHolding = false;
     }
 
-    //public void OnClick()
-    //{
-    //    // 習得済みなら何もしない
-    //    if (SkillManager.instance.HasSkill(this.skilltype))
-    //    {
-    //        Debug.Log("習得済み");
-    //        return;
-    //    }
-
-    //    // 習得可能？
-    //    if (SkillManager.instance.CanLearnSkill(cost, skilltype))
-    //    {
-    //        // 習得可能なら習得する
-    //        SkillManager.instance.LearnSkill(this.skilltype);
-    //        Debug.Log("習得");
-    //        ChangeLearnedBlock(Color.blue);
-    //    }
-    //    else
-    //    {
-    //        // 習得不可能ならログを出す
-    //        Debug.Log("習得NG");
-    //    }
-    //}
-
     // 習得した場合 hidepanel外す
     public void CheckActiveBlock()
     {
+        // すでに習得済なら、パネルは常に表示
+        if(SkillManager.instance.HasSkill(skilltype))
+        {
+            hidePanel.SetActive(false);
+            return;
+        }
+
+        // 習得済でない場合は、習得条件をチェック
         if (SkillManager.instance.CanLearnSkill(cost, skilltype))
         {
             hidePanel.SetActive(false);
