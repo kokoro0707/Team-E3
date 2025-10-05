@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4768205141084846471}
   - component: {fileID: 3654540822876692164}
   - component: {fileID: 3368314919853260099}
-  - component: {fileID: 2656949946104945076}
+  - component: {fileID: 4075273609131643925}
   - component: {fileID: 3586749577946637186}
   - component: {fileID: -7916509017183700296}
   - component: {fileID: 309047702533243268}
@@ -32,7 +32,7 @@ RectTransform:
   m_GameObject: {fileID: 5720961653235472723}
   m_LocalRotation: {x: -0, y: -0, z: 0.37029532, w: 0.9289141}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.0795, y: 1.0972002, z: 1}
+  m_LocalScale: {x: 2.651684, y: 2.987018, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3294191689510451053}
@@ -93,8 +93,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f5ea5c0e07f47042b1cfb90b0a499e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ChangeScale: {x: 1.2, y: 1.2, z: 1}
---- !u!114 &2656949946104945076
+  scaleratio: 1.2
+--- !u!114 &4075273609131643925
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -107,10 +107,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skilltype: 0
-  cost: 0
+  cost: 1
   name: 
   info: 
-  hidePanel: {fileID: 0}
+  hidePanel: {fileID: 8705899492578137514}
   nextLine: {fileID: 0}
   holdTime: 1.5
 --- !u!114 &3586749577946637186
