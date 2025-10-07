@@ -5,15 +5,16 @@ public class EnemyShooter : MonoBehaviour
     public float detectionRadius = 5f;
 
     [Header("追尾の速度")]
-    public float minShootSpeed = 2f;        // 追尾の最低速度（はじめ遅い）
-    public float maxShootSpeed = 8f;        // 追尾の最大速度
-    public float shootAcceleration = 3f;    // 追尾の加速度（速度が上がる速さ）
+    public float minShootSpeed = 2f;        // 最低速度
+    public float maxShootSpeed = 8f;        // 最大速度
+    public float shootAcceleration = 3f;    // 加速度
 
     [Header("ジャンプ（上昇）の設定")]
-    public float jumpInitialSpeed = 15f;    // ジャンプ開始の初速（速い）
-    public float gravity = 20f;              // ジャンプの減速（重力相当）
+    public float jumpInitialSpeed = 15f;    // ジャンプ初速
+    public float gravity = 20f;             // 重力相当
 
-    public float cooldownTime = 1.5f;       // 突進のクールタイム
+    [Header("挙動タイミング")]
+    public float cooldownTime = 1.5f;       // クールタイム（突進間隔）
     public float stopDuration = 2f;         // 停止時間
 
     private Transform player;
@@ -31,15 +32,14 @@ public class EnemyShooter : MonoBehaviour
 
     private float cooldownTimer = 0f;
     private float stopTimer = 0f;
-
-    private float currentShootSpeed;     // 今の追尾速度（徐々に増える）
-
-    private float verticalVelocity;      // ジャンプ中の縦速度
+    private float currentShootSpeed;
+    private float verticalVelocity;
 
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
         rb = GetComponent<Rigidbody2D>();
+
         cooldownTimer = cooldownTime;
         currentShootSpeed = minShootSpeed;
         verticalVelocity = 0f;
@@ -55,28 +55,24 @@ public class EnemyShooter : MonoBehaviour
         {
             case State.Idle:
                 rb.linearVelocity = Vector2.zero;
-                currentShootSpeed = minShootSpeed;   // 速度はリセット
+                currentShootSpeed = minShootSpeed;
 
                 if (distanceToPlayer <= detectionRadius)
                 {
                     currentState = State.JumpingUp;
-                    verticalVelocity = jumpInitialSpeed; // ジャンプ初速セット
+                    verticalVelocity = jumpInitialSpeed;
                 }
                 break;
 
             case State.JumpingUp:
-                // ジャンプの上昇速度を時間経過で重力で減速
                 verticalVelocity -= gravity * Time.deltaTime;
-
-                // 縦速度を適用して移動
                 rb.linearVelocity = new Vector2(0, verticalVelocity);
 
-                // 上昇が終わったら（速度が0以下になったら）攻撃開始へ
                 if (verticalVelocity <= 0f)
                 {
                     currentState = State.Attacking;
-                    cooldownTimer = 0f;  // 即突進開始OK
-                    currentShootSpeed = minShootSpeed;  // 追尾速度リセット
+                    cooldownTimer = 0f;
+                    currentShootSpeed = minShootSpeed;
                 }
                 break;
 
@@ -90,7 +86,6 @@ public class EnemyShooter : MonoBehaviour
                     break;
                 }
 
-                // 速度を加速（maxShootSpeedまで）
                 currentShootSpeed += shootAcceleration * Time.deltaTime;
                 currentShootSpeed = Mathf.Min(currentShootSpeed, maxShootSpeed);
 
@@ -98,24 +93,23 @@ public class EnemyShooter : MonoBehaviour
                 {
                     Vector2 direction = (player.position - transform.position).normalized;
 
-                    // 回転（頂点をプレイヤー方向に向ける）
                     float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
                     transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
 
-                    // 加速した速度で突進
                     rb.linearVelocity = direction * currentShootSpeed;
 
                     cooldownTimer = cooldownTime;
                 }
 
-                // 弧の演出で少し下に加速
-                rb.linearVelocity += Vector2.down * gravity * 0.05f * Time.deltaTime;
+                // 弧を描く演出として少し下方向に力を加える
+                rb.velocity += Vector2.down * gravity * 0.05f * Time.deltaTime;
+
                 break;
 
             case State.Stopped:
                 rb.linearVelocity = Vector2.zero;
-
                 stopTimer -= Time.deltaTime;
+
                 if (stopTimer <= 0f)
                 {
                     currentState = State.Idle;
@@ -124,22 +118,18 @@ public class EnemyShooter : MonoBehaviour
         }
     }
 
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        // 同じ敵同士では反応しない
+        if (collision.gameObject.CompareTag("Enemy")) return;
 
-                // その方向へ突進速度を設定
-                rb.linearVelocity = direction * shootSpeed;
-
-        // ジャンプ中の衝突は無視（地面に当たって止まらないように）
+        // ジャンプ中の衝突は無視（地面にぶつかっても止まらない）
         if (currentState == State.JumpingUp) return;
 
-            // 突進中に少しずつ下方向に速度を加える（カーブ演出）
-            rb.linearVelocity += Vector2.down * verticalSpeed * Time.deltaTime;
-        }
-        else
-        {
-            // プレイヤーが範囲外に出たら、停止＆クールタイムをリセット
-            rb.linearVelocity = Vector2.zero;
-            cooldownTimer = cooldownTime;
-        }
+        // 攻撃中にプレイヤーなどに衝突したら一時停止
+        currentState = State.Stopped;
+        rb.linearVelocity = Vector2.zero;
+        stopTimer = stopDuration;
     }
 
     void OnDrawGizmosSelected()
