@@ -15,7 +15,6 @@ public enum SkillType
 public class SkillManager : MonoBehaviour
 {
     [SerializeField] GameObject skillBlockPanel;
-    int skillPoint;
 
     List<SkillType> skillList = new List<SkillType>();
     SkillBlock[] skillBlocks;
@@ -44,16 +43,21 @@ public class SkillManager : MonoBehaviour
     // スキルの習得条件
     public bool CanLearnSkill(int cost, SkillType skilltype)
     {
-        if(skillPoint < cost)
+        if(SkillPointManager.instance.GetSkillPoint() < cost)
         {
             return false;
         }
 
         // ここに追加
-        if(skilltype == SkillType.Shield2)
+        if(skilltype == SkillType.Shield2) // 取得したいスキル
         {
-            return HasSkill(SkillType.Shield);
+            return HasSkill(SkillType.Shield); // 取得するために必要な前提スキル
+        } 
+        if(skilltype == SkillType.Shield3) 
+        {
+            return HasSkill(SkillType.Shield2);
         }
+
         return true;
     }
 
@@ -63,12 +67,21 @@ public class SkillManager : MonoBehaviour
     // スキル習得
     public void LearnSkill(SkillType skillType)
     {
-        if(!skillList.Contains(skillType))
-        {
-            skillList.Add(skillType);
-            OnSkillLearned?.Invoke(skillType);
-            CehckActiveBlocks();
-        }
+        int cost = 1;
+
+        //  すでに習得済ならスキップ
+        if (HasSkill(skillType)) return;
+
+        // 習得条件を満たしていないならスキップ
+        if (!CanLearnSkill(cost, skillType)) return;
+
+        // スキルポイントが足りなければスキップ
+        if (!SkillPointManager.instance.UseSkillPoint(cost)) return;
+
+        // 習得処理
+         skillList.Add(skillType);
+         OnSkillLearned?.Invoke(skillType);
+         CehckActiveBlocks();
     }
 
     // スキル習得済パネル確認

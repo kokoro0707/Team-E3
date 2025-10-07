@@ -6,9 +6,7 @@ using UnityEngine.UIElements;
 public class SkillTreeActive : MonoBehaviour
 {
     [SerializeField] private RectTransform SkillTreePanel;
-    [SerializeField] private float slideDistance = 800f; // 下方向への移動量
     [SerializeField] private float slideSpeed = 5f;
-    [SerializeField] private float slideDelay = 0.3f; // 現状使ってない関数
 
     private bool isActive = false;
     private Vector2 visiblePosition;
@@ -20,8 +18,8 @@ public class SkillTreeActive : MonoBehaviour
         // 現在位置を表示位置とする
         visiblePosition = SkillTreePanel.anchoredPosition;
 
-        // 非表示位置を下にずらして固定
-        hiddenPositin = new Vector2(visiblePosition.x, visiblePosition.y - slideDistance);
+        // 非表示位置を下にずらして固定(パネルの高さぶん下げる)
+        hiddenPositin = new Vector2(visiblePosition.x, visiblePosition.y - SkillTreePanel.rect.height);
 
         // 初期状態は非表示
         SkillTreePanel.anchoredPosition = hiddenPositin;
@@ -42,13 +40,6 @@ public class SkillTreeActive : MonoBehaviour
         }
 
         targetPosition = isActive ? visiblePosition : hiddenPositin;
-
-        // スライドの処理にフェードやエフェクトを入れたい場合使用する、現状使わない
-        //if (!isActive)
-        //{
-        //    StopAllCoroutines();
-        //    StartCoroutine(DisableAfterSlide());
-        //}
     }
 
     private void Update()
@@ -61,12 +52,5 @@ public class SkillTreeActive : MonoBehaviour
         {
             ActiveSkillTree();
         }
-    }
-
-    private IEnumerator DisableAfterSlide()
-    {
-        yield return new WaitForSecondsRealtime(slideDelay);
-
-        SkillTreePanel.gameObject.SetActive(false);
     }
 }

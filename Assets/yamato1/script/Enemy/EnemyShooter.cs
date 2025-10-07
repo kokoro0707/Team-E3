@@ -124,17 +124,22 @@ public class EnemyShooter : MonoBehaviour
         }
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        // 衝突した相手がEnemyタグなら停止処理をしない
-        if (collision.gameObject.CompareTag("Enemy")) return;
+
+                // その方向へ突進速度を設定
+                rb.linearVelocity = direction * shootSpeed;
 
         // ジャンプ中の衝突は無視（地面に当たって止まらないように）
         if (currentState == State.JumpingUp) return;
 
-        currentState = State.Stopped;
-        rb.linearVelocity = Vector2.zero;
-        stopTimer = stopDuration;
+            // 突進中に少しずつ下方向に速度を加える（カーブ演出）
+            rb.linearVelocity += Vector2.down * verticalSpeed * Time.deltaTime;
+        }
+        else
+        {
+            // プレイヤーが範囲外に出たら、停止＆クールタイムをリセット
+            rb.linearVelocity = Vector2.zero;
+            cooldownTimer = cooldownTime;
+        }
     }
 
     void OnDrawGizmosSelected()
