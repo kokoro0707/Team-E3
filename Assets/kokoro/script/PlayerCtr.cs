@@ -160,14 +160,13 @@ public class PlayerClr : MonoBehaviour
         if (slashPrehab != null)
         {
             // 斬撃生成（プレイヤーの上に出す）
-            Vector3 spawnPos = transform.position + Vector3.up * 1.0f; // プレイヤーの真上1.0の位置（調整可）
+            Vector3 spawnPos = transform.position + Vector3.up * 1.5f; // プレイヤーの真上1.0の位置（調整可）
             GameObject slash = Instantiate(slashPrehab, spawnPos, Quaternion.identity);
 
-            // プレイヤーを親にして、位置だけ固定で追従
-            slash.transform.SetParent(transform);
-
-            // 親の回転の影響を受けないようにする
-            slash.transform.rotation = Quaternion.identity;
+            // 追従設定
+            Slash slashScript = slash.GetComponent<Slash>();
+            slashScript.target = transform;                // プレイヤーを追従対象に設定
+            slashScript.offset = new Vector3(0, 1.0f, 0);  // 高さ調整
         }
     }
 
@@ -179,10 +178,14 @@ public class PlayerClr : MonoBehaviour
             Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         }
     }
-    // ===== 通常攻撃などの当たり判定 =====
+    // ===== プレイヤーダメージ判定 =====
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Enemy")) // 斬撃や攻撃エフェクトに "" タグをつける
+        if (Invncble) return;
+
+        if (other.CompareTag("Saw")) return;
+
+        if (other.CompareTag("Enemy")) 
         {
             Debug.Log("atat");
             TakeDamage(1); // 通常攻撃のダメージを 1 とする
@@ -192,21 +195,26 @@ public class PlayerClr : MonoBehaviour
     // ===== ダメージ処理 =====
     public void TakeDamage(int damage)
     {
+        if (Invncble) return; // ← これを追加！
+
         hp -= damage;
-        if(hp==2)
+
+        if (hp == 2)
         {
             var spriteRenderer = targetSprite.GetComponent<SpriteRenderer>();
             spriteRenderer.sprite = Shield;
         }
-        if(hp==1)
+        else if (hp == 1)
         {
             var spriteRenderer = targetSprite.GetComponent<SpriteRenderer>();
             spriteRenderer.sprite = Nomal;
         }
-        if (hp == 0)
+        else if (hp <= 0)
         {
             Die();
+            return;
         }
+
         StartCoroutine(InvncbleCoroutine());
     }
     private IEnumerator InvncbleCoroutine()

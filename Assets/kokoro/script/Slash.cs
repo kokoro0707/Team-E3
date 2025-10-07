@@ -4,18 +4,21 @@ public class Slash : MonoBehaviour
 {
     public float lifeTime = 0.3f;
     public int damage = 1;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public Transform target;          // 追従先（プレイヤー）
+    public Vector3 offset = new Vector3(0, 1.0f, 0); // プレイヤーの上あたりに出す
+
     void Start()
     {
-        Destroy(gameObject,lifeTime);
+        Destroy(gameObject, lifeTime);
     }
 
-    // Update is called once per frame
-    void OnTriggerEnter2D(Collider2D other)
+    void LateUpdate()
     {
-        if(other.CompareTag("Enemy"))
+        // プレイヤーを追従（親子関係なし）
+        if (target != null)
         {
-            Debug.Log("敵にヒット");
+            transform.position = target.position + offset;
         }
     }
+
 }

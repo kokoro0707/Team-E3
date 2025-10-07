@@ -11,17 +11,17 @@ public class Enemy : MonoBehaviour
         currentHP = maxHP;
     }
 
-    // ===== 通常攻撃などの当たり判定 =====
+    // 攻撃（Saw）に当たったらダメージ
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Saw")) // 斬撃や攻撃エフェクトに "Saw" タグをつける
+        if (other.CompareTag("Saw"))
         {
-            Debug.Log("itata");
-            TakeDamage(1); // 通常攻撃のダメージを 1 とする
+            Debug.Log("敵に攻撃がヒット");
+
+            TakeDamage(1);
         }
     }
 
-    // ===== ダメージ処理 =====
     public void TakeDamage(int damage)
     {
         currentHP -= damage;
@@ -34,7 +34,6 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
-        // ここで死亡エフェクトやスコア加算もできる
         Destroy(gameObject);
     }
 }
