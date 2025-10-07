@@ -1,69 +1,135 @@
 using UnityEngine;
 
-// プレイヤーに対して1.5秒ごとに突進を繰り返す敵の挙動スクリプト
 public class EnemyShooter : MonoBehaviour
 {
-    // プレイヤーを検知する範囲（この距離内で追尾開始）
     public float detectionRadius = 5f;
 
-    // 突進の速度
-    public float shootSpeed = 5f;
+    [Header("追尾の速度")]
+    public float minShootSpeed = 2f;        // 追尾の最低速度（はじめ遅い）
+    public float maxShootSpeed = 8f;        // 追尾の最大速度
+    public float shootAcceleration = 3f;    // 追尾の加速度（速度が上がる速さ）
 
-    // カーブ演出用：下方向へ加える速度（重力っぽい）
-    public float verticalSpeed = 2f;
+    [Header("ジャンプ（上昇）の設定")]
+    public float jumpInitialSpeed = 15f;    // ジャンプ開始の初速（速い）
+    public float gravity = 20f;              // ジャンプの減速（重力相当）
 
-    // 突進のクールタイム（秒）
-    public float cooldownTime = 1.5f;
+    public float cooldownTime = 1.5f;       // 突進のクールタイム
+    public float stopDuration = 2f;         // 停止時間
 
-    // プレイヤーのTransform（位置情報）
     private Transform player;
-
-    // Rigidbody2D（物理挙動制御）
     private Rigidbody2D rb;
 
-    // クールダウンのタイマー（現在のカウント）
-    private float cooldownTimer = 0f;
-
-    // 初期化処理（ゲーム開始時に1回だけ実行）
-    void Start()
+    private enum State
     {
-        // "Player" タグのついたオブジェクトを探す
-        player = GameObject.FindGameObjectWithTag("Player")?.transform;
-
-        // この敵のRigidbody2Dを取得
-        rb = GetComponent<Rigidbody2D>();
-
-        // 最初の突進までのクールタイムを設定
-        cooldownTimer = cooldownTime;
+        Idle,
+        JumpingUp,
+        Attacking,
+        Stopped
     }
 
-    // 毎フレーム実行される処理
+    private State currentState = State.Idle;
+
+    private float cooldownTimer = 0f;
+    private float stopTimer = 0f;
+
+    private float currentShootSpeed;     // 今の追尾速度（徐々に増える）
+
+    private float verticalVelocity;      // ジャンプ中の縦速度
+
+    void Start()
+    {
+        player = GameObject.FindGameObjectWithTag("Player")?.transform;
+        rb = GetComponent<Rigidbody2D>();
+        cooldownTimer = cooldownTime;
+        currentShootSpeed = minShootSpeed;
+        verticalVelocity = 0f;
+    }
+
     void Update()
     {
-        // プレイヤーまたはRigidbodyが存在しない場合は処理をしない
         if (player == null || rb == null) return;
 
-        // プレイヤーとの距離を計算
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
 
-        // プレイヤーが検知範囲内にいるときのみ追尾
-        if (distanceToPlayer <= detectionRadius)
+        switch (currentState)
         {
-            // クールタイマーを減らす
-            cooldownTimer -= Time.deltaTime;
+            case State.Idle:
+                rb.linearVelocity = Vector2.zero;
+                currentShootSpeed = minShootSpeed;   // 速度はリセット
 
-            // クールタイムが終了したら突進
-            if (cooldownTimer <= 0f)
-            {
-                // プレイヤーの方向を計算（ベクトルを正規化）
-                Vector2 direction = (player.position - transform.position).normalized;
+                if (distanceToPlayer <= detectionRadius)
+                {
+                    currentState = State.JumpingUp;
+                    verticalVelocity = jumpInitialSpeed; // ジャンプ初速セット
+                }
+                break;
+
+            case State.JumpingUp:
+                // ジャンプの上昇速度を時間経過で重力で減速
+                verticalVelocity -= gravity * Time.deltaTime;
+
+                // 縦速度を適用して移動
+                rb.linearVelocity = new Vector2(0, verticalVelocity);
+
+                // 上昇が終わったら（速度が0以下になったら）攻撃開始へ
+                if (verticalVelocity <= 0f)
+                {
+                    currentState = State.Attacking;
+                    cooldownTimer = 0f;  // 即突進開始OK
+                    currentShootSpeed = minShootSpeed;  // 追尾速度リセット
+                }
+                break;
+
+            case State.Attacking:
+                cooldownTimer -= Time.deltaTime;
+
+                if (distanceToPlayer > detectionRadius)
+                {
+                    currentState = State.Idle;
+                    rb.linearVelocity = Vector2.zero;
+                    break;
+                }
+
+                // 速度を加速（maxShootSpeedまで）
+                currentShootSpeed += shootAcceleration * Time.deltaTime;
+                currentShootSpeed = Mathf.Min(currentShootSpeed, maxShootSpeed);
+
+                if (cooldownTimer <= 0f)
+                {
+                    Vector2 direction = (player.position - transform.position).normalized;
+
+                    // 回転（頂点をプレイヤー方向に向ける）
+                    float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                    transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
+
+                    // 加速した速度で突進
+                    rb.linearVelocity = direction * currentShootSpeed;
+
+                    cooldownTimer = cooldownTime;
+                }
+
+                // 弧の演出で少し下に加速
+                rb.linearVelocity += Vector2.down * gravity * 0.05f * Time.deltaTime;
+                break;
+
+            case State.Stopped:
+                rb.linearVelocity = Vector2.zero;
+
+                stopTimer -= Time.deltaTime;
+                if (stopTimer <= 0f)
+                {
+                    currentState = State.Idle;
+                }
+                break;
+        }
+    }
+
 
                 // その方向へ突進速度を設定
                 rb.linearVelocity = direction * shootSpeed;
 
-                // クールタイムをリセット
-                cooldownTimer = cooldownTime;
-            }
+        // ジャンプ中の衝突は無視（地面に当たって止まらないように）
+        if (currentState == State.JumpingUp) return;
 
             // 突進中に少しずつ下方向に速度を加える（カーブ演出）
             rb.linearVelocity += Vector2.down * verticalSpeed * Time.deltaTime;
@@ -76,10 +142,8 @@ public class EnemyShooter : MonoBehaviour
         }
     }
 
-    // Unityエディタ上で検知範囲を可視化するための処理
     void OnDrawGizmosSelected()
     {
-        // 線だけの円で表示
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
     }
