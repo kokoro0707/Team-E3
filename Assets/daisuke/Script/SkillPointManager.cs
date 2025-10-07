@@ -47,7 +47,7 @@ public class SkillPointManager : MonoBehaviour
     {
         killCount += amont;
 
-        if(killCount >= killsPoint)
+        if(killCount >= killsPoint) // キルカウントがキルポイントを上回ったらスキルポイント増加
         {
             killCount = 0;
             AddSkillPoint(1);
