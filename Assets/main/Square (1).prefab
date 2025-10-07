@@ -91,9 +91,9 @@ GameObject:
   - component: {fileID: 8175244199186020147}
   - component: {fileID: 6338674119801454743}
   - component: {fileID: 7707722633942253863}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Square (1)
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -254,6 +254,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 844f010f09e3c0949adb3b22b83e0184, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hp: 1
   moveSpeed: 15
   maxAngularSpeed: 400
   angularAccel: 5000
@@ -263,5 +264,12 @@ MonoBehaviour:
     m_Bits: 8
   groundCheck: {fileID: 2335096139800003651}
   groundCheckRadius: 0.2
+  targetSprite: {fileID: 0}
+  Nomal: {fileID: 0}
+  Shield: {fileID: 0}
+  Shield2: {fileID: 0}
   slashPrehab: {fileID: 2028584758682666093, guid: 4699e6df77acdb0428bde2d6b93163ee, type: 3}
   attackSpawn: {fileID: 0}
+  specialSlashPrefab: {fileID: 0}
+  specialDuration: 1
+  screenFade: {fileID: 0}

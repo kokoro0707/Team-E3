@@ -12,7 +12,9 @@ GameObject:
   - component: {fileID: 6460615178898826948}
   - component: {fileID: 5942105578368286062}
   - component: {fileID: 1527833060986569367}
-  m_Layer: 0
+  - component: {fileID: 5663085117698025753}
+  - component: {fileID: -8617823253906565555}
+  m_Layer: 8
   m_Name: "\u30A8\u30D5\u30A7\u30AF\u30C8_1_0 (1) 1"
   m_TagString: Saw
   m_Icon: {fileID: 0}
@@ -31,9 +33,7 @@ Transform:
   m_LocalPosition: {x: -0.034, y: -7.696, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 281656760575330387}
-  - {fileID: 3952179423732727533}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6460615178898826948
@@ -125,47 +125,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 230b1e5d933b8064080ea136f5600b11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifeTime: 0.3
+  lifeTime: 0.38
   damage: 1
---- !u!1 &4605748097012378617
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 281656760575330387}
-  - component: {fileID: 3645608321624878524}
-  m_Layer: 0
-  m_Name: ataack (1)
-  m_TagString: Saw
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &281656760575330387
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4605748097012378617}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0.80664796, w: 0.5910322}
-  m_LocalPosition: {x: 0.85505, y: 0.82658, z: -0.014752036}
-  m_LocalScale: {x: 0.5418892, y: 1.8024466, z: 1.4623126}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3885745972862034138}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -107.539}
---- !u!61 &3645608321624878524
+  target: {fileID: 0}
+  offset: {x: 0, y: 1, z: 0}
+--- !u!61 &5663085117698025753
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4605748097012378617}
+  m_GameObject: {fileID: 1073849214045063630}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
@@ -189,64 +159,38 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.05914063, y: -0.05973673}
+  m_Offset: {x: -0.06745905, y: 0.21935529}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
+    pivot: {x: 0.54892564, y: 0.3640711}
+    oldSize: {x: 1.3788078, y: 1.6137501}
+    newSize: {x: 2.8426192, y: 3.2749999}
+    adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.59708077, y: 0.76072013}
+  m_Size: {x: 1.3788078, y: 1.6137501}
   m_EdgeRadius: 0
---- !u!1 &6356887977017702398
-GameObject:
+--- !u!50 &-8617823253906565555
+Rigidbody2D:
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3952179423732727533}
-  - component: {fileID: 2475540275910270938}
-  m_Layer: 0
-  m_Name: ataack
-  m_TagString: Saw
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3952179423732727533
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6356887977017702398}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0.3998718, w: 0.9165711}
-  m_LocalPosition: {x: -0.46246, y: 0.49265, z: -0.014752036}
-  m_LocalScale: {x: 0.4688328, y: 1.7044412, z: 1.3828015}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3885745972862034138}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -47.14}
---- !u!61 &2475540275910270938
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6356887977017702398}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
+  m_GameObject: {fileID: 1073849214045063630}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -254,32 +198,7 @@ BoxCollider2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: -0.083039, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 0.833922, y: 1}
-  m_EdgeRadius: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
