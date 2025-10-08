@@ -102,7 +102,7 @@ public class EnemyShooter : MonoBehaviour
                 }
 
                 // 弧を描く演出として少し下方向に力を加える
-                rb.velocity += Vector2.down * gravity * 0.05f * Time.deltaTime;
+                rb.linearVelocity += Vector2.down * gravity * 0.05f * Time.deltaTime;
 
                 break;
 
