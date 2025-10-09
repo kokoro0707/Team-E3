@@ -223,11 +223,30 @@ public class PlayerClr : MonoBehaviour
         Invncble = true;
         Col.enabled = false;
 
-        yield return new WaitForSeconds(1f);
+        SpriteRenderer sr = targetSprite.GetComponent<SpriteRenderer>();
+        Color originalColor = sr.color;
+
+        float duration = 1.5f; // 無敵時間
+        float blinkInterval = 0.1f; // 点滅間隔
+        float timer = 0f;
+
+        while (timer < duration)
+        {
+            // 表示ON/OFFを交互に切り替え
+            sr.enabled = !sr.enabled;
+
+            yield return new WaitForSeconds(blinkInterval);
+            timer += blinkInterval;
+        }
+
+        // 最終的に表示を戻す
+        sr.enabled = true;
+        sr.color = originalColor;
 
         Col.enabled = true;
         Invncble = false;
     }
+
     void Die()
     {
         // ここで死亡エフェクトやスコア加算もできる
