@@ -6,8 +6,9 @@ using UnityEngine.UI;
 public class GameClearManager : MonoBehaviour
 {
     public Image GameClearImage;
-    public float slideTime = 0.05f; // スライドにかける時間
-    public string nextStageName; // 次のステージのシーン名
+    public float slideTime = 1.0f; // スライドにかける時間
+    public float slideOutTime = 5.0f;
+    public string nextStageName; // 次のステージのシーン名を入れる
 
     private Vector2 starttPos;
     private Vector2 midPos;
@@ -77,7 +78,7 @@ public class GameClearManager : MonoBehaviour
         // 右へスライドアウト
         if (isSlidingout)
         {
-            float slideOutT = Mathf.Clamp01(t / slideTime);
+            float slideOutT = Mathf.Clamp01(t / slideOutTime);
             GameClearImage.rectTransform.anchoredPosition = Vector2.Lerp(midPos, endPos, slideOutT);
             // 右外に完全到達したら終了
             if (slideOutT >= 1f)
