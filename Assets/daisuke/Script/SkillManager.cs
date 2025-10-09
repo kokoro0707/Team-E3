@@ -26,6 +26,7 @@ public class SkillManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+            DontDestroyOnLoad(gameObject);
         }
 
         skillBlocks = skillBlockPanel.GetComponentsInChildren<SkillBlock>();
@@ -57,6 +58,10 @@ public class SkillManager : MonoBehaviour
         {
             return HasSkill(SkillType.Shield2);
         }
+        if(skilltype == SkillType.ShieldRepair) 
+        {
+            return HasSkill(SkillType.Shield);
+        }
 
         return true;
     }
@@ -81,6 +86,22 @@ public class SkillManager : MonoBehaviour
         // 習得処理
          skillList.Add(skillType);
          OnSkillLearned?.Invoke(skillType);
+
+        // スキルブロックにアニメーションを伝達
+        if(skillBlocks != null)
+        {
+            foreach (SkillBlock block in skillBlocks)
+            {
+                if ((block == null)) continue;
+                {
+                    
+                }
+                if ((block.SkillType == skillType))
+                {
+                    block.AnimateCoonnectedLines();
+                }
+            }
+        }
          CehckActiveBlocks();
     }
 
