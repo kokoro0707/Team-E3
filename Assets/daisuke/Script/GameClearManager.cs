@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class GameClearManager : MonoBehaviour
 {
     public Image GameClearImage;
-    public float slideTime = 5f; // スライドにかける時間
+    public float slideTime = 0.05f; // スライドにかける時間
     public string nextStageName; // 次のステージのシーン名
 
     private Vector2 starttPos;
