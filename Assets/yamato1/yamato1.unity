@@ -826,8 +826,10 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1312187528}
-  - {fileID: 758560323}
   - {fileID: 1321748891}
+  - {fileID: 1562659806}
+  - {fileID: 1237302085}
+  - {fileID: 1893281975}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &509709166
@@ -862,9 +864,7 @@ MonoBehaviour:
   stages:
   - enemyCount: 8
     spawners:
-    - {fileID: 1562659805}
-    - {fileID: 1893281974}
-    - {fileID: 1237302083}
+    - {fileID: 758560322}
   enemyCountText: {fileID: 763505525}
   currentStage: 1
 --- !u!4 &509709168
@@ -1286,7 +1286,7 @@ GameObject:
   - component: {fileID: 676633553}
   - component: {fileID: 676633552}
   - component: {fileID: 676633554}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Square (1)
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -1438,9 +1438,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1562659806}
-  - {fileID: 1237302085}
-  - {fileID: 1893281975}
+  - {fileID: 758560323}
   - {fileID: 586722629}
   - {fileID: 95467261}
   m_Father: {fileID: 0}
@@ -1535,6 +1533,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 5725851012507320629, guid: 0edc4d31d31be384dad8ad45489576af, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1578,11 +1580,11 @@ Transform:
   m_GameObject: {fileID: 758560322}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 22.13099, z: 0}
+  m_LocalPosition: {x: 0.077782035, y: 29, z: -10.066165}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 474415050}
+  m_Father: {fileID: 684926444}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &758560324
 MonoBehaviour:
@@ -2185,11 +2187,11 @@ Transform:
   m_GameObject: {fileID: 1237302083}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7.2222185, y: 27.589012, z: -10.066165}
+  m_LocalPosition: {x: -7.3000007, y: 20.720001, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 684926444}
+  m_Father: {fileID: 474415050}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1312187527
 GameObject:
@@ -2456,11 +2458,11 @@ Transform:
   m_GameObject: {fileID: 1562659805}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -5.5222178, y: 31.479012, z: -10.066165}
+  m_LocalPosition: {x: -5.6, y: 24.61, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 684926444}
+  m_Father: {fileID: 474415050}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1562659807
 MonoBehaviour:
@@ -2753,9 +2755,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   splitPrefab: {fileID: 1778032789}
-  splitForce: 5
   splitCount: 0
-  moveSpeed: 3
+  moveSpeed: 4
+  splitUpSpeed: 4
+  splitSideSpeed: 3
 --- !u!50 &1778032793
 Rigidbody2D:
   serializedVersion: 5
@@ -2771,7 +2774,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 0.05
+  m_GravityScale: 0.02
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -2781,7 +2784,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!114 &1778032795
 MonoBehaviour:
@@ -2823,11 +2826,11 @@ Transform:
   m_GameObject: {fileID: 1893281974}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.077782035, y: 30.269012, z: -10.066165}
+  m_LocalPosition: {x: 0, y: 23.400002, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 684926444}
+  m_Father: {fileID: 474415050}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1893281976
 MonoBehaviour:
@@ -3058,7 +3061,7 @@ GameObject:
   - component: {fileID: 1963065253}
   - component: {fileID: 1963065252}
   - component: {fileID: 1963065254}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Square (2)
   m_TagString: Wall
   m_Icon: {fileID: 0}

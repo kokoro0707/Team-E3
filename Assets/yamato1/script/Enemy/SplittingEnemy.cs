@@ -1,58 +1,95 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class SplittingEnemy : MonoBehaviour
 {
-    public GameObject splitPrefab;     // 分裂後に生成するプレハブ
-    public float splitForce = 5f;      // 分裂時の弾く力
-    public int splitCount = 0;         // 分裂回数（0なら分裂可能）
+    public GameObject splitPrefab;   // 分裂後の敵プレハブ
+    public int splitCount = 0;       // 0なら分裂可能、1なら分裂済み
 
-    public float moveSpeed = 3f;       // 初期移動速度
-
+    [Header("移動設定（分裂前）")]
+    public float moveSpeed = 3f;     // 分裂前の移動速度
     private Rigidbody2D rb;
+
+    [Header("分裂時の初速度")]
+    public float splitUpSpeed = 4f;    // 分裂時の上方向の速度（半分にしたいなら調整）
+    public float splitSideSpeed = 2f;  // 分裂時の左右方向の速度（半分にしたいなら調整）
+
+    private Vector2 moveDirection;
+
+    private Vector2 minBounds;
+    private Vector2 maxBounds;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
 
-        // ランダムな方向に初期速度を設定（下方向に落ちる）
-        float vx = Random.Range(-1f, 1f);
-        float vy = Random.Range(-0.5f, -0.1f); // 下向き
+        // カメラ端を取得
+        Camera cam = Camera.main;
+        minBounds = cam.ViewportToWorldPoint(Vector2.zero);
+        maxBounds = cam.ViewportToWorldPoint(Vector2.one);
 
-        Vector2 initialVelocity = new Vector2(vx, vy).normalized * moveSpeed;
-        rb.linearVelocity = initialVelocity;
+        if (splitCount == 0)
+        {
+            // 最初は斜め下方向（ランダムに左か右）
+            float horizontal = Random.value < 0.5f ? -1f : 1f;
+            moveDirection = new Vector2(horizontal, -1f).normalized;
+            rb.linearVelocity = moveDirection * moveSpeed;
+
+            // 重力はオフ（一定速度で動く）
+            rb.gravityScale = 0f;
+        }
+        else
+        {
+            // 分裂後は重力有効、velocityは分裂時にセットされる想定
+            rb.gravityScale = 0.5f;
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            // X成分だけ反転してバウンドさせる
+            Vector2 vel = rb.linearVelocity;
+            vel.x = -vel.x;
+            rb.linearVelocity = vel;
+        }
     }
 
     void Update()
     {
-        Vector2 min = Camera.main.ViewportToWorldPoint(new Vector2(0f, 0f));
-        Vector2 max = Camera.main.ViewportToWorldPoint(new Vector2(1f, 1f));
-        Vector2 pos = transform.position;
+        Vector3 pos = transform.position;
 
-        // 左右端に当たったら反転
-        if (pos.x < min.x || pos.x > max.x)
+        // 壁（画面左右）にあたったら反射（X方向速度を反転）
+        if (pos.x <= minBounds.x && rb.linearVelocity.x < 0f)
         {
             rb.linearVelocity = new Vector2(-rb.linearVelocity.x, rb.linearVelocity.y);
+            transform.position = new Vector3(minBounds.x, pos.y, pos.z);
+        }
+        else if (pos.x >= maxBounds.x && rb.linearVelocity.x > 0f)
+        {
+            rb.linearVelocity = new Vector2(-rb.linearVelocity.x, rb.linearVelocity.y);
+            transform.position = new Vector3(maxBounds.x, pos.y, pos.z);
         }
 
-        // 下に落ちすぎたら削除（画面外処理）
-        if (pos.y < min.y - 2f)
+        // 画面外に下に落ちたら削除
+        if (pos.y < minBounds.y - 2f)
         {
             Destroy(gameObject);
         }
     }
 
-    // 攻撃を受けたときに呼び出す
+    // 攻撃された時に呼ばれる
     public void OnHit()
     {
         if (splitCount == 0)
         {
-            Split(); // 初回ヒットで分裂
+            Split();
         }
         else
         {
-            Destroy(gameObject); // 2回目以降は消滅
-            FindObjectOfType<StageManager>().OnEnemyDestroyed();
+            Destroy(gameObject);
         }
     }
 
@@ -64,27 +101,26 @@ public class SplittingEnemy : MonoBehaviour
         GameObject left = Instantiate(splitPrefab, pos, Quaternion.identity);
         GameObject right = Instantiate(splitPrefab, pos, Quaternion.identity);
 
-        SplittingEnemy e1 = left.GetComponent<SplittingEnemy>();
-        SplittingEnemy e2 = right.GetComponent<SplittingEnemy>();
-
-        if (e1 != null)
-        {
-            e1.splitCount = 1;
-
-            Rigidbody2D rb1 = left.GetComponent<Rigidbody2D>();
-            rb1.linearVelocity = Vector2.zero;
-            rb1.AddForce(new Vector2(-1f, 1f).normalized * splitForce, ForceMode2D.Impulse);
-        }
-
-        if (e2 != null)
-        {
-            e2.splitCount = 1;
-
-            Rigidbody2D rb2 = right.GetComponent<Rigidbody2D>();
-            rb2.linearVelocity = Vector2.zero;
-            rb2.AddForce(new Vector2(1f, 1f).normalized * splitForce, ForceMode2D.Impulse);
-        }
+        SetSplitVelocity(left, -1);
+        SetSplitVelocity(right, 1);
 
         Destroy(gameObject);
     }
+
+    void SetSplitVelocity(GameObject obj, int direction)
+    {
+        SplittingEnemy enemy = obj.GetComponent<SplittingEnemy>();
+        Rigidbody2D enemyRb = obj.GetComponent<Rigidbody2D>();
+        if (enemy != null && enemyRb != null)
+        {
+            enemy.splitCount = 1;
+            enemyRb.gravityScale = 0.03f;
+
+            // 上方向速度を1.5倍にアップ！
+            float newUpSpeed = splitUpSpeed * 1.5f;
+
+            enemyRb.linearVelocity = new Vector2(direction * splitSideSpeed, newUpSpeed);
+        }
+    }
+
 }
