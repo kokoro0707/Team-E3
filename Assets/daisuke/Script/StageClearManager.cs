@@ -3,14 +3,14 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class GameClearManager : MonoBehaviour
+public class StageClearManager : MonoBehaviour
 {
     public Image GameClearImage;
     public float slideTime = 1.0f; // スライドにかける時間
     public float slideOutTime = 5.0f;
     public string nextStageName; // 次のステージのシーン名を入れる
 
-    private Vector2 starttPos;
+    private Vector2 startPos;
     private Vector2 midPos;
     private Vector2 endPos;
 
@@ -30,10 +30,10 @@ public class GameClearManager : MonoBehaviour
     { 
         RectTransform rect = GameClearImage.rectTransform;
         float canvasWidth = rect.rect.width * 1.2f;
-        starttPos = new Vector2(-canvasWidth, 0); // 画面左外
+        startPos = new Vector2(-canvasWidth, 0); // 画面左外
         midPos = new Vector2(0, 0); // 画面中央
         endPos = new Vector2(canvasWidth, 0); // 画面右外
-        rect.anchoredPosition = starttPos;
+        rect.anchoredPosition = startPos;
         GameClearImage.gameObject.SetActive(false);
     }
 
@@ -41,7 +41,7 @@ public class GameClearManager : MonoBehaviour
     {
         if (isTransrationStarted) return;
 
-        GameClearImage.rectTransform.anchoredPosition = starttPos;
+        GameClearImage.rectTransform.anchoredPosition = startPos;
 
         GameClearImage.gameObject.SetActive(true);
         isTransrationStarted = true;
@@ -51,7 +51,7 @@ public class GameClearManager : MonoBehaviour
         // ゲーム全体の時間を停止
         Time.timeScale = 0f;
 
-        Debug.Log("gameclearが呼ばれた");
+        Debug.Log("stageclearが呼ばれた");
     }
 
     void Update()
@@ -65,7 +65,7 @@ public class GameClearManager : MonoBehaviour
         if (!hasLoadScene && !isSlidingout)
         {
             float slideT = Mathf.Clamp01(t /slideTime); // 1秒で中央に到達
-            GameClearImage.rectTransform.anchoredPosition = Vector2.Lerp(starttPos, midPos, slideT);
+            GameClearImage.rectTransform.anchoredPosition = Vector2.Lerp(startPos, midPos, slideT);
 
             // 中央に完全到達した瞬間
             if (slideT >= 1f)

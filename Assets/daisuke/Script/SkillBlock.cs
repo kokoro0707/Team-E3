@@ -46,6 +46,7 @@ public class SkillBlock : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        if(isHolding) return;
         Debug.Log("onPointerDown");
         if (SkillManager.instance.HasSkill(skilltype)) return; // Ç∑Ç≈Ç…éÊìæçœÇ›Ç»ÇÁñ≥éã
 
@@ -96,7 +97,7 @@ public class SkillBlock : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         isHolding = false;
     }
 
-    public void AnimateCoonnectedLines()
+    public void AnimateConnectedLines()
     {
         foreach(var line in nextLine)
         {
