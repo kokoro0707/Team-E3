@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using NUnit.Framework.Internal;
 using UnityEngine;
 
 
@@ -42,7 +43,6 @@ public class PlayerClr : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         Col = GetComponent<Collider2D>();
         SkillManager.instance.OnSkillLearned += ApplySkill;
-        hp += 1;
     }
 
     private void ApplySkill(SkillType skillType)
@@ -108,7 +108,15 @@ public class PlayerClr : MonoBehaviour
         }
         if (Input.GetButtonDown("Fire2"))
         {
-            StartCoroutine(DoSpecialAttack());
+            if(SpecialGauge.instance.IsFull())
+            {
+                StartCoroutine(DoSpecialAttack());
+                SpecialGauge.instance.ResetGauge();
+            }
+            else
+            {
+                Debug.Log("弾ってない");
+            }
         }
     }
     IEnumerator DoSpecialAttack()
@@ -167,7 +175,7 @@ public class PlayerClr : MonoBehaviour
 
             // 追従設定
             Slash slashScript = slash.GetComponent<Slash>();
-            slashScript.target = transform;                // プレイヤーを追従対象に設定
+            slashScript.transform.SetParent(transform);//slashScript.target = transform;                // プレイヤーを追従対象に設定
             slashScript.offset = new Vector3(0, 1.0f, 0);  // 高さ調整
         }
     }

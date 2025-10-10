@@ -104,6 +104,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHP: 1
+  effect: {fileID: 6372842992514843614, guid: 6339029df1657fc4e8e7dc68ab742ac4, type: 3}
 --- !u!114 &-3665937644035679752
 MonoBehaviour:
   m_ObjectHideFlags: 0

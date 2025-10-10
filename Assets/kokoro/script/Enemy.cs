@@ -35,6 +35,7 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
+        SpecialGauge.instance.AddKill();
         Instantiate(effect, transform.position, Quaternion.identity);
         Destroy(gameObject);
     }
