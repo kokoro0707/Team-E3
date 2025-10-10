@@ -21,6 +21,7 @@ public class PlayerClr : MonoBehaviour
     [SerializeField] private Sprite Nomal;
     [SerializeField] private Sprite Shield;
     [SerializeField] private Sprite Shield2;
+    public ParticleSystem Shieldeffect;
 
     [Header("攻撃設定")]
     public GameObject slashPrehab;
@@ -41,6 +42,7 @@ public class PlayerClr : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         Col = GetComponent<Collider2D>();
         SkillManager.instance.OnSkillLearned += ApplySkill;
+        hp += 1;
     }
 
     private void ApplySkill(SkillType skillType)
@@ -169,6 +171,21 @@ public class PlayerClr : MonoBehaviour
             slashScript.offset = new Vector3(0, 1.0f, 0);  // 高さ調整
         }
     }
+    //エフェクト追従
+    private void PlayShieldEffect()
+    {
+        if (Shieldeffect != null)
+        {
+            // エフェクトを生成
+             ParticleSystem efect= Instantiate(Shieldeffect, transform.position, Quaternion.identity);
+
+            // プレイヤーの子にして追従させる
+            efect.transform.SetParent(transform);
+
+            // 位置をリセットしてプレイヤーの中心に固定
+            efect.transform.localPosition = Vector3.zero;
+        }
+    }
 
     void OnDrawGizmosSelected()
     {
@@ -199,15 +216,16 @@ public class PlayerClr : MonoBehaviour
 
         hp -= damage;
 
+        var spriteRenderer = targetSprite.GetComponent<SpriteRenderer>();
         if (hp == 2)
         {
-            var spriteRenderer = targetSprite.GetComponent<SpriteRenderer>();
             spriteRenderer.sprite = Shield;
+            PlayShieldEffect();
         }
         else if (hp == 1)
         {
-            var spriteRenderer = targetSprite.GetComponent<SpriteRenderer>();
             spriteRenderer.sprite = Nomal;
+            PlayShieldEffect();
         }
         else if (hp <= 0)
         {
