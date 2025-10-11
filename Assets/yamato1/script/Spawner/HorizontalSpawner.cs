@@ -4,10 +4,11 @@ using System.Collections.Generic;
 
 public class HorizontalSpawner : MonoBehaviour
 {
-    public GameObject horizontalPrefab; // 敵のPrefab
-    public GameObject warningPrefab;    // 警告マークのPrefab
-    public float interval = 2f;         // 敵を出す間隔
-    public float warningDuration = 1.5f; // 警告を出しておく時間
+    public GameObject horizontalPrefab;
+    public GameObject warningPrefab;
+    public float interval = 2f;
+    public float warningDuration = 1.5f;
+    public float spawnScaleTime = 0.5f; // 拡大にかける時間（秒）
 
     private float timer = 0f;
     private List<GameObject> activeEnemies = new List<GameObject>();
@@ -34,39 +35,56 @@ public class HorizontalSpawner : MonoBehaviour
     {
         if (horizontalPrefab == null || warningPrefab == null) return;
 
-        float y = Random.Range(-8f, -1f);
+        float centerY = Random.Range(-8f, -1f);
         bool spawnLeft = Random.value < 0.5f;
         float x = spawnLeft ? -16f : 16f;
-        Vector3 spawnPos = new Vector3(x, y, 0f);
 
-        // 警告マークの位置は、敵の出現位置と一致させる（少し内側にしてもOK）
-        StartCoroutine(SpawnWithWarning(spawnPos, spawnLeft));
+        StartCoroutine(SpawnWithWarning(new Vector3(x, centerY, 0f), spawnLeft));
     }
 
-    IEnumerator SpawnWithWarning(Vector3 spawnPosition, bool spawnLeft)
+    IEnumerator SpawnWithWarning(Vector3 centerPos, bool spawnLeft)
     {
-        // 警告マークを生成
-        GameObject warning = Instantiate(warningPrefab, spawnPosition, Quaternion.identity);
+        // 3体の縦位置オフセット（例：上下に1.2f間隔で配置）
+        float offset = 1.2f;
+        Vector3[] spawnPositions = new Vector3[3];
+        for (int i = 0; i < 3; i++)
+        {
+            float yOffset = (i - 1) * offset; // i=0→-1, i=1→0, i=2→+1
+            spawnPositions[i] = centerPos + new Vector3(0f, yOffset, 0f);
+        }
 
-        // 警告マークを一定時間表示
+        // 警告マークを3体分表示
+        List<GameObject> warnings = new List<GameObject>();
+        foreach (Vector3 pos in spawnPositions)
+        {
+            GameObject warning = Instantiate(warningPrefab, pos, Quaternion.identity);
+            warnings.Add(warning);
+        }
+
         yield return new WaitForSeconds(warningDuration);
 
-        // 警告マークを削除
-        Destroy(warning);
-
-        // 敵を生成
-        GameObject enemy = Instantiate(horizontalPrefab, spawnPosition, Quaternion.identity);
-        activeEnemies.Add(enemy);
-
-        // 移動方向設定
-        StraightEnemy move = enemy.GetComponent<StraightEnemy>();
-        if (move != null)
+        // 警告削除
+        foreach (GameObject warning in warnings)
         {
-            move.direction = spawnLeft ? Vector2.right : Vector2.left;
+            Destroy(warning);
+        }
 
-            // 向き調整：スプライトの上が前提
-            float angle = Mathf.Atan2(move.direction.y, move.direction.x) * Mathf.Rad2Deg - 90f;
-            enemy.transform.rotation = Quaternion.Euler(0, 0, angle);
+        // 敵を3体スポーン
+        foreach (Vector3 pos in spawnPositions)
+        {
+            GameObject enemy = Instantiate(horizontalPrefab, pos, Quaternion.identity);
+            activeEnemies.Add(enemy);
+
+            // 向きと進行方向設定
+            StraightEnemy move = enemy.GetComponent<StraightEnemy>();
+            if (move != null)
+            {
+                move.direction = spawnLeft ? Vector2.right : Vector2.left;
+                move.spawnScaleTime = spawnScaleTime;
+
+                float angle = Mathf.Atan2(move.direction.y, move.direction.x) * Mathf.Rad2Deg - 90f;
+                enemy.transform.rotation = Quaternion.Euler(0, 0, angle);
+            }
         }
     }
 
