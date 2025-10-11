@@ -1,126 +1,121 @@
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
 public class SplittingEnemy : MonoBehaviour
 {
-    public GameObject splitPrefab;   // 分裂後の敵プレハブ
-    public int splitCount = 0;       // 0なら分裂可能、1なら分裂済み
+    public GameObject enemyPrefab;
+    public float speed = 3f;
+    public float jumpHeight = 2f;
+    public float jumpOffsetY = 3f;
+    public float arcDuration = 0.5f;
+    public float splitOffsetX = 1.5f;
 
-    [Header("移動設定（分裂前）")]
-    public float moveSpeed = 3f;     // 分裂前の移動速度
-    private Rigidbody2D rb;
-
-    [Header("分裂時の初速度")]
-    public float splitUpSpeed = 4f;    // 分裂時の上方向の速度（半分にしたいなら調整）
-    public float splitSideSpeed = 2f;  // 分裂時の左右方向の速度（半分にしたいなら調整）
-
-    private Vector2 moveDirection;
-
-    private Vector2 minBounds;
-    private Vector2 maxBounds;
+    private Vector3 direction;
+    private bool hasSplit = false;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        if (rb != null) rb.gravityScale = 0f;
 
-        // カメラ端を取得
-        Camera cam = Camera.main;
-        minBounds = cam.ViewportToWorldPoint(Vector2.zero);
-        maxBounds = cam.ViewportToWorldPoint(Vector2.one);
+        float angleDeg = Random.Range(30f, 60f);
+        if (Random.value < 0.5f) angleDeg = 180f - angleDeg;
 
-        if (splitCount == 0)
-        {
-            // 最初は斜め下方向（ランダムに左か右）
-            float horizontal = Random.value < 0.5f ? -1f : 1f;
-            moveDirection = new Vector2(horizontal, -1f).normalized;
-            rb.linearVelocity = moveDirection * moveSpeed;
-
-            // 重力はオフ（一定速度で動く）
-            rb.gravityScale = 0f;
-        }
-        else
-        {
-            // 分裂後は重力有効、velocityは分裂時にセットされる想定
-            rb.gravityScale = 0.5f;
-        }
-    }
-
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Wall"))
-        {
-            // X成分だけ反転してバウンドさせる
-            Vector2 vel = rb.linearVelocity;
-            vel.x = -vel.x;
-            rb.linearVelocity = vel;
-        }
+        float angleRad = angleDeg * Mathf.Deg2Rad;
+        direction = new Vector3(Mathf.Cos(angleRad), -Mathf.Sin(angleRad), 0f).normalized;
     }
 
     void Update()
     {
-        Vector3 pos = transform.position;
+        if (hasSplit) return;
 
-        // 壁（画面左右）にあたったら反射（X方向速度を反転）
-        if (pos.x <= minBounds.x && rb.linearVelocity.x < 0f)
+        transform.position += direction * speed * Time.deltaTime;
+
+        float centerY = Camera.main.transform.position.y;
+        if (!hasSplit && Mathf.Abs(transform.position.y - centerY) < 0.5f)
         {
-            rb.linearVelocity = new Vector2(-rb.linearVelocity.x, rb.linearVelocity.y);
-            transform.position = new Vector3(minBounds.x, pos.y, pos.z);
-        }
-        else if (pos.x >= maxBounds.x && rb.linearVelocity.x > 0f)
-        {
-            rb.linearVelocity = new Vector2(-rb.linearVelocity.x, rb.linearVelocity.y);
-            transform.position = new Vector3(maxBounds.x, pos.y, pos.z);
+            hasSplit = true;
+            StartCoroutine(SplitJump());
         }
 
-        // 画面外に下に落ちたら削除
-        if (pos.y < minBounds.y - 2f)
-        {
-            Destroy(gameObject);
-        }
-    }
+        float camHalfWidth = Camera.main.orthographicSize * Camera.main.aspect;
+        float leftEdge = Camera.main.transform.position.x - camHalfWidth;
+        float rightEdge = Camera.main.transform.position.x + camHalfWidth;
 
-    // 攻撃された時に呼ばれる
-    public void OnHit()
-    {
-        if (splitCount == 0)
+        if (transform.position.x < leftEdge || transform.position.x > rightEdge)
         {
-            Split();
-        }
-        else
-        {
-            Destroy(gameObject);
+            direction.x *= -1f;
         }
     }
 
-    // 分裂処理
-    void Split()
+    IEnumerator SplitJump()
     {
-        Vector3 pos = transform.position;
+        GameObject leftClone = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
+        GameObject rightClone = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
 
-        GameObject left = Instantiate(splitPrefab, pos, Quaternion.identity);
-        GameObject right = Instantiate(splitPrefab, pos, Quaternion.identity);
+        SplittingEnemy leftScript = leftClone.GetComponent<SplittingEnemy>();
+        SplittingEnemy rightScript = rightClone.GetComponent<SplittingEnemy>();
 
-        SetSplitVelocity(left, -1);
-        SetSplitVelocity(right, 1);
+        if (leftScript != null)
+        {
+            leftScript.hasSplit = true;
+            Vector3 leftOffset = new Vector3(-splitOffsetX, jumpOffsetY, 0);
+            leftScript.StartCoroutine(leftScript.JumpThenFall(leftClone, leftOffset));
+        }
+
+        if (rightScript != null)
+        {
+            rightScript.hasSplit = true;
+            Vector3 rightOffset = new Vector3(splitOffsetX, jumpOffsetY, 0);
+            rightScript.StartCoroutine(rightScript.JumpThenFall(rightClone, rightOffset));
+        }
 
         Destroy(gameObject);
+        yield return null;
     }
 
-    void SetSplitVelocity(GameObject obj, int direction)
+    public IEnumerator JumpThenFall(GameObject target, Vector3 offset)
     {
-        SplittingEnemy enemy = obj.GetComponent<SplittingEnemy>();
-        Rigidbody2D enemyRb = obj.GetComponent<Rigidbody2D>();
-        if (enemy != null && enemyRb != null)
+        Vector3 start = target.transform.position;
+        Vector3 end = start + offset;
+        Vector3 mid = (start + end) / 2 + new Vector3(0, jumpHeight, 0); // 弧の頂点を上に
+
+        float t = 0f;
+        while (t < 1f)
         {
-            enemy.splitCount = 1;
-            enemyRb.gravityScale = 0.03f;
+            t += Time.deltaTime / arcDuration;
+            Vector3 p1 = Vector3.Lerp(start, mid, t);
+            Vector3 p2 = Vector3.Lerp(mid, end, t);
+            target.transform.position = Vector3.Lerp(p1, p2, t);
+            yield return null;
+        }
 
-            // 上方向速度を1.5倍にアップ！
-            float newUpSpeed = splitUpSpeed * 1.5f;
+        // ジャンプ完了 → その方向に落下開始
+        Vector3 fallDirection = new Vector3(offset.x, -Mathf.Abs(offset.y), 0).normalized;
+        float fallSpeed = speed;
 
-            enemyRb.linearVelocity = new Vector2(direction * splitSideSpeed, newUpSpeed);
+        while (true)
+        {
+            target.transform.position += fallDirection * fallSpeed * Time.deltaTime;
+
+            // 画面端で反射（任意）
+            float camHalfWidth = Camera.main.orthographicSize * Camera.main.aspect;
+            float leftEdge = Camera.main.transform.position.x - camHalfWidth;
+            float rightEdge = Camera.main.transform.position.x + camHalfWidth;
+
+            if (target.transform.position.x < leftEdge || target.transform.position.x > rightEdge)
+            {
+                fallDirection.x *= -1f;
+            }
+
+            yield return null;
         }
     }
 
+
+    public void OnHit()
+    {
+        Destroy(gameObject);
+        FindObjectOfType<StageManager>()?.OnEnemyDestroyed();
+    }
 }
