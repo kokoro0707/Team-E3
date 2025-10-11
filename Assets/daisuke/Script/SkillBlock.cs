@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class SkillBlock : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class SkillBlock : MonoBehaviour, IPointerEnterHandler,IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
     [SerializeField] SkillType skilltype;
     [SerializeField] int cost = 1;
@@ -18,12 +18,27 @@ public class SkillBlock : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     private Image image;
 
+    [SerializeField] private SkillContent content;
+
     public SkillType SkillType => skilltype;
 
     void Start()
     {
         image = GetComponent<Image>();
         CheckActiveBlock();
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        Debug.Log("enter");
+        if (content != null)
+            content.ShowContent(info);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (content != null)
+            content.HideContent();
     }
 
     private void Update()
