@@ -24,7 +24,7 @@ public class SkillPointManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-            skillPoints = 3; // デバック用初期値
+            skillPoints = 9; // デバック用初期値
     }
 
     private void Start()

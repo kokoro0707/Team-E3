@@ -832,10 +832,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1312187528}
   - {fileID: 1562659806}
   - {fileID: 1893281975}
   - {fileID: 758560323}
+  - {fileID: 1321748891}
+  - {fileID: 1237302085}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &509709166
@@ -868,9 +869,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stages:
-  - enemyCount: 8
+  - enemyCount: 5
     spawners:
-    - {fileID: 1321748890}
+    - {fileID: 1562659805}
   - enemyCount: 8
     spawners:
     - {fileID: 758560322}
@@ -1449,10 +1450,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1321748891}
   - {fileID: 586722629}
   - {fileID: 95467261}
+
   - {fileID: 1237302085}
+
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &687358703
@@ -2232,11 +2234,11 @@ Transform:
   m_GameObject: {fileID: 1312187527}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.8829863, y: 8.852482, z: 0.108781815}
+  m_LocalPosition: {x: -0.8052043, y: 15.721494, z: -9.957383}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 474415050}
+  m_Father: {fileID: 684926444}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1312187529
 MonoBehaviour:
@@ -2301,11 +2303,11 @@ Transform:
   m_GameObject: {fileID: 1321748890}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 18.1, y: 12.4, z: -10.066165}
+  m_LocalPosition: {x: 18.022219, y: 5.5309877, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 684926444}
+  m_Father: {fileID: 474415050}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1321748892
 MonoBehaviour:
@@ -4263,7 +4265,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6881725457361727784, guid: f4cd8c163452e6f409828fc73ea2d7a6, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6881725457361727784, guid: f4cd8c163452e6f409828fc73ea2d7a6, type: 3}
       propertyPath: m_TagString

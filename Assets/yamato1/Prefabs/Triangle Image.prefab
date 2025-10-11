@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 4713732925188136747}
   - component: {fileID: 6464620356237207117}
   - component: {fileID: 1216112090833675568}
-  m_Layer: 0
+  - component: {fileID: 3096679896354800734}
+  m_Layer: 6
   m_Name: Triangle Image
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -104,9 +105,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detectionRadius: 25
-  shootSpeed: 5
-  verticalSpeed: 2
+  minShootSpeed: 2
+  maxShootSpeed: 8
+  shootAcceleration: 3
+  jumpInitialSpeed: 15
+  gravity: 20
   cooldownTime: 1.5
+  stopDuration: 2
 --- !u!50 &6464620356237207117
 Rigidbody2D:
   serializedVersion: 5
@@ -164,7 +169,7 @@ PolygonCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -216,6 +221,20 @@ PolygonCollider2D:
       - {x: 0.905, y: -1.03}
       - {x: 0.775, y: -0.7}
   m_UseDelaunayMesh: 0
+--- !u!114 &3096679896354800734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8035088530445895683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bac9cc4ca477a0247bcb83a4db36bd08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHP: 1
+  effect: {fileID: 6372842992514843614, guid: 6339029df1657fc4e8e7dc68ab742ac4, type: 3}
 --- !u!1001 &6973626956619778042
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -281,8 +300,16 @@ PrefabInstance:
       value: Triangle
       objectReference: {fileID: 0}
     - target: {fileID: 4911503087203597504, guid: 7aacc5ca28ba65b4780f0ba8b5838fea, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4911503087203597504, guid: 7aacc5ca28ba65b4780f0ba8b5838fea, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4911503087203597504, guid: 7aacc5ca28ba65b4780f0ba8b5838fea, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -310,9 +337,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detectionRadius: 11.02
-  shootSpeed: 5
-  verticalSpeed: 2
+  minShootSpeed: 2
+  maxShootSpeed: 8
+  shootAcceleration: 3
+  jumpInitialSpeed: 15
+  gravity: 20
   cooldownTime: 1.5
+  stopDuration: 2
 --- !u!4 &6250537046832068531 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3925188990561497161, guid: 7aacc5ca28ba65b4780f0ba8b5838fea, type: 3}

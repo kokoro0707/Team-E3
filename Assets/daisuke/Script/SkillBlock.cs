@@ -9,13 +9,15 @@ public class SkillBlock : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     [SerializeField] new string name;
     [SerializeField] string info;
     [SerializeField] GameObject hidePanel;
-    [SerializeField] SkillLine nextLine; // 次のスキルへつながる線
+    [SerializeField] SkillLine[] nextLine; // 次のスキルへつながる線
     [SerializeField] float holdTime = 1.5f;
 
     private bool isHolding = false;
     private float holdCounter = 0;
 
     private Image image;
+
+    public SkillType SkillType => skilltype;
 
     void Start()
     {
@@ -31,7 +33,11 @@ public class SkillBlock : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         holdCounter += Time.unscaledDeltaTime;
         float progress = Mathf.Clamp01(holdCounter / holdTime);
 
-        nextLine?.SetFillProgress(progress);
+        foreach (var line in nextLine)
+        {
+            line?.SetFillProgress(progress);
+        }
+
         if (progress >= 1f)
         {
             LearnSkill();
@@ -40,6 +46,7 @@ public class SkillBlock : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        if(isHolding) return;
         Debug.Log("onPointerDown");
         if (SkillManager.instance.HasSkill(skilltype)) return; // すでに取得済みなら無視
 
@@ -60,7 +67,10 @@ public class SkillBlock : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         holdCounter = 0f;
         if(!SkillManager.instance.HasSkill(skilltype))
         {
-            nextLine?.ResetLine();
+            foreach (var line in nextLine)
+            {
+                line?.ResetLine();
+            }
         }
     }
 
@@ -75,13 +85,24 @@ public class SkillBlock : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         // スキル習得
         SkillManager.instance.LearnSkill(skilltype);
         Debug.Log($"{ skilltype} 習得完了");
-        ChangeLearnedBlock(Color.blue);
+        ChangeLearnedBlock(Color.gray);
 
         // ラインを塗り切った状態に固定
-        if(nextLine != null) nextLine.SetComplete();
+        foreach (var line in nextLine)
+        {
+            line?.SetComplete();
+        }
 
         //// 長押しを解除
         isHolding = false;
+    }
+
+    public void AnimateConnectedLines()
+    {
+        foreach(var line in nextLine)
+        {
+            line?.AnimaterFill();
+        }
     }
 
     // 習得した場合 hidepanel外す

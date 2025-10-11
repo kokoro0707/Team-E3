@@ -26,6 +26,7 @@ public class SkillManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+            DontDestroyOnLoad(gameObject);
         }
 
         skillBlocks = skillBlockPanel.GetComponentsInChildren<SkillBlock>();
@@ -48,17 +49,22 @@ public class SkillManager : MonoBehaviour
             return false;
         }
 
-        // ここに追加
-        if(skilltype == SkillType.Shield2) // 取得したいスキル
-        {
-            return HasSkill(SkillType.Shield); // 取得するために必要な前提スキル
-        } 
-        if(skilltype == SkillType.Shield3) 
-        {
-            return HasSkill(SkillType.Shield2);
-        }
+        if (HasSkill(skilltype)) return true;
 
-        return true;
+        // ここにスキル取得条件追加
+        switch (skilltype)
+        {
+            case SkillType.Shield2:                  // 取得したいスキル
+                return HasSkill(SkillType.Shield);   // 取得するために必要なスキル
+            case SkillType.Shield3:
+                return HasSkill(SkillType.Shield2);
+            case SkillType.ShieldRepair:
+                return HasSkill(SkillType.Shield);
+            case SkillType.ShieldRepairSpeed:
+                return HasSkill(SkillType.ShieldRepair);
+            default:
+                return true;
+        }
     }
 
     public delegate void SkillLearnHandler(SkillType skillType);
@@ -72,23 +78,45 @@ public class SkillManager : MonoBehaviour
         //  すでに習得済ならスキップ
         if (HasSkill(skillType)) return;
 
+        // スキルポイントが足りなければスキップ
+        if (SkillPointManager.instance.GetSkillPoint() < cost) return; 
+
         // 習得条件を満たしていないならスキップ
         if (!CanLearnSkill(cost, skillType)) return;
 
-        // スキルポイントが足りなければスキップ
+        // スキルポイントを消費
         if (!SkillPointManager.instance.UseSkillPoint(cost)) return;
 
         // 習得処理
          skillList.Add(skillType);
          OnSkillLearned?.Invoke(skillType);
-         CehckActiveBlocks();
+
+        // スキルブロックにアニメーションを伝達
+        foreach (SkillBlock block in skillBlocks)
+        {
+            if (skillBlocks != null && block.SkillType == skillType)
+            {
+                block.AnimateConnectedLines();
+                break;
+            }
+        }
+            CheckActiveBlocks();
     }
 
     // スキル習得済パネル確認
-    void CehckActiveBlocks()
+    public void CheckActiveBlocks()
     {
+        if (skillBlocks == null) return;
         foreach (SkillBlock skillBlock in skillBlocks)
         {
+            if((skillBlock == null)) continue;
+            Debug.Log($"[check]{skillBlock.name}: HasSkill = {HasSkill(skillBlock.SkillType)}");
+
+            if (HasSkill(skillBlock.SkillType))
+            {
+                Debug.Log($"→ Skip {skillBlock.name}(already learned)");
+                continue;
+            }
             skillBlock.CheckActiveBlock();
         }
     }

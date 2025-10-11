@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using NUnit.Framework.Internal;
 using UnityEngine;
 
 
@@ -21,6 +22,7 @@ public class PlayerClr : MonoBehaviour
     [SerializeField] private Sprite Nomal;
     [SerializeField] private Sprite Shield;
     [SerializeField] private Sprite Shield2;
+    public ParticleSystem Shieldeffect;
 
     [Header("攻撃設定")]
     public GameObject slashPrehab;
@@ -106,7 +108,15 @@ public class PlayerClr : MonoBehaviour
         }
         if (Input.GetButtonDown("Fire2"))
         {
-            StartCoroutine(DoSpecialAttack());
+            if(SpecialGauge.instance.IsFull())
+            {
+                StartCoroutine(DoSpecialAttack());
+                SpecialGauge.instance.ResetGauge();
+            }
+            else
+            {
+                Debug.Log("弾ってない");
+            }
         }
     }
     IEnumerator DoSpecialAttack()
@@ -165,8 +175,23 @@ public class PlayerClr : MonoBehaviour
 
             // 追従設定
             Slash slashScript = slash.GetComponent<Slash>();
-            slashScript.target = transform;                // プレイヤーを追従対象に設定
+            slashScript.transform.SetParent(transform);//slashScript.target = transform;                // プレイヤーを追従対象に設定
             slashScript.offset = new Vector3(0, 1.0f, 0);  // 高さ調整
+        }
+    }
+    //エフェクト追従
+    private void PlayShieldEffect()
+    {
+        if (Shieldeffect != null)
+        {
+            // エフェクトを生成
+             ParticleSystem efect= Instantiate(Shieldeffect, transform.position, Quaternion.identity);
+
+            // プレイヤーの子にして追従させる
+            efect.transform.SetParent(transform);
+
+            // 位置をリセットしてプレイヤーの中心に固定
+            efect.transform.localPosition = Vector3.zero;
         }
     }
 
@@ -199,15 +224,16 @@ public class PlayerClr : MonoBehaviour
 
         hp -= damage;
 
+        var spriteRenderer = targetSprite.GetComponent<SpriteRenderer>();
         if (hp == 2)
         {
-            var spriteRenderer = targetSprite.GetComponent<SpriteRenderer>();
             spriteRenderer.sprite = Shield;
+            PlayShieldEffect();
         }
         else if (hp == 1)
         {
-            var spriteRenderer = targetSprite.GetComponent<SpriteRenderer>();
             spriteRenderer.sprite = Nomal;
+            PlayShieldEffect();
         }
         else if (hp <= 0)
         {
@@ -223,11 +249,30 @@ public class PlayerClr : MonoBehaviour
         Invncble = true;
         Col.enabled = false;
 
-        yield return new WaitForSeconds(1f);
+        SpriteRenderer sr = targetSprite.GetComponent<SpriteRenderer>();
+        Color originalColor = sr.color;
+
+        float duration = 1.5f; // 無敵時間
+        float blinkInterval = 0.1f; // 点滅間隔
+        float timer = 0f;
+
+        while (timer < duration)
+        {
+            // 表示ON/OFFを交互に切り替え
+            sr.enabled = !sr.enabled;
+
+            yield return new WaitForSeconds(blinkInterval);
+            timer += blinkInterval;
+        }
+
+        // 最終的に表示を戻す
+        sr.enabled = true;
+        sr.color = originalColor;
 
         Col.enabled = true;
         Invncble = false;
     }
+
     void Die()
     {
         // ここで死亡エフェクトやスコア加算もできる

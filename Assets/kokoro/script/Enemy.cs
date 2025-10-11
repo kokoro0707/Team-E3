@@ -5,6 +5,7 @@ public class Enemy : MonoBehaviour
     [Header("敵ステータス")]
     public int maxHP = 1;
     private int currentHP;
+    public ParticleSystem effect;
 
     void Start()
     {
@@ -34,6 +35,8 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
+        SpecialGauge.instance.AddKill();
+        Instantiate(effect, transform.position, Quaternion.identity);
         Destroy(gameObject);
     }
 }

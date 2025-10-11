@@ -118,7 +118,7 @@ public class EnemyShooter : MonoBehaviour
         }
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    void OnTriggerEnter2D(Collider2D collision)
     {
         // 同じ敵同士では反応しない
         if (collision.gameObject.CompareTag("Enemy")) return;
