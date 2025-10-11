@@ -6,8 +6,9 @@ using UnityEngine.UI;
 public class StageClearManager : MonoBehaviour
 {
     public Image GameClearImage;
-    public float slideTime = 1.0f; // スライドにかける時間
-    public float slideOutTime = 5.0f;
+    public float slideTime = 1.5f; // スライドにかける時間
+    //public float slideOutTime = 5.0f;
+    [Header("ここにシーン名を入れる")]
     public string nextStageName; // 次のステージのシーン名を入れる
 
     private Vector2 startPos;
@@ -64,21 +65,23 @@ public class StageClearManager : MonoBehaviour
         // 左から中央へスライドイン
         if (!hasLoadScene && !isSlidingout)
         {
-            float slideT = Mathf.Clamp01(t /slideTime); // 1秒で中央に到達
+            float slideT = Mathf.Clamp01(t /slideTime);
+            float eased = Mathf.SmoothStep(0f, 1f, slideT); // 減速力カーブ
             GameClearImage.rectTransform.anchoredPosition = Vector2.Lerp(startPos, midPos, slideT);
 
-            // 中央に完全到達した瞬間
-            if (slideT >= 1f)
+            // 中央に近づいたら
+            if (slideT >= 0.9f && !hasLoadScene)
             {
-                StartCoroutine(LoadNextScene());
                 hasLoadScene = true;
+                StartCoroutine(LoadNextScene());
             }
         }
 
         // 右へスライドアウト
         if (isSlidingout)
         {
-            float slideOutT = Mathf.Clamp01(t / slideOutTime);
+            float slideOutT = Mathf.Clamp01(t / slideTime);
+            float easedOutT = Mathf.Clamp(0f, 1f, slideOutT); // 加速カーブ
             GameClearImage.rectTransform.anchoredPosition = Vector2.Lerp(midPos, endPos, slideOutT);
             // 右外に完全到達したら終了
             if (slideOutT >= 1f)
@@ -93,7 +96,7 @@ public class StageClearManager : MonoBehaviour
 
     private System.Collections.IEnumerator LoadNextScene()
     {
-        yield return new WaitForSecondsRealtime(0.5f);
+        yield return null;
 
         SceneManager.LoadScene(nextStageName);
     }
