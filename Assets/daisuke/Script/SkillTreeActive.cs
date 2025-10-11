@@ -19,7 +19,7 @@ public class SkillTreeActive : MonoBehaviour
         visiblePosition = SkillTreePanel.anchoredPosition;
 
         // 非表示位置を下にずらして固定(パネルの高さぶん下げる)
-        hiddenPositin = new Vector2(visiblePosition.x, visiblePosition.y - SkillTreePanel.rect.height);
+        hiddenPositin = new Vector2(visiblePosition.x, visiblePosition.y - 1080);
 
         // 初期状態は非表示
         SkillTreePanel.anchoredPosition = hiddenPositin;
