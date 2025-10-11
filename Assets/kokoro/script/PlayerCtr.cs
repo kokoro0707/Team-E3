@@ -170,7 +170,7 @@ public class PlayerClr : MonoBehaviour
         if (slashPrehab != null)
         {
             // 斬撃生成（プレイヤーの上に出す）
-            Vector3 spawnPos = transform.position + Vector3.up * 1.5f; // プレイヤーの真上1.0の位置（調整可）
+            Vector3 spawnPos = transform.position + Vector3.up * 1.0f; // プレイヤーの真上1.0の位置（調整可）
             GameObject slash = Instantiate(slashPrehab, spawnPos, Quaternion.identity);
 
             // 追従設定

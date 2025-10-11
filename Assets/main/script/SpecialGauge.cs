@@ -6,7 +6,7 @@ public class SpecialGauge : MonoBehaviour
     public static SpecialGauge instance; // ƒVƒ“ƒOƒ‹ƒgƒ“
     public Slider gaugeSlider;
 
-    private int currentKills = 0;
+    private int currentKills = 18;
     private int maxKills = 20;
 
     void Awake()
