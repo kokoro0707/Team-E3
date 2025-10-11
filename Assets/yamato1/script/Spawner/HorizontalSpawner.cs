@@ -4,18 +4,22 @@ using System.Collections.Generic;
 
 public class HorizontalSpawner : MonoBehaviour
 {
-    public GameObject horizontalPrefab; // 敵のPrefab
-    public GameObject warningPrefab;    // 警告マークのPrefab
-    public float interval = 2f;         // 敵を出す間隔
-    public float warningDuration = 1.5f; // 警告を出しておく時間
+    public GameObject horizontalPrefab;
+    public float interval = 2f;
+    public float spawnScaleTime = 0.3f; // 拡大時間
+    public float spawnDelay = 0.2f;     // 一体ずつ出す間隔
+    public float spacing = 1.8f;        // ← 敵の縦方向の間隔（ここを調整！）
 
-    private float timer = 0f;
-    private List<GameObject> activeEnemies = new List<GameObject>();
     public static HorizontalSpawner Instance;
 
-    void Awake()
+    private List<GameObject> activeEnemies = new List<GameObject>();
+    private float timer = 0f;
+
+    void Awake() => Instance = this;
+
+    void Start()
     {
-        Instance = this;
+        SpawnRandomSide(); // ゲーム開始時にスポーン
     }
 
     void Update()
@@ -26,55 +30,56 @@ public class HorizontalSpawner : MonoBehaviour
             SpawnRandomSide();
             timer = 0f;
         }
-
-        activeEnemies.RemoveAll(e => e == null);
     }
 
     void SpawnRandomSide()
     {
-        if (horizontalPrefab == null || warningPrefab == null) return;
+        if (horizontalPrefab == null) return;
 
-        float y = Random.Range(-8f, -1f);
+        float centerY = Random.Range(-8f, -1f);
         bool spawnLeft = Random.value < 0.5f;
         float x = spawnLeft ? -16f : 16f;
-        Vector3 spawnPos = new Vector3(x, y, 0f);
 
-        // 警告マークの位置は、敵の出現位置と一致させる（少し内側にしてもOK）
-        StartCoroutine(SpawnWithWarning(spawnPos, spawnLeft));
+        StartCoroutine(SpawnSequentially(new Vector3(x, centerY, 0f), spawnLeft));
     }
 
-    IEnumerator SpawnWithWarning(Vector3 spawnPosition, bool spawnLeft)
+    IEnumerator SpawnSequentially(Vector3 centerPos, bool spawnLeft)
     {
-        // 警告マークを生成
-        GameObject warning = Instantiate(warningPrefab, spawnPosition, Quaternion.identity);
-
-        // 警告マークを一定時間表示
-        yield return new WaitForSeconds(warningDuration);
-
-        // 警告マークを削除
-        Destroy(warning);
-
-        // 敵を生成
-        GameObject enemy = Instantiate(horizontalPrefab, spawnPosition, Quaternion.identity);
-        activeEnemies.Add(enemy);
-
-        // 移動方向設定
-        StraightEnemy move = enemy.GetComponent<StraightEnemy>();
-        if (move != null)
+        Vector3[] spawnPositions = new Vector3[3];
+        for (int i = 0; i < 3; i++)
         {
-            move.direction = spawnLeft ? Vector2.right : Vector2.left;
-
-            // 向き調整：スプライトの上が前提
-            float angle = Mathf.Atan2(move.direction.y, move.direction.x) * Mathf.Rad2Deg - 90f;
-            enemy.transform.rotation = Quaternion.Euler(0, 0, angle);
+            float yOffset = (i - 1) * spacing; // ← spacingを使用
+            spawnPositions[i] = centerPos + new Vector3(0f, yOffset, 0f);
         }
-    }
 
-    public static void Unregister(GameObject enemy)
-    {
-        if (Instance != null && Instance.activeEnemies.Contains(enemy))
+        List<StraightEnemy> enemies = new List<StraightEnemy>();
+
+        // 一体ずつ拡大アニメーションで出現
+        foreach (Vector3 pos in spawnPositions)
         {
-            Instance.activeEnemies.Remove(enemy);
+            GameObject enemy = Instantiate(horizontalPrefab, pos, Quaternion.identity);
+
+            // 向きを設定（拡大アニメ中もこの向きで）
+            float angle = spawnLeft ? -90f : 90f;
+            enemy.transform.rotation = Quaternion.Euler(0, 0, angle);
+
+            StraightEnemy move = enemy.GetComponent<StraightEnemy>();
+            if (move != null)
+            {
+                move.direction = spawnLeft ? Vector2.right : Vector2.left;
+                move.spawnScaleTime = spawnScaleTime;
+                move.canMove = false; // 拡大中は動かない
+                enemies.Add(move);
+            }
+
+            yield return new WaitForSeconds(spawnDelay); // 順番に出現
+        }
+
+        // 全員が出現してから動き開始
+        yield return new WaitForSeconds(spawnScaleTime);
+        foreach (var e in enemies)
+        {
+            if (e != null) e.canMove = true;
         }
     }
 }
