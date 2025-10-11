@@ -9,6 +9,7 @@ public class SkillBlock : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     [SerializeField] new string name;
     [SerializeField] string info;
     [SerializeField] GameObject hidePanel;
+    [Header("Ÿ‚Ö‚Æ‚Â‚È‚ª‚éƒ‰ƒCƒ“‚ğ“ü‚ê‚é")]
     [SerializeField] SkillLine[] nextLine; // Ÿ‚ÌƒXƒLƒ‹‚Ö‚Â‚È‚ª‚éü
     [SerializeField] float holdTime = 1.5f;
 

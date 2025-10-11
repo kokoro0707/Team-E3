@@ -4,8 +4,11 @@ using UnityEngine;
 
 public enum SkillType
 {
-    ATTACK,
+    ThrowAttack,
+    ThrowAttack2,
+    ThrowAttack3,
     ATTACKRANGE,
+    ATTACKRANGE2,
     Shield,
     Shield2,
     Shield3,
@@ -62,6 +65,14 @@ public class SkillManager : MonoBehaviour
                 return HasSkill(SkillType.Shield);
             case SkillType.ShieldRepairSpeed:
                 return HasSkill(SkillType.ShieldRepair);
+            case SkillType.ThrowAttack2:
+                return HasSkill(SkillType.ThrowAttack);
+                case SkillType.ThrowAttack3:
+                return HasSkill(SkillType.ThrowAttack2);
+            case SkillType.ATTACKRANGE:
+                return HasSkill(SkillType.ThrowAttack);
+            case SkillType.ATTACKRANGE2:
+                return HasSkill(SkillType.ATTACKRANGE);
             default:
                 return true;
         }
