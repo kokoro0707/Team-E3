@@ -67,4 +67,14 @@ public class SkillLine : MonoBehaviour
         }
         SetComplete();
     }
+
+    public void HideLine()
+    {
+        gameObject.SetActive(false);
+    }
+
+    public void ShowLine()
+    {
+        gameObject.SetActive(true);
+    }
 }

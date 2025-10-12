@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -7,18 +9,21 @@ public class SkillBlock : MonoBehaviour, IPointerEnterHandler,IPointerExitHandle
     [SerializeField] SkillType skilltype;
     [SerializeField] int cost = 1;
     [SerializeField] new string name;
-    [SerializeField] string info;
+    [SerializeField] private Sprite info;
+    [SerializeField] private SkillContent content;
     [SerializeField] GameObject hidePanel;
     [Header("次へとつながるラインを入れる")]
     [SerializeField] SkillLine[] nextLine; // 次のスキルへつながる線
     [SerializeField] float holdTime = 1.5f;
+    [Header("同じ親から派生するスキル")]
+    [SerializeField] SkillType[] brotherskilltype; // 兄弟スキル
+    [Header("最後のスキルの場合はここをtrueにする")]
+    [SerializeField] bool isLeafSkill = false;
 
     private bool isHolding = false;
     private float holdCounter = 0;
 
     private Image image;
-
-    [SerializeField] private SkillContent content;
 
     public SkillType SkillType => skilltype;
 
@@ -109,8 +114,33 @@ public class SkillBlock : MonoBehaviour, IPointerEnterHandler,IPointerExitHandle
             line?.SetComplete();
         }
 
+
+        // 兄弟スキルを無効化　最後のスキルでないとき
+        if (!isLeafSkill)
+        {
+            foreach (var sibling in brotherskilltype)
+            {
+                var siblingBlock = SkillManager.instance.skillBlocks.FirstOrDefault(b => b.SkillType == sibling);
+                if (siblingBlock != null)
+                {
+                    siblingBlock.SetUnavailable();
+                    SkillManager.instance.DisableSkill(sibling);
+                }
+            }
+        }
+        
         //// 長押しを解除
         isHolding = false;
+    }
+
+    private void SetUnavailable()
+    {
+        hidePanel.SetActive(true);
+        foreach (var line in nextLine)
+        {
+            line?.HideLine();
+        }
+        isHolding= false;
     }
 
     public void AnimateConnectedLines()
