@@ -20,7 +20,7 @@ public class SkillManager : MonoBehaviour
     [SerializeField] GameObject skillBlockPanel;
 
     List<SkillType> skillList = new List<SkillType>();
-    SkillBlock[] skillBlocks;
+    public SkillBlock[] skillBlocks;
 
     public static SkillManager instance;
 
@@ -47,6 +47,8 @@ public class SkillManager : MonoBehaviour
     // スキルの習得条件
     public bool CanLearnSkill(int cost, SkillType skilltype)
     {
+        if(disableSkills.Contains(skilltype)) return false;
+
         if(SkillPointManager.instance.GetSkillPoint() < cost)
         {
             return false;
@@ -76,6 +78,20 @@ public class SkillManager : MonoBehaviour
             default:
                 return true;
         }
+    }
+
+    // 習得不可スキルの設定
+    private List<SkillType> disableSkills = new List<SkillType>();
+
+    public bool IsDisabled(SkillType skill)
+    {
+        return disableSkills.Contains(skill);
+    }
+
+    public void DisableSkill(SkillType skill)
+    {
+        if(!disableSkills.Contains(skill))
+            disableSkills.Add(skill);
     }
 
     public delegate void SkillLearnHandler(SkillType skillType);
