@@ -4,13 +4,31 @@ using System.Collections;
 using System;
 using Unity.Mathematics;
 using UnityEditor;
+using Unity.VisualScripting;
 
 public class GameOverManager : MonoBehaviour
 {
+    public static GameOverManager Instance { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
+
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Transform player;
 
-    [Header("Fade/ClearPlaer")]
+    private Vector3 lastplayerPositon;
+
+    [Header("Fade/ClonePlaer")]
     [SerializeField] private Image fadeimage;
     [SerializeField] private GameObject clonePlayerobject;
 
@@ -43,6 +61,9 @@ public class GameOverManager : MonoBehaviour
         if (player == null)
             player = GameObject.FindGameObjectWithTag("Player").transform;
 
+        if (player != null)
+            lastplayerPositon = player.position; // 初期座標を記録
+
         // フェード初期化
         if (fadeimage != null)
         {
@@ -64,7 +85,12 @@ public class GameOverManager : MonoBehaviour
         }
     }
 
-    private IEnumerator StartGameOver()
+    public void SetPlayerDeathPosition(Vector3 pos)
+    {
+        lastplayerPositon = pos;
+    }
+
+    public IEnumerator StartGameOver()
     {
         isClearing = true;
         Time.timeScale = 0f; // ゲーム停止
@@ -72,7 +98,7 @@ public class GameOverManager : MonoBehaviour
         // ==== ズーム処理 ====
 
         Vector3 startPos = mainCamera.transform.position;
-        Vector3 targetPos = player.transform.position + new Vector3(0, 1.5f, -zoomDistance);
+        Vector3 targetPos = lastplayerPositon + new Vector3(0, 1.5f, -zoomDistance);
 
         float t = 0f;
         while (t < 1f)
@@ -106,11 +132,11 @@ public class GameOverManager : MonoBehaviour
 
         // ==== 新プレイヤー生成 ====
         GameObject newPlayer = null;
-        if (clonePlayerobject != null && player != null)
+        if (clonePlayerobject != null)
         {
-            Vector3 rightDir = player.right * rightOffset;
-            Vector3 spawnPos = player.position + rightDir;
-            quaternion spawanRot = player.rotation;
+            Vector3 rightDir = Vector3.right * rightOffset;
+            Vector3 spawnPos = lastplayerPositon + rightDir;
+            quaternion spawanRot = player != null ? player.rotation : quaternion.identity;
             newPlayer = Instantiate(clonePlayerobject, spawnPos, spawanRot);
             newPlayer.layer = LayerMask.NameToLayer("ClearPlayer");
 
@@ -129,9 +155,20 @@ public class GameOverManager : MonoBehaviour
             }
             yield return new WaitForSecondsRealtime(0.4f);
 
-            if (gameOverText != null) gameOverText.gameObject.SetActive(true);
-            if (spotLightImage != null) spotLightImage.gameObject.SetActive(true);
-            yield return new WaitForSecondsRealtime(0.5f);
+            if (gameOverText != null)
+            {
+                gameOverText.gameObject.SetActive(true);
+                Debug.Log("text表示");
+            }
+            if (spotLightImage != null)
+            {
+                spotLightImage.gameObject.SetActive(true);
+                Debug.Log("spotLight表示");
+            }
+            else {
+                Debug.Log("参照が切れている");
+            }
+                yield return new WaitForSecondsRealtime(0.5f);
 
             // ==== 回転終了後に爆発
             if (explodeEffect != null)
@@ -152,9 +189,12 @@ public class GameOverManager : MonoBehaviour
            
         }
 
-       
-
-        ShowScore(100);
+        int score = 0;
+        if(SkillPointManager.instance != null)
+        {
+            score = SkillPointManager.instance.GetTotalKillCount();
+        }
+        ShowScore(score);
         yield return new WaitForSecondsRealtime(0.5f);
         Time.timeScale = 1f;
         isClearing = false;
