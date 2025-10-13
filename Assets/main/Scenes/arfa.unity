@@ -1196,9 +1196,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   horizontalPrefab: {fileID: 6075764963754434664, guid: 441a0b638248fa54b842f9aa3df96b2a, type: 3}
-  warningPrefab: {fileID: 2171844251658929002, guid: dfae221f25fc407489b985398df98ed5, type: 3}
   interval: 7
-  warningDuration: 1.5
+  spawnScaleTime: 0.3
+  spawnDelay: 0.2
+  spacing: 1.8
 --- !u!1 &1129344658
 GameObject:
   m_ObjectHideFlags: 0
