@@ -8,6 +8,7 @@ public class SkillPointManager : MonoBehaviour
 
     [SerializeField] private int skillPoints = 0;
     [SerializeField] private int killCount = 0;
+    [SerializeField] private int totalKillCount = 0; //　合計キル数
     [SerializeField] private int killsPoint = 2; // 2体で1ポイント
 
     [SerializeField] private TextMeshProUGUI skillPointText;
@@ -46,6 +47,7 @@ public class SkillPointManager : MonoBehaviour
     public void AddKillCount(int amont)
     {
         killCount += amont;
+        totalKillCount += amont;
 
         if(killCount >= killsPoint) // キルカウントがキルポイントを上回ったらスキルポイント増加
         {
@@ -75,6 +77,17 @@ public class SkillPointManager : MonoBehaviour
             Debug.Log("スキルポイントが足りません");
             return false;
         }
+    }
 
+    // 合計キル数を取得
+    public int GetTotalKillCount()
+    {
+        return totalKillCount;
+    }
+
+    public void ResetKillCount()
+    {
+        killCount = 0;
+        totalKillCount = 0;
     }
 }

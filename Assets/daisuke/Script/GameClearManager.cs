@@ -24,6 +24,10 @@ public class GameClearManager : MonoBehaviour
     [Header("数字同士の幅")]
     [SerializeField] private float numberSpacing;
 
+    [Header("Buttons")]
+    [SerializeField] private GameObject retryButton;
+    [SerializeField] private GameObject titleButton;
+
     [Header("数値設定")]
     [SerializeField] private float zoomspeed = 2f;
     [SerializeField] private float zoomDistance = 1.5f;
@@ -52,6 +56,10 @@ public class GameClearManager : MonoBehaviour
         // UI初期化
         if(spotLightImage != null ) spotLightImage.gameObject.SetActive(false);
         if(gameClearText != null ) gameClearText.gameObject.SetActive(false);
+   
+        // リトライ・タイトルへ戻るボタン初期化
+        if(retryButton != null ) retryButton.SetActive(false);
+        if(titleButton != null ) titleButton.SetActive(false);
     }
 
     private void Update()
@@ -126,13 +134,21 @@ public class GameClearManager : MonoBehaviour
             }
         }
 
+        // ==== クリアテキストとスポットライト表示 ====
         if(gameClearText != null) gameClearText.gameObject.SetActive(true);
-
         if (spotLightImage != null) spotLightImage.gameObject.SetActive(true);
         yield return new WaitForSecondsRealtime(1f);
+
+        // ==== スコア表示 ====
         ShowScore(100);
         yield return new WaitForSecondsRealtime(1f);
-        Time.timeScale = 1f;
+
+        // ==== リトライ・タイトルボタン表示
+        if(retryButton != null) retryButton.gameObject.SetActive(true);
+        yield return new WaitForSecondsRealtime(1f);
+        if(titleButton != null) titleButton.gameObject.SetActive(true);
+
+        Time.timeScale = 0f;
         isClearing = false;
     }
 
@@ -161,5 +177,18 @@ public class GameClearManager : MonoBehaviour
 
             rect.anchoredPosition = new Vector2(startX + i * numberSpacing, 0);
         }
+    }
+
+    public void OnRetryButton()
+    {
+        Time.timeScale = 1f;
+        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+    }
+
+    public void OnCTitleButton()
+    {
+        Time.timeScale = 1f;
+        //UnityEngine.SceneManagement.SceneManager.LoadScene("TitleScene");
+        Debug.Log("タイトルに戻る");
     }
 }
