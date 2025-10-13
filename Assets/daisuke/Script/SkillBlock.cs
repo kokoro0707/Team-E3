@@ -9,6 +9,7 @@ public class SkillBlock : MonoBehaviour, IPointerEnterHandler,IPointerExitHandle
     [SerializeField] SkillType skilltype;
     [SerializeField] int cost = 1;
     [SerializeField] new string name;
+    [Header("‚±‚±‚ÉŠeƒXƒLƒ‹à–¾‚Ì‰æ‘œ‚ğ“ü‚ê‚é")]
     [SerializeField] private Sprite info;
     [SerializeField] private SkillContent content;
     [SerializeField] GameObject hidePanel;
@@ -31,6 +32,11 @@ public class SkillBlock : MonoBehaviour, IPointerEnterHandler,IPointerExitHandle
     {
         image = GetComponent<Image>();
         CheckActiveBlock();
+
+        if(content == null)
+        {
+            content = FindObjectOfType<SkillContent>();
+        }
     }
 
     public void OnPointerEnter(PointerEventData eventData)

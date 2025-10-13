@@ -41,7 +41,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 238.9, y: 55.4}
-  m_SizeDelta: {x: 30, y: 30}
+  m_SizeDelta: {x: 45, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4768205141084846471
 CanvasRenderer:
@@ -109,11 +109,14 @@ MonoBehaviour:
   skilltype: 0
   cost: 1
   name: 
-  info: 
+  info: {fileID: 0}
+  content: {fileID: 7980995492705427250, guid: d7dbcdae0e1a2c7488dde9308ce6da5b, type: 3}
   hidePanel: {fileID: 8705899492578137514}
   nextLine:
   - {fileID: 0}
   holdTime: 1.5
+  brotherskilltype: 
+  isLeafSkill: 0
 --- !u!114 &3586749577946637186
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -243,15 +246,15 @@ RectTransform:
   m_GameObject: {fileID: 8705899492578137514}
   m_LocalRotation: {x: 0, y: 0, z: -0.38268343, w: 0.92387956}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.1256, y: 1.155, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8059746211732816436}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -45}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1692790856119039440
 CanvasRenderer:

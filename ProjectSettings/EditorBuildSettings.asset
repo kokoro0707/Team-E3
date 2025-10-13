@@ -15,10 +15,10 @@ EditorBuildSettings:
     path: Assets/main/Scenes/arfa.unity
     guid: 77b0396747e311d458a14a85676ba2e5
   - enabled: 1
-    path: Assets/daisuke/New Scene.unity
+    path: Assets/daisuke/Scene/New Scene.unity
     guid: 283a65958b11b4d4bbad86a1d028e3ac
   - enabled: 1
-    path: Assets/daisuke/Stage2.unity
+    path: Assets/daisuke/Scene/Stage2.unity
     guid: ef015673a40ce2941ac2c0c48fdcceb9
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

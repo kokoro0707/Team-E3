@@ -5,18 +5,18 @@ using System;
 using Unity.Mathematics;
 using UnityEditor;
 
-public class GameClearManager : MonoBehaviour
+public class GameOverManager : MonoBehaviour
 {
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Transform player;
-   
+
     [Header("Fade/ClearPlaer")]
     [SerializeField] private Image fadeimage;
     [SerializeField] private GameObject clonePlayerobject;
 
     [Header("Clear UI")]
     [SerializeField] private Image spotLightImage;
-    [SerializeField] private Image gameClearText;
+    [SerializeField] private Image gameOverText;
 
     [Header("Score UI")]
     [SerializeField] private Transform scoreParet;
@@ -31,18 +31,20 @@ public class GameClearManager : MonoBehaviour
     [SerializeField] private float rotateSpeed = 180f;
     [SerializeField] private float rightOffset;
 
+    [SerializeField] private ParticleSystem explodeEffect;
+
     private bool isClearing = false;
 
     private void Start()
     {
-        if(mainCamera == null)
+        if (mainCamera == null)
             mainCamera = Camera.main;
 
-        if(player == null)
+        if (player == null)
             player = GameObject.FindGameObjectWithTag("Player").transform;
 
         // フェード初期化
-        if(fadeimage != null )
+        if (fadeimage != null)
         {
             var c = fadeimage.color;
             c.a = 0f;
@@ -50,30 +52,30 @@ public class GameClearManager : MonoBehaviour
         }
 
         // UI初期化
-        if(spotLightImage != null ) spotLightImage.gameObject.SetActive(false);
-        if(gameClearText != null ) gameClearText.gameObject.SetActive(false);
+        if (spotLightImage != null) spotLightImage.gameObject.SetActive(false);
+        if (gameOverText != null) gameOverText.gameObject.SetActive(false);
     }
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.G)) // デバック用キー　Gキー
+        if (Input.GetKeyDown(KeyCode.O)) // デバック用キー　Oキー
         {
-            StartCoroutine(StartGameClear());
+            StartCoroutine(StartGameOver());
         }
     }
 
-    private IEnumerator StartGameClear()
+    private IEnumerator StartGameOver()
     {
-       isClearing = true;
+        isClearing = true;
         Time.timeScale = 0f; // ゲーム停止
 
         // ==== ズーム処理 ====
 
         Vector3 startPos = mainCamera.transform.position;
-        Vector3 targetPos = player.transform.position + new Vector3(0,1.5f,-zoomDistance);
+        Vector3 targetPos = player.transform.position + new Vector3(0, 1.5f, -zoomDistance);
 
         float t = 0f;
-        while(t < 1f)
+        while (t < 1f)
         {
             t += Time.unscaledDeltaTime * fadespeed;
             mainCamera.transform.position = Vector3.Lerp(startPos, targetPos, t);
@@ -88,7 +90,7 @@ public class GameClearManager : MonoBehaviour
         {
             f += Time.unscaledDeltaTime * fadespeed;
 
-            if(fadeimage != null )
+            if (fadeimage != null)
             {
                 var c = fadeimage.color;
                 c.a = Mathf.Clamp01(f);
@@ -99,7 +101,8 @@ public class GameClearManager : MonoBehaviour
         }
 
         // ==== SE部分 ====
-       
+
+      
 
         // ==== 新プレイヤー生成 ====
         GameObject newPlayer = null;
@@ -111,7 +114,7 @@ public class GameClearManager : MonoBehaviour
             newPlayer = Instantiate(clonePlayerobject, spawnPos, spawanRot);
             newPlayer.layer = LayerMask.NameToLayer("ClearPlayer");
 
-            newPlayer.transform.Rotate(20f, 40f, 0f,Space.Self);
+            newPlayer.transform.Rotate(20f, 40f, 0f, Space.Self);
         }
 
         // ==== 回転演出 ====
@@ -124,22 +127,43 @@ public class GameClearManager : MonoBehaviour
                 newPlayer.transform.Rotate(Vector3.up, rotateSpeed * Time.unscaledDeltaTime);
                 yield return null;
             }
+            yield return new WaitForSecondsRealtime(0.4f);
+
+            if (gameOverText != null) gameOverText.gameObject.SetActive(true);
+            if (spotLightImage != null) spotLightImage.gameObject.SetActive(true);
+            yield return new WaitForSecondsRealtime(0.5f);
+
+            // ==== 回転終了後に爆発
+            if (explodeEffect != null)
+            {
+                Time.timeScale = 1f;
+                // 爆発のプレイヤーの位置に生成＆再生
+                Vector3 explosionPos = newPlayer.transform.position - mainCamera.transform.forward * 0.5f;
+                Quaternion explosionRot = Quaternion.identity;
+                ParticleSystem explosion = Instantiate(explodeEffect, explosionPos, explosionRot);
+
+                Instantiate(explodeEffect,explosionPos, explosionRot);
+
+                Destroy(newPlayer);
+
+                yield return new WaitForSecondsRealtime(1f);
+                Time.timeScale = 0f;
+            }
+           
         }
 
-        if(gameClearText != null) gameClearText.gameObject.SetActive(true);
+       
 
-        if (spotLightImage != null) spotLightImage.gameObject.SetActive(true);
-        yield return new WaitForSecondsRealtime(1f);
         ShowScore(100);
-        yield return new WaitForSecondsRealtime(1f);
+        yield return new WaitForSecondsRealtime(0.5f);
         Time.timeScale = 1f;
         isClearing = false;
     }
 
     private void ShowScore(int score)
     {
-        if(scoreParet == null || numberSprite == null || numberSprite.Length < 10) return;
-        
+        if (scoreParet == null || numberSprite == null || numberSprite.Length < 10) return;
+
         // 一旦クリア
         foreach (Transform child in scoreParet)
             Destroy(child.gameObject);
@@ -147,7 +171,7 @@ public class GameClearManager : MonoBehaviour
         string scoreText = score.ToString();
         float startX = -((scoreText.Length - 1) * numberSpacing) / 2f;
 
-        for(int i = 0; i < scoreText.Length; i++)
+        for (int i = 0; i < scoreText.Length; i++)
         {
             int num = int.Parse(scoreText[i].ToString());
 
