@@ -30,7 +30,7 @@ public class PlayerClr : MonoBehaviour
 
     [Header("必殺技")]
     public GameObject specialSlashPrefab;
-    public float specialDuration = 1.0f; // 表示時間
+    public float specialDuration = 0.8f; // 表示時間
     public ScreenFade screenFade;  // インスペクタで黒パネルのスクリプトを設定する
 
     private Rigidbody2D rb;
