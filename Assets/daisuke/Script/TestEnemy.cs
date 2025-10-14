@@ -7,8 +7,10 @@ public class TestEnemy : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Q))
         {
-            //SkillPointManager.instance.AddKillCount(1);
+            // ‚±‚Á‚¿‚Í“G€–S‚ÉŒÄ‚Ô
+            SkillPointManager.instance.AddKillCount(1);
 
+            // ‚±‚Á‚¿‚ÍƒvƒŒƒCƒ„[€–S‚ÉŒÄ‚Ô
             GameOverManager.Instance.SetPlayerDeathPosition(transform.position);
             GameOverManager.Instance.StartCoroutine(GameOverManager.Instance.StartGameOver());
             Destroy(gameObject);

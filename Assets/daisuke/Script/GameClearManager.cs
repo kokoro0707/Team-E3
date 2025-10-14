@@ -125,13 +125,16 @@ public class GameClearManager : MonoBehaviour
         // ==== 回転演出 ====
         if (newPlayer != null)
         {
-            float rotTime = 0f;
-            while (rotTime < 2f)
-            {
-                rotTime += Time.unscaledDeltaTime;
-                newPlayer.transform.Rotate(Vector3.up, rotateSpeed * Time.unscaledDeltaTime);
-                yield return null;
-            }
+            //float rotTime = 0f;
+            //while (rotTime < 2f)
+            //{
+            //    rotTime += Time.unscaledDeltaTime;
+            //    newPlayer.transform.Rotate(Vector3.up, rotateSpeed * Time.unscaledDeltaTime);
+            //    yield return null;
+            //}
+
+            StartCoroutine(RotateForever(newPlayer));
+            yield return new WaitForSecondsRealtime(1f);
         }
 
         // ==== クリアテキストとスポットライト表示 ====
@@ -150,6 +153,15 @@ public class GameClearManager : MonoBehaviour
 
         Time.timeScale = 0f;
         isClearing = false;
+    }
+
+    private IEnumerator RotateForever(GameObject target)
+    {
+        while (target != null)
+        {
+            target.transform.Rotate(Vector3.forward, rotateSpeed * Time.unscaledDeltaTime);
+            yield return null;
+        }
     }
 
     private void ShowScore(int score)
@@ -181,6 +193,11 @@ public class GameClearManager : MonoBehaviour
 
     public void OnRetryButton()
     {
+        if(SkillPointManager.instance != null)
+        {
+            SkillPointManager.instance.ResetKillCount();
+        }
+
         Time.timeScale = 1f;
         UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
     }
