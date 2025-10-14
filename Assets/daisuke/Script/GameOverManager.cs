@@ -39,6 +39,11 @@ public class GameOverManager : MonoBehaviour
     [Header("Score UI")]
     [SerializeField] private Transform scoreParet;
     [SerializeField] private Sprite[] numberSprite;
+
+    [Header("Buttons")]
+    [SerializeField] private GameObject retryButton;
+    [SerializeField] private GameObject titleButton;
+
     [Header("数字同士の幅")]
     [SerializeField] private float numberSpacing;
 
@@ -75,6 +80,10 @@ public class GameOverManager : MonoBehaviour
         // UI初期化
         if (spotLightImage != null) spotLightImage.gameObject.SetActive(false);
         if (gameOverText != null) gameOverText.gameObject.SetActive(false);
+
+        // リトライ・タイトルへ戻るボタン初期化
+        if (retryButton != null) retryButton.SetActive(false);
+        if (titleButton != null) titleButton.SetActive(false);
     }
 
     private void Update()
@@ -146,14 +155,17 @@ public class GameOverManager : MonoBehaviour
         // ==== 回転演出 ====
         if (newPlayer != null)
         {
-            float rotTime = 0f;
-            while (rotTime < 2f)
-            {
-                rotTime += Time.unscaledDeltaTime;
-                newPlayer.transform.Rotate(Vector3.up, rotateSpeed * Time.unscaledDeltaTime);
-                yield return null;
-            }
-            yield return new WaitForSecondsRealtime(0.4f);
+            //float rotTime = 0f;
+            //while (rotTime < 2f)
+            //{
+            //    rotTime += Time.unscaledDeltaTime;
+            //    newPlayer.transform.Rotate(Vector3.up, rotateSpeed * Time.unscaledDeltaTime);
+            //    yield return null;
+            //}
+
+            // 永続回転
+            StartCoroutine(RotateForever(newPlayer));
+            yield return new WaitForSecondsRealtime(1f);
 
             if (gameOverText != null)
             {
@@ -189,6 +201,7 @@ public class GameOverManager : MonoBehaviour
            
         }
 
+        // ==== スコア表示 ====
         int score = 0;
         if(SkillPointManager.instance != null)
         {
@@ -196,8 +209,23 @@ public class GameOverManager : MonoBehaviour
         }
         ShowScore(score);
         yield return new WaitForSecondsRealtime(0.5f);
+
+        // ==== リトライ・タイトルボタン表示
+        if (retryButton != null) retryButton.gameObject.SetActive(true);
+        yield return new WaitForSecondsRealtime(1f);
+        if (titleButton != null) titleButton.gameObject.SetActive(true);
+
         Time.timeScale = 1f;
         isClearing = false;
+    }
+
+    private IEnumerator RotateForever(GameObject target)
+    {
+        while (target != null)
+        {
+            target.transform.Rotate(Vector3.forward, rotateSpeed * Time.unscaledDeltaTime);
+            yield return null;
+        }
     }
 
     private void ShowScore(int score)
@@ -225,5 +253,23 @@ public class GameOverManager : MonoBehaviour
 
             rect.anchoredPosition = new Vector2(startX + i * numberSpacing, 0);
         }
+    }
+
+    public void OnRetryButton()
+    {
+        if (SkillPointManager.instance != null)
+        {
+            SkillPointManager.instance.ResetKillCount();
+        }
+
+        Time.timeScale = 1f;
+        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+    }
+
+    public void OnCTitleButton()
+    {
+        Time.timeScale = 1f;
+        //UnityEngine.SceneManagement.SceneManager.LoadScene("TitleScene");
+        Debug.Log("タイトルに戻る");
     }
 }
