@@ -21,6 +21,7 @@ public class StageManager : MonoBehaviour
         currentStage = stageIndex;
         remainingEnemies = stages[stageIndex].enemyCount;
         enemyCountText.text = "残りの敵: " + remainingEnemies;
+        //現在のステージのスポナー化をActive
         stages[stageIndex].ActivateSpawners();
     }
 
@@ -40,6 +41,8 @@ public class StageManager : MonoBehaviour
         if (currentStage + 1 < stages.Count)
         {
             stages[currentStage].DeactivateSpawners();
+
+            //ステージを進める
             currentStage++;
             StartStage(currentStage);
         }

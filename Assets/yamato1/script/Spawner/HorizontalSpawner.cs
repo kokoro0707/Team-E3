@@ -38,7 +38,7 @@ public class HorizontalSpawner : MonoBehaviour
 
         float centerY = Random.Range(-8f, -1f);
         bool spawnLeft = Random.value < 0.5f;
-        float x = spawnLeft ? -16f : 16f;
+        float x = spawnLeft ? -16f : 15f;
 
         StartCoroutine(SpawnSequentially(new Vector3(x, centerY, 0f), spawnLeft));
     }

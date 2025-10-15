@@ -8,6 +8,8 @@ public class SplitSpawner : MonoBehaviour
 
     void Update()
     {
+       
+
         timer += Time.deltaTime;
         if (timer >= interval)
         {

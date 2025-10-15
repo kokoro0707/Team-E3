@@ -10,6 +10,7 @@ public class BouncingEnemy : MonoBehaviour
     private Vector2 currentVelocity;
     private bool isActive = false; // バウンド開始したかどうか
     private float scaleTimer = 0f;
+  
 
     void Start()
     {
@@ -33,6 +34,9 @@ public class BouncingEnemy : MonoBehaviour
 
     void Update()
     {
+        // 回転処理
+        //float rotationSpeed = 360f; // 1秒で1回転
+       // transform.Rotate(0f, 0f, rotationSpeed * Time.deltaTime);
         // 拡大アニメーション中
         if (!isActive)
         {
@@ -40,7 +44,7 @@ public class BouncingEnemy : MonoBehaviour
             float t = Mathf.Clamp01(scaleTimer / spawnScaleTime);
             transform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one, t);
 
-            if (t >= 1f)
+            if (t >= 0.5f)
             {
                 isActive = true;
                 currentVelocity = velocity; // 拡大終了 → バウンド開始
@@ -62,5 +66,7 @@ public class BouncingEnemy : MonoBehaviour
         {
             currentVelocity.y *= -1;
         }
+
+       
     }
 }

@@ -27,6 +27,10 @@ public class SplittingEnemy : MonoBehaviour
 
     void Update()
     {
+        // 一秒に一回転（360度/秒）
+        float rotationSpeed = 360f;
+        transform.Rotate(0f, 0f, rotationSpeed * Time.deltaTime);
+
         if (hasSplit) return;
 
         transform.position += direction * speed * Time.deltaTime;
