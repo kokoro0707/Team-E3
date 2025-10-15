@@ -2,22 +2,15 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public GameObject[] enemyPrefabs;
-    public Transform[] spawnPoints;
-    public int spawnCount = 5;
-    public GameManager gameManager;
+    public GameObject enemyPrefab;
 
-    public void SpawnEnemies()
+    // 指定された数だけ敵をスポーンするメソッド
+    public void SpawnEnemies(int count)
     {
-        gameManager.SetEnemyCount(spawnCount);
-
-        for (int i = 0; i < spawnCount; i++)
+        for (int i = 0; i < count; i++)
         {
-            int prefabIndex = Random.Range(0, enemyPrefabs.Length);
-            int pointIndex = Random.Range(0, spawnPoints.Length);
-
-            GameObject enemy = Instantiate(enemyPrefabs[prefabIndex], spawnPoints[pointIndex].position, Quaternion.identity);
-            enemy.GetComponent<Enemy>().gameManager = gameManager;
+            Vector3 spawnPos = transform.position + new Vector3(i * 1.5f, 0, 0);
+            Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
         }
     }
 }

@@ -4,42 +4,64 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public int currentPhase = 0;
-    public int maxPhase = 3;
-    public int enemiesRemaining = 0;
-
-    public Text enemyCountText;
-    public GameObject startButton;
-    public GameObject gameClearPanel;
-
-    public GameObject phaseTransitionPanel;
-    public Text phaseText;
-    public Animator phaseAnimator;
-
-    public EnemySpawner[] phaseSpawners;
-
-    public void StartGame()
+    [System.Serializable]
+    public class Phase
     {
-        startButton.SetActive(false);
-        currentPhase = 1;
-        StartPhase(currentPhase);
+        public string phaseName;       // 「フェイズ1」「フェイズ2」などの表示名
+        public EnemySpawner spawner;   // このフェイズで使うスポナー
+        public int enemyCount;         // スポーンする敵の数
     }
 
-    void StartPhase(int phase)
-    {
-        foreach (var spawner in phaseSpawners)
-            spawner.gameObject.SetActive(false);
+    public Phase[] phases;              // フェイズの配列
 
-        phaseSpawners[phase - 1].gameObject.SetActive(true);
-        phaseSpawners[phase - 1].SpawnEnemies();
+    public Text enemyCountText;         // 左上の残り敵数表示
+    public GameObject phaseTransitionPanel; // 中央にフェイズ名表示用パネル
+    public Text phaseTransitionText;    // パネル内のテキスト
+    public GameObject gameClearPanel;   // ゲームクリア表示パネル
+
+    private int currentPhaseIndex = -1;
+    private int enemiesRemaining = 0;
+
+    void Start()
+    {
+        StartNextPhase();
     }
 
-    public void SetEnemyCount(int count)
+    void StartNextPhase()
     {
-        enemiesRemaining = count;
+        currentPhaseIndex++;
+        if (currentPhaseIndex >= phases.Length)
+        {
+            GameClear();
+            return;
+        }
+
+        StartCoroutine(PhaseTransition(phases[currentPhaseIndex]));
+    }
+
+    IEnumerator PhaseTransition(Phase phase)
+    {
+        // フェイズ開始演出表示
+        phaseTransitionPanel.SetActive(true);
+        phaseTransitionText.text = phase.phaseName;
+        enemyCountText.gameObject.SetActive(false);
+
+        yield return new WaitForSeconds(2f);
+
+        // 演出終了
+        phaseTransitionPanel.SetActive(false);
+        enemyCountText.gameObject.SetActive(true);
+
+        // 敵の数をセットし、UI更新
+        enemiesRemaining = phase.enemyCount;
         UpdateEnemyCountUI();
+
+        // スポナーを有効化し敵をスポーン
+        phase.spawner.gameObject.SetActive(true);
+        phase.spawner.SpawnEnemies(enemiesRemaining);
     }
 
+    // 敵を倒したときに呼ぶ
     public void OnEnemyDefeated()
     {
         enemiesRemaining--;
@@ -47,37 +69,23 @@ public class GameManager : MonoBehaviour
 
         if (enemiesRemaining <= 0)
         {
-            if (currentPhase < maxPhase)
-            {
-                currentPhase++;
-                StartCoroutine(TransitionToNextPhase(currentPhase));
-            }
-            else
-            {
-                GameClear();
-            }
+            // 現フェイズのスポナーを非表示にする
+            phases[currentPhaseIndex].spawner.gameObject.SetActive(false);
+
+            // 次のフェイズへ
+            StartNextPhase();
         }
-    }
-
-    IEnumerator TransitionToNextPhase(int nextPhase)
-    {
-        phaseText.text = "フェイズ " + nextPhase + " 開始！";
-        phaseTransitionPanel.SetActive(true);
-        phaseAnimator.SetTrigger("Play");
-
-        yield return new WaitForSeconds(2f);
-
-        phaseTransitionPanel.SetActive(false);
-        StartPhase(nextPhase);
     }
 
     void UpdateEnemyCountUI()
     {
-        enemyCountText.text = "残り敵数: " + enemiesRemaining;
+        enemyCountText.text = $"残り敵数: {enemiesRemaining}";
     }
 
     void GameClear()
     {
+        enemyCountText.gameObject.SetActive(false);
+        phaseTransitionPanel.SetActive(false);
         gameClearPanel.SetActive(true);
     }
 }
