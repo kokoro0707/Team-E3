@@ -15,6 +15,7 @@ public class GameClearManager : MonoBehaviour
     [SerializeField] private GameObject clonePlayerobject;
 
     [Header("Clear UI")]
+    [SerializeField] private GameObject ClearCanvas;
     [SerializeField] private Image spotLightImage;
     [SerializeField] private Image gameClearText;
 
@@ -39,6 +40,11 @@ public class GameClearManager : MonoBehaviour
 
     private void Start()
     {
+        if(ClearCanvas != null)
+        {
+            ClearCanvas.SetActive(false);
+        }
+
         if(mainCamera == null)
             mainCamera = Camera.main;
 
@@ -72,6 +78,8 @@ public class GameClearManager : MonoBehaviour
 
     private IEnumerator StartGameClear()
     {
+        if(ClearCanvas != null) ClearCanvas.SetActive(true);
+
        isClearing = true;
         Time.timeScale = 0f; // ÉQÅ[ÉÄí‚é~
 

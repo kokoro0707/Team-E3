@@ -5,6 +5,7 @@ using System;
 using Unity.Mathematics;
 using UnityEditor;
 using Unity.VisualScripting;
+using UnityEngine.EventSystems;
 
 public class GameOverManager : MonoBehaviour
 {
@@ -37,6 +38,7 @@ public class GameOverManager : MonoBehaviour
     [SerializeField] private Image gameOverText;
 
     [Header("Score UI")]
+    [SerializeField] private GameObject OverCanvas;
     [SerializeField] private Transform scoreParet;
     [SerializeField] private Sprite[] numberSprite;
 
@@ -60,6 +62,11 @@ public class GameOverManager : MonoBehaviour
 
     private void Start()
     {
+        if(OverCanvas  != null)
+        {
+            OverCanvas.SetActive(false);
+        }
+
         if (mainCamera == null)
             mainCamera = Camera.main;
 
@@ -101,6 +108,11 @@ public class GameOverManager : MonoBehaviour
 
     public IEnumerator StartGameOver()
     {
+        if (OverCanvas != null)
+        {
+            OverCanvas.SetActive(true);
+        }
+
         isClearing = true;
         Time.timeScale = 0f; // ÉQÅ[ÉÄí‚é~
 
@@ -182,7 +194,7 @@ public class GameOverManager : MonoBehaviour
             }
                 yield return new WaitForSecondsRealtime(0.5f);
 
-            // ==== âÒì]èIóπå„Ç…îöî≠
+            //// ==== âÒì]èIóπå„Ç…îöî≠
             if (explodeEffect != null)
             {
                 Time.timeScale = 1f;
@@ -191,14 +203,13 @@ public class GameOverManager : MonoBehaviour
                 Quaternion explosionRot = Quaternion.identity;
                 ParticleSystem explosion = Instantiate(explodeEffect, explosionPos, explosionRot);
 
-                Instantiate(explodeEffect,explosionPos, explosionRot);
+                Instantiate(explodeEffect, explosionPos, explosionRot);
 
                 Destroy(newPlayer);
 
                 yield return new WaitForSecondsRealtime(1f);
-                Time.timeScale = 0f;
             }
-           
+
         }
 
         // ==== ÉXÉRÉAï\é¶ ====
@@ -215,7 +226,7 @@ public class GameOverManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(1f);
         if (titleButton != null) titleButton.gameObject.SetActive(true);
 
-        Time.timeScale = 1f;
+        Time.timeScale = 0f;
         isClearing = false;
     }
 
