@@ -16,6 +16,11 @@ public class enemyziguzagu : MonoBehaviour
 
     void Update()
     {
+
+        // ‰ñ“]ˆ—
+        float rotationSpeed = 180f; // 1•b‚Å1‰ñ“]
+        transform.Rotate(0f, 0f, rotationSpeed * Time.deltaTime);
+
         if (isDestroyed) return;
 
         float x = startX + Mathf.Sin(Time.time * horizontalFrequency) * horizontalAmplitude;
