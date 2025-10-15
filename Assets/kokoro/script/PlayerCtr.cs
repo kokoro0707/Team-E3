@@ -17,6 +17,8 @@ public class PlayerClr : MonoBehaviour
     public Transform groundCheck;
     public float groundCheckRadius = 0.2f;
     private bool Invncble=false;
+    private bool canThrowAttack = false;
+    public GameObject breakEffectPrefab;
     [Header("シールド")]
     public  GameObject targetSprite;
     [SerializeField] private Sprite Nomal;
@@ -26,6 +28,7 @@ public class PlayerClr : MonoBehaviour
 
     [Header("攻撃設定")]
     public GameObject slashPrehab;
+    public GameObject slashPrehab2;
     public Transform attackSpawn;
 
     [Header("必殺技")]
@@ -43,6 +46,7 @@ public class PlayerClr : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         Col = GetComponent<Collider2D>();
         SkillManager.instance.OnSkillLearned += ApplySkill;
+        canThrowAttack = true;
     }
 
     private void ApplySkill(SkillType skillType)
@@ -56,8 +60,20 @@ public class PlayerClr : MonoBehaviour
         if (skillType == SkillType.Shield2)
         {
             hp += 1;
-            var spriteRenderer = targetSprite.GetComponent<SpriteRenderer>();
-            spriteRenderer.sprite = Shield2;
+            if(hp==2)
+            {
+                var spriteRenderer = targetSprite.GetComponent<SpriteRenderer>();
+                spriteRenderer.sprite = Shield2;
+            }
+            else
+            {
+                var spriteRenderer = targetSprite.GetComponent<SpriteRenderer>();
+                spriteRenderer.sprite = Shield;
+            }
+        }
+        if(skillType==SkillType.ThrowAttack)
+        {
+            canThrowAttack = true;
         }
     }
 
@@ -105,6 +121,10 @@ public class PlayerClr : MonoBehaviour
         if (Input.GetButtonDown("Fire1"))
         {
             Attack();
+            if(canThrowAttack)
+            {
+                ThrowAttack();
+            }
         }
         if (Input.GetButtonDown("Fire2"))
         {
@@ -179,6 +199,25 @@ public class PlayerClr : MonoBehaviour
             slashScript.offset = new Vector3(0, 1.0f, 0);  // 高さ調整
         }
     }
+    //斬撃
+    void ThrowAttack()
+    {
+        if (slashPrehab2 == null) return;
+
+        // 発射位置（プレイヤーの少し上）
+        Vector3 spawnPos = transform.position + new Vector3(0, 1.0f, 0f);
+
+        // 斬撃生成
+        GameObject slash = Instantiate(slashPrehab2, spawnPos, Quaternion.identity);
+
+        // 方向を「上」に設定
+        ThrowSlash slashScript = slash.GetComponent<ThrowSlash>();
+        slashScript.SetDirection(Vector2.up); // ← 真上に飛ぶ！
+
+        // プレイヤーの子にしない（独立して飛ばす）
+    }
+
+
     //エフェクト追従
     private void PlayShieldEffect()
     {
@@ -275,8 +314,16 @@ public class PlayerClr : MonoBehaviour
 
     void Die()
     {
-        // ここで死亡エフェクトやスコア加算もできる
+        // エフェクト再生
+        if (breakEffectPrefab != null)
+        {
+            GameObject effect = Instantiate(breakEffectPrefab, transform.position, Quaternion.identity);
+            Destroy(effect, 2f); // エフェクトを自動削除
+        }
+
+        // プレイヤー削除
         Destroy(gameObject);
     }
+
 
 }
