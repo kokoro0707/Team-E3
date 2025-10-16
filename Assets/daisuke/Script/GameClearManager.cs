@@ -30,11 +30,15 @@ public class GameClearManager : MonoBehaviour
     [SerializeField] private GameObject titleButton;
 
     [Header("数値設定")]
-    [SerializeField] private float zoomspeed = 2f;
-    [SerializeField] private float zoomDistance = 1.5f;
-    [SerializeField] private float fadespeed = 1f;
+    [SerializeField] private float zoomspeed = 2f;       // ズームスピード
+    [SerializeField] private float zoomDistance = 1.5f;　// ズーム距離
+    [SerializeField] private float fadespeed = 1f;　　　 // フェードスピード 
     [SerializeField] private float rotateSpeed = 180f;
     [SerializeField] private float rightOffset;
+
+    [Header("オーディオ関連")]
+    [SerializeField] private AudioSource seSource;
+    [SerializeField] private AudioClip drumClip;
 
     private bool isClearing = false;
 
@@ -83,6 +87,14 @@ public class GameClearManager : MonoBehaviour
        isClearing = true;
         Time.timeScale = 0f; // ゲーム停止
 
+        // ==== オーディオ再生 ====
+        if(seSource != null  && drumClip != null)
+        {
+            seSource.clip = drumClip;
+            seSource.loop = true;
+            seSource.Play();
+        }
+
         // ==== ズーム処理 ====
 
         Vector3 startPos = mainCamera.transform.position;
@@ -114,9 +126,6 @@ public class GameClearManager : MonoBehaviour
             yield return null;
         }
 
-        // ==== SE部分 ====
-       
-
         // ==== 新プレイヤー生成 ====
         GameObject newPlayer = null;
         if (clonePlayerobject != null && player != null)
@@ -133,17 +142,12 @@ public class GameClearManager : MonoBehaviour
         // ==== 回転演出 ====
         if (newPlayer != null)
         {
-            //float rotTime = 0f;
-            //while (rotTime < 2f)
-            //{
-            //    rotTime += Time.unscaledDeltaTime;
-            //    newPlayer.transform.Rotate(Vector3.up, rotateSpeed * Time.unscaledDeltaTime);
-            //    yield return null;
-            //}
-
             StartCoroutine(RotateForever(newPlayer));
             yield return new WaitForSecondsRealtime(1f);
         }
+
+        // ==== オーディオ停止 ====
+        if(seSource != null && seSource.isPlaying)seSource.Stop();
 
         // ==== クリアテキストとスポットライト表示 ====
         if(gameClearText != null) gameClearText.gameObject.SetActive(true);
@@ -210,10 +214,10 @@ public class GameClearManager : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
     }
 
-    public void OnCTitleButton()
+    public void OnTitleButton()
     {
         Time.timeScale = 1f;
-        //UnityEngine.SceneManagement.SceneManager.LoadScene("TitleScene");
+        //UnityEngine.SceneManagement.SceneManager.LoadScene("Title");
         Debug.Log("タイトルに戻る");
     }
 }
