@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8190371034588020858}
   - component: {fileID: 5733396306462664244}
   - component: {fileID: 8821966933335336008}
+  - component: {fileID: 4789691170880402552}
   m_Layer: 6
   m_Name: SplittingEnemy 1
   m_TagString: Enemy
@@ -120,7 +121,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -181,3 +182,17 @@ MonoBehaviour:
   jumpOffsetY: 3
   arcDuration: 0.5
   splitOffsetX: 1.5
+--- !u!114 &4789691170880402552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8253655274595937461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bac9cc4ca477a0247bcb83a4db36bd08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHP: 1
+  effect: {fileID: 6372842992514843614, guid: 6339029df1657fc4e8e7dc68ab742ac4, type: 3}
