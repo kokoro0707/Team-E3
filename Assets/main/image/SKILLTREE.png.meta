@@ -70,7 +70,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -122,6 +122,19 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
     buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -338,7 +351,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -347,7 +360,16 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_0": 4080724995068984774
+      "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_1": 9136971648662842707
+      "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_2": -2544971908435429119
+      "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_3": -8743108267979645626
+      "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_4": 1270890085166033414
+      "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_5": -5468729876233679866
+      "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_6": 662594446581217151
+      "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_7": -2637706234192686899
+      "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_8": -4777502236903343934
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
