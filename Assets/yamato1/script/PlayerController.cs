@@ -16,27 +16,25 @@ public class PlayerController2D : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
     }
 
-    [System.Obsolete]
     void Update()
     {
-        // 横移動（A/Dキー）
+        // 横移動
         float moveX = Input.GetKey(KeyCode.A) ? -1f : Input.GetKey(KeyCode.D) ? 1f : 0f;
         rb.linearVelocity = new Vector2(moveX * moveSpeed, rb.linearVelocity.y);
 
-        // ジャンプ（スペースキー）
+        // ジャンプ
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
 
-        // 攻撃（左クリック）
+        // 攻撃
         if (Input.GetMouseButtonDown(0))
         {
             Attack();
         }
     }
 
-    [System.Obsolete]
     void Attack()
     {
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
@@ -45,17 +43,19 @@ public class PlayerController2D : MonoBehaviour
             SplittingEnemy split = enemy.GetComponent<SplittingEnemy>();
             if (split != null)
             {
-                split.OnHit(); // 分裂 or 破壊
+                split.OnHit();
             }
             else
             {
-                Destroy(enemy.gameObject); // 通常敵は即破壊
-                FindObjectOfType<StageManager>().OnEnemyDestroyed();
+                Destroy(enemy.gameObject);
+                var manager = FindObjectOfType<StageManager01>();
+                if (manager != null)
+                {
+                    manager.OnEnemyDestroyed();
+                }
             }
         }
-
     }
-
 
     void OnDrawGizmosSelected()
     {
@@ -79,5 +79,4 @@ public class PlayerController2D : MonoBehaviour
             isGrounded = false;
         }
     }
-  
 }

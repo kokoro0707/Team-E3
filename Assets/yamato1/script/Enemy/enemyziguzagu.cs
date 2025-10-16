@@ -32,4 +32,19 @@ public class enemyziguzagu : MonoBehaviour
     {
         isDestroyed = true;
     }
+    public void DestroyEnemy()
+    {
+        if (isDestroyed) return;
+
+        isDestroyed = true;
+        ZigZagSpawner.Unregister(gameObject);
+
+        StageManager01 manager = FindObjectOfType<StageManager01>();
+        if (manager != null)
+        {
+            manager.OnEnemyDestroyed();
+        }
+
+        Destroy(gameObject);
+    }
 }
