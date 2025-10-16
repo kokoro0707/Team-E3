@@ -10,7 +10,7 @@ public class StageManager01 : MonoBehaviour
     public Text enemyCountText;
 
     [Header("ゲーム全体オブジェクト")]
-    public GameObject gameObjectsGroup; // 床・壁・プレイヤー・敵などをまとめたオブジェクト
+    public GameObject gameObjectsGroup;
 
     [Header("フェイズごとのスポナー設定")]
     public List<GameObject> phaseSpawners = new List<GameObject>();
@@ -24,91 +24,98 @@ public class StageManager01 : MonoBehaviour
 
     void Start()
     {
-        // 最初はUIを整理
+        // UI非表示
         phaseText.gameObject.SetActive(false);
         enemyCountText.gameObject.SetActive(false);
 
-        // ゲーム全体を非表示
+        // ゲーム全体非表示
         if (gameObjectsGroup != null)
             gameObjectsGroup.SetActive(false);
 
-        // 全てのスポナーを無効化しておく
+        // 全スポナー無効化
         foreach (var spawner in phaseSpawners)
         {
             if (spawner != null)
                 spawner.SetActive(false);
         }
 
-        // スタートボタンを設定
+        // スタートボタンイベント登録
         startButton.onClick.AddListener(StartGame);
     }
 
-    // 🔹 ゲームスタート処理
+    // 🔹 ゲーム開始処理
     public void StartGame()
     {
-        // ボタンを非表示にしてUIを有効化
         startButton.gameObject.SetActive(false);
         phaseText.gameObject.SetActive(true);
         enemyCountText.gameObject.SetActive(true);
 
-        // ゲームオブジェクト群を表示
         if (gameObjectsGroup != null)
             gameObjectsGroup.SetActive(true);
 
-        // ゲーム開始
         isPlaying = true;
         currentPhaseIndex = -1;
         NextPhase();
     }
 
-    // 🔹 フェイズ切り替え処理
+    // 🔹 フェイズ切替処理
     void NextPhase()
     {
         currentPhaseIndex++;
 
-        // フェイズが全部終わったらゲームクリア
+        // ゲームクリアチェック
         if (currentPhaseIndex >= enemiesPerPhase.Count)
         {
             GameClear();
             return;
         }
 
-        // 前フェイズのスポナーを止める
+        // 全スポナー無効化
         foreach (var spawner in phaseSpawners)
         {
             if (spawner != null)
                 spawner.SetActive(false);
         }
 
-        // 今のフェイズのスポナーをONにする
+        // 残った敵を全削除（前フェイズの敵）
+        DestroyAllEnemies();
+
+        // 敵数設定
+        remainingEnemies = enemiesPerPhase[currentPhaseIndex];
+
+        // スポナー有効化
         if (phaseSpawners[currentPhaseIndex] != null)
             phaseSpawners[currentPhaseIndex].SetActive(true);
 
-        // 敵の数を設定
-        remainingEnemies = enemiesPerPhase[currentPhaseIndex];
         UpdateUI();
     }
 
-    // 🔹 敵が倒されたときに呼ぶ
+    // 🔹 敵が倒されたときに呼ばれる
     public void OnEnemyDestroyed()
     {
+        if (remainingEnemies <= 0) return;  // すでに0以下なら処理しない（連続呼び出し対策）
+
         remainingEnemies--;
         UpdateUI();
 
         if (remainingEnemies <= 0)
         {
-            Invoke(nameof(NextPhase), 1f); // 少し待って次フェイズへ
+            remainingEnemies = 0;  // 負の値にならないように固定
+            UpdateUI();            // 念のためUIも更新
+
+            DestroyAllEnemies();   // 残ってる敵を即削除
+
+            Invoke(nameof(NextPhase), 2f); // 2秒待って次フェイズへ
         }
     }
 
-    // 🔹 プレイヤーが倒されたときに呼ぶ
+    // 🔹 プレイヤーがやられたとき
     public void OnPlayerDead()
     {
         if (!isPlaying) return;
 
         isPlaying = false;
 
-        // 全てのスポナーを停止
         foreach (var spawner in phaseSpawners)
         {
             if (spawner != null)
@@ -116,15 +123,14 @@ public class StageManager01 : MonoBehaviour
         }
 
         Debug.Log("Game Over!");
-        // あとでここに「ゲームオーバー画面を表示」処理を追加
+        // TODO: ゲームオーバー画面追加予定
     }
 
-    // 🔹 ゲームクリア時
+    // 🔹 ゲームクリア
     void GameClear()
     {
         isPlaying = false;
 
-        // スポナー全停止
         foreach (var spawner in phaseSpawners)
         {
             if (spawner != null)
@@ -132,7 +138,7 @@ public class StageManager01 : MonoBehaviour
         }
 
         Debug.Log("Game Clear!");
-        // あとでここに「ゲームクリア画面を表示」処理を追加
+        // TODO: クリア画面追加予定
     }
 
     // 🔹 UI更新
@@ -140,5 +146,15 @@ public class StageManager01 : MonoBehaviour
     {
         phaseText.text = "フェイズ " + (currentPhaseIndex + 1);
         enemyCountText.text = "残りの敵: " + remainingEnemies;
+    }
+
+    // 🔹 敵をすべて削除
+    void DestroyAllEnemies()
+    {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (var enemy in enemies)
+        {
+            Destroy(enemy);
+        }
     }
 }
