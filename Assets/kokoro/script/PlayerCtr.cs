@@ -18,6 +18,7 @@ public class PlayerClr : MonoBehaviour
     public float groundCheckRadius = 0.2f;
     private bool Invncble=false;
     private bool canThrowAttack = false;
+    private bool canThrowAttack2 = false;
     public GameObject breakEffectPrefab;
     [Header("シールド")]
     public  GameObject targetSprite;
@@ -75,6 +76,11 @@ public class PlayerClr : MonoBehaviour
         {
             canThrowAttack = true;
         }
+        if(skillType==SkillType.ThrowAttack2)
+        {
+            canThrowAttack = false;
+            canThrowAttack2 = true;
+        }
     }
 
     bool CheckGrounded()
@@ -124,6 +130,10 @@ public class PlayerClr : MonoBehaviour
             if(canThrowAttack)
             {
                 ThrowAttack();
+            }
+            if(canThrowAttack2)
+            {
+                ThrowAttack2();
             }
         }
         if (Input.GetButtonDown("Fire2"))
@@ -217,9 +227,30 @@ public class PlayerClr : MonoBehaviour
         // プレイヤーの子にしない（独立して飛ばす）
     }
 
+    private void ThrowAttack2()
+    {
+        if (slashPrehab2 == null) return;
 
-    //エフェクト追従
-    private void PlayShieldEffect()
+        //発射位置
+        Vector3 spawnPos = transform.position + new Vector3(0, 1.0f, 0);
+
+        Vector2[] directions = new Vector2[]
+        {
+        Vector2.up,                       // 上
+        new Vector2(1, 1).normalized,     // 斜め右上
+        new Vector2(-1, 1).normalized     // 斜め左上
+        };
+
+        foreach (Vector2 dir in directions)
+        {
+            GameObject slash = Instantiate(slashPrehab2, spawnPos, Quaternion.identity);
+            ThrowSlash slashScript = slash.GetComponent<ThrowSlash>();
+            slashScript.SetDirection(dir);
+        }
+    }
+
+        //エフェクト追従
+        private void PlayShieldEffect()
     {
         if (Shieldeffect != null)
         {
@@ -320,6 +351,8 @@ public class PlayerClr : MonoBehaviour
             GameObject effect = Instantiate(breakEffectPrefab, transform.position, Quaternion.identity);
             Destroy(effect, 2f); // エフェクトを自動削除
         }
+       // GameOverManager.Instance.SetPlayerDeathPosition(transform.position);
+        //GameOverManager.Instance.StartCoroutine(GameOverManager.Instance.StartGameOver());
 
         // プレイヤー削除
         Destroy(gameObject);
