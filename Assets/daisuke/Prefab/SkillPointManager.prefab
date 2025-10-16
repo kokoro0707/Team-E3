@@ -46,5 +46,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillPoints: 0
   killCount: 0
+  totalKillCount: 0
   killsPoint: 2
   skillPointText: {fileID: 0}
