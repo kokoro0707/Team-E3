@@ -5452,10 +5452,34 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5960590159407781572, guid: 3afc9e7a361b3474180bd8ce58d43fb6, type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6010261170214219788, guid: 3afc9e7a361b3474180bd8ce58d43fb6, type: 3}
+      propertyPath: Shield
+      value: 
+      objectReference: {fileID: 1329603003752963002, guid: 522c67cd58b6a8c4ba050f21fdef41dc, type: 3}
+    - target: {fileID: 6010261170214219788, guid: 3afc9e7a361b3474180bd8ce58d43fb6, type: 3}
+      propertyPath: Shield2
+      value: 
+      objectReference: {fileID: -3991048473326762739, guid: 0b8223fedd6113e4986f6e8c63bd1dcd, type: 3}
+    - target: {fileID: 6010261170214219788, guid: 3afc9e7a361b3474180bd8ce58d43fb6, type: 3}
+      propertyPath: Shield3
+      value: 
+      objectReference: {fileID: -985739895239651080, guid: f340788dfc285374b8d410eab917529a, type: 3}
     - target: {fileID: 6010261170214219788, guid: 3afc9e7a361b3474180bd8ce58d43fb6, type: 3}
       propertyPath: screenFade
       value: 
       objectReference: {fileID: 537540711}
+    - target: {fileID: 6010261170214219788, guid: 3afc9e7a361b3474180bd8ce58d43fb6, type: 3}
+      propertyPath: shieldRepairInterval
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6010261170214219788, guid: 3afc9e7a361b3474180bd8ce58d43fb6, type: 3}
+      propertyPath: shieldRepairInterval2
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 8542778334090788068, guid: 3afc9e7a361b3474180bd8ce58d43fb6, type: 3}
       propertyPath: m_Name
       value: Square (1)
