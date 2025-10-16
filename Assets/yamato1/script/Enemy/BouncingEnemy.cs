@@ -1,43 +1,38 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class BouncingEnemy : MonoBehaviour
 {
-    public Vector2 velocity = new Vector2(2f, -3f); // Inspector‚Åİ’è or ƒXƒ|[ƒi[‚©‚ç“n‚·
-    public float spawnScaleTime = 0.5f; // Šg‘å‚É‚©‚¯‚éŠÔi•bj
+    public Vector2 velocity = new Vector2(2f, -3f);
+    public float spawnScaleTime = 0.5f;
+    public float rotationSpeed = 360f; // â† å›è»¢é€Ÿåº¦è¿½åŠ 
 
     private Vector2 minBounds;
     private Vector2 maxBounds;
     private Vector2 currentVelocity;
-    private bool isActive = false; // ƒoƒEƒ“ƒhŠJn‚µ‚½‚©‚Ç‚¤‚©
+    private bool isActive = false;
     private float scaleTimer = 0f;
-  
 
     void Start()
     {
-        // ƒJƒƒ‰‚Ìƒ[ƒ‹ƒhÀ•W”ÍˆÍ‚ğæ“¾
         Camera cam = Camera.main;
         minBounds = cam.ViewportToWorldPoint(new Vector2(0f, 0f));
         maxBounds = cam.ViewportToWorldPoint(new Vector2(1f, 1f));
 
-        // Å‰‚ÍŒ©‚½–Ú‚ğ0‚É‚·‚é
         transform.localScale = Vector3.zero;
 
-        // Y•ûŒü‚ª0‚É‹ß‚¢‚È‚ç‹­§“I‚É‰ºŒü‚«‚É
         if (Mathf.Abs(velocity.y) < 0.1f)
         {
             velocity.y = -3f;
         }
 
-        // Šg‘åƒAƒjƒ[ƒVƒ‡ƒ“‚ªI‚í‚Á‚½‚çg‚¤‚æ‚¤‚É‘Ò‹@
         currentVelocity = Vector2.zero;
     }
 
     void Update()
     {
-        // ‰ñ“]ˆ—
-        //float rotationSpeed = 360f; // 1•b‚Å1‰ñ“]
-       // transform.Rotate(0f, 0f, rotationSpeed * Time.deltaTime);
-        // Šg‘åƒAƒjƒ[ƒVƒ‡ƒ“’†
+        // âœ… å¸¸ã«å›è»¢ï¼ˆè¦‹ãŸç›®ã ã‘ï¼‰
+        transform.Rotate(0f, 0f, rotationSpeed * Time.deltaTime);
+
         if (!isActive)
         {
             scaleTimer += Time.deltaTime;
@@ -47,14 +42,15 @@ public class BouncingEnemy : MonoBehaviour
             if (t >= 0.5f)
             {
                 isActive = true;
-                currentVelocity = velocity; // Šg‘åI—¹ ¨ ƒoƒEƒ“ƒhŠJn
+                currentVelocity = velocity;
             }
 
-            return; // Šg‘å’†‚ÍˆÚ“®‚µ‚È‚¢
+            return;
         }
 
-        // ˆÚ“®ˆ—
-        transform.Translate(currentVelocity * Time.deltaTime);
+        // ç§»å‹•å‡¦ç†ï¼ˆå›è»¢ã¨ã¯ç„¡é–¢ä¿‚ï¼‰
+        transform.Translate(currentVelocity * Time.deltaTime, Space.World); // â† å¿µã®ãŸã‚WorldæŒ‡å®š
+
         Vector3 pos = transform.position;
 
         if (pos.x < minBounds.x || pos.x > maxBounds.x)
@@ -66,7 +62,5 @@ public class BouncingEnemy : MonoBehaviour
         {
             currentVelocity.y *= -1;
         }
-
-       
     }
 }

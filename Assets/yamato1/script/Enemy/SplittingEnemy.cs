@@ -12,14 +12,14 @@ public class SplittingEnemy : MonoBehaviour
 
     private Vector3 direction;
     private bool hasSplit = false;
-    private bool isSplittingEnemy = false;  // 分裂後の敵かどうか判定
+    private bool isSplittingEnemy = false;
 
     void Start()
     {
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         if (rb != null) rb.gravityScale = 0f;
 
-        // 分裂後の敵は移動方向を固定（左右に動かすなど）
+        // 分裂後の敵は移動方向を固定
         if (!isSplittingEnemy)
         {
             float angleDeg = Random.Range(30f, 60f);
@@ -30,17 +30,16 @@ public class SplittingEnemy : MonoBehaviour
         }
         else
         {
-            direction = Vector3.right;  // 分裂後は右向きに移動開始
+            direction = Vector3.right;
         }
     }
 
     void Update()
     {
-        // 常に回転（分裂前・後ともに回転）
+        // ✅ 分裂前後問わず常に回転
         float rotationSpeed = 360f;
         transform.Rotate(0f, 0f, rotationSpeed * Time.deltaTime);
 
-        // 分裂後はJumpThenFallコルーチンで動くのでUpdateでの移動はしない
         if (isSplittingEnemy) return;
 
         // 分裂前の移動処理
@@ -53,7 +52,7 @@ public class SplittingEnemy : MonoBehaviour
             StartCoroutine(SplitJump());
         }
 
-        // 画面端で移動方向反転
+        // 画面端で反射
         float camHalfWidth = Camera.main.orthographicSize * Camera.main.aspect;
         float leftEdge = Camera.main.transform.position.x - camHalfWidth;
         float rightEdge = Camera.main.transform.position.x + camHalfWidth;
@@ -66,44 +65,36 @@ public class SplittingEnemy : MonoBehaviour
 
     IEnumerator SplitJump()
     {
-        // 分裂元の敵を消す（これ重要！）
         Destroy(gameObject);
 
-        // 分裂後の敵を2体生成
         GameObject leftClone = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
         GameObject rightClone = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
 
-        // Layerやタグが「Enemy」になっているかチェック（念のためセット）
-        leftClone.layer = LayerMask.NameToLayer("Enemy");
-        rightClone.layer = LayerMask.NameToLayer("Enemy");
-        leftClone.tag = "Enemy";
-        rightClone.tag = "Enemy";
+        // ✅ レイヤー・タグ・有効化を明示的に設定
+        SetupClone(leftClone, new Vector3(-splitOffsetX, jumpOffsetY, 0));
+        SetupClone(rightClone, new Vector3(splitOffsetX, jumpOffsetY, 0));
 
-        SplittingEnemy leftScript = leftClone.GetComponent<SplittingEnemy>();
-        SplittingEnemy rightScript = rightClone.GetComponent<SplittingEnemy>();
-
-        if (leftScript != null)
-        {
-            leftScript.isSplittingEnemy = true;  // 分裂後の敵であることをセット
-            Vector3 leftOffset = new Vector3(-splitOffsetX, jumpOffsetY, 0);
-            leftScript.StartCoroutine(leftScript.JumpThenFall(leftClone, leftOffset));
-        }
-
-        if (rightScript != null)
-        {
-            rightScript.isSplittingEnemy = true;
-            Vector3 rightOffset = new Vector3(splitOffsetX, jumpOffsetY, 0);
-            rightScript.StartCoroutine(rightScript.JumpThenFall(rightClone, rightOffset));
-        }
-
-        // ステージ管理に敵数増加を通知
-        var stageManager = FindObjectOfType<StageManager01>();
-        if (stageManager != null)
-        {
-            stageManager.AddEnemies(2);
-        }
+       // FindObjectOfType<StageManager01>()?.AddEnemies(2);
 
         yield return null;
+    }
+
+    void SetupClone(GameObject clone, Vector3 offset)
+    {
+        clone.layer = LayerMask.NameToLayer("Enemy");
+        clone.tag = "Enemy";
+
+        // ✅ Colliderとスクリプトを強制的に有効化
+        var collider = clone.GetComponent<Collider2D>();
+        if (collider != null) collider.enabled = true;
+
+        var script = clone.GetComponent<SplittingEnemy>();
+        if (script != null)
+        {
+            script.isSplittingEnemy = true;
+            script.enabled = true;
+            script.StartCoroutine(script.JumpThenFall(clone, offset));
+        }
     }
 
     public IEnumerator JumpThenFall(GameObject target, Vector3 offset)
@@ -125,10 +116,11 @@ public class SplittingEnemy : MonoBehaviour
         Vector3 fallDirection = new Vector3(offset.x, -Mathf.Abs(offset.y), 0).normalized;
         float fallSpeed = speed;
 
-        while (true)
-        {
+        while(true)
+{
             target.transform.position += fallDirection * fallSpeed * Time.deltaTime;
 
+            // 画面端で反射
             float camHalfWidth = Camera.main.orthographicSize * Camera.main.aspect;
             float leftEdge = Camera.main.transform.position.x - camHalfWidth;
             float rightEdge = Camera.main.transform.position.x + camHalfWidth;
@@ -138,11 +130,17 @@ public class SplittingEnemy : MonoBehaviour
                 fallDirection.x *= -1f;
             }
 
+            // ✅ Y座標が -10 以下なら消す
+            if (target.transform.position.y < -10f)
+            {
+                Destroy(target);
+                yield break; // コルーチン終了
+            }
+
             yield return null;
         }
     }
 
-    // 敵が攻撃された時に呼ばれる
     public void OnHit()
     {
         Destroy(gameObject);
