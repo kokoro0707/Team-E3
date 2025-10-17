@@ -189,9 +189,11 @@ public class SkillBlock : MonoBehaviour, IPointerEnterHandler,IPointerExitHandle
 
         bool hasEnoughPoint = SkillPointManager.instance.GetSkillPoint() >= cost;
         bool canlearn = SkillManager.instance.CanLearnSkill(cost , skilltype);
-        bool sholdShow = hasEnoughPoint && canlearn;
+        bool shouldShow = hasEnoughPoint && canlearn;
 
-        hidePanel.SetActive(!sholdShow);
+        Debug.Log($"SkillType: {skilltype}, Points: {SkillPointManager.instance.GetSkillPoint()}, CanLearn: {canlearn}, ShouldShow: {shouldShow}");
+
+        hidePanel.SetActive(!shouldShow);
 
         //// 習得済でない場合は、習得条件をチェック
         //if (SkillManager.instance.CanLearnSkill(cost, skilltype))

@@ -68,6 +68,8 @@ public class SkillPointManager : MonoBehaviour
         }
         skillPoints += amont;
         UpdateSkillPointUI();
+
+        SkillManager.instance.CheckActiveBlocks();
     }
 
     // スキルポイント使用
