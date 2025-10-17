@@ -54,7 +54,7 @@ public class GameOverManager : MonoBehaviour
     [SerializeField] private float zoomDistance = 1.5f;
     [SerializeField] private float fadespeed = 1f;
     [SerializeField] private float rotateSpeed = 180f;
-    [SerializeField] private float rightOffset;
+    [SerializeField] private float rightOffset = 5.3f;
 
     [Header("爆発エフェクト")]
     [SerializeField] private ParticleSystem explodeEffect;
@@ -167,15 +167,22 @@ public class GameOverManager : MonoBehaviour
 
         // ==== 新プレイヤー生成 ====
         GameObject newPlayer = null;
+
+        // 生成基準座標（プレイヤー生存時 or 最後の座標）
+        Vector3 basePos = player != null ? player.position : lastplayerPositon;
+
+        // スポーン位置（右方向に少しずらす）
+        Vector3 offset = new Vector3(rightOffset, 0f, 0f); // ←必要なら調整（右方向に出したい距離）
+        Vector3 spawnPos = basePos + offset;
+
+        // 回転（固定）
+        Quaternion spawnRot = Quaternion.Euler(20f, 40f, 0f);
+
+        // 生成処理
         if (clonePlayerobject != null)
         {
-            Vector3 rightDir = Vector3.right * rightOffset;
-            Vector3 spawnPos = lastplayerPositon + rightDir;
-            quaternion spawanRot = player != null ? player.rotation : quaternion.identity;
-            newPlayer = Instantiate(clonePlayerobject, spawnPos, spawanRot);
+            newPlayer = Instantiate(clonePlayerobject, spawnPos, spawnRot);
             newPlayer.layer = LayerMask.NameToLayer("ClearPlayer");
-
-            newPlayer.transform.Rotate(20f, 40f, 0f, Space.Self);
         }
 
 
@@ -308,4 +315,6 @@ public class GameOverManager : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene("Title");
         Debug.Log("タイトルに戻る");
     }
+
+
 }

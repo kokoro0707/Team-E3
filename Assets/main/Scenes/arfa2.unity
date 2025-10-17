@@ -276,7 +276,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 3
+  m_SortingOrder: 4
   m_TargetDisplay: 0
 --- !u!114 &64122415 stripped
 MonoBehaviour:
@@ -348,7 +348,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -794,6 +794,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 259722058}
   m_CullTransparentMesh: 1
+--- !u!1 &273542502 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8542778334090788068, guid: 3afc9e7a361b3474180bd8ce58d43fb6, type: 3}
+  m_PrefabInstance: {fileID: 5279827755068216708}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &287730078 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8059746211732816436, guid: 260f4c44a0281544cbf1bfc9db0a2828, type: 3}
@@ -907,7 +912,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7feb493268b894940b51f120e62a7340, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCamera: {fileID: 0}
+  clearUI: {fileID: 701597611}
+  playerObject: {fileID: 273542502}
+  mainCamera: {fileID: 1319647623}
   player: {fileID: 450918551}
   fadeimage: {fileID: 598659710}
   clonePlayerobject: {fileID: 8548509596435201970, guid: a8637531ed5f36d49868a869e22dab7c, type: 3}
@@ -935,10 +942,10 @@ MonoBehaviour:
   rotateSpeed: 180
   rightOffset: 5.3
   seSource: {fileID: 1131884515}
-  drumClip: {fileID: 0}
-  scoreClip: {fileID: 0}
-  retryClip: {fileID: 0}
-  titleClip: {fileID: 0}
+  drumClip: {fileID: 8300000, guid: 28fc0fce6e2a6c94a92a676b824f4d4e, type: 3}
+  scoreClip: {fileID: 8300000, guid: c699069889a21e7478752aa34d4f206f, type: 3}
+  retryClip: {fileID: 8300000, guid: c699069889a21e7478752aa34d4f206f, type: 3}
+  titleClip: {fileID: 8300000, guid: c699069889a21e7478752aa34d4f206f, type: 3}
 --- !u!4 &326464797
 Transform:
   m_ObjectHideFlags: 0
@@ -1185,11 +1192,11 @@ MonoBehaviour:
   rightOffset: 5.3
   explodeEffect: {fileID: 8234223233734947099, guid: ee5c15ee7dbad4f47afff9ab98384e5e, type: 3}
   seSource: {fileID: 1644984549}
-  drumClip: {fileID: 0}
-  explsosionClip: {fileID: 0}
-  scoreClip: {fileID: 0}
-  retryClip: {fileID: 0}
-  titleClip: {fileID: 0}
+  drumClip: {fileID: 8300000, guid: 28fc0fce6e2a6c94a92a676b824f4d4e, type: 3}
+  explsosionClip: {fileID: 8300000, guid: 26c7a67ca9034ad40be01b588742daad, type: 3}
+  scoreClip: {fileID: 8300000, guid: c699069889a21e7478752aa34d4f206f, type: 3}
+  retryClip: {fileID: 8300000, guid: c699069889a21e7478752aa34d4f206f, type: 3}
+  titleClip: {fileID: 8300000, guid: c699069889a21e7478752aa34d4f206f, type: 3}
 --- !u!4 &398272829
 Transform:
   m_ObjectHideFlags: 0
@@ -1997,7 +2004,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -2637,7 +2644,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 3
+  m_SortingOrder: 4
   m_TargetDisplay: 0
 --- !u!1 &742390328
 GameObject:
@@ -3061,16 +3068,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 976879535}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 5400}
   m_LocalScale: {x: 3, y: 3, z: 2}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 701597612}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 357}
+  m_AnchoredPosition: {x: 0, y: 320}
   m_SizeDelta: {x: 180, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &976879537
@@ -4741,16 +4748,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1507647955}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 5400}
   m_LocalScale: {x: 3, y: 3, z: 2}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 701597612}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -0.0001068115, y: 166}
+  m_AnchoredPosition: {x: -0.0001068115, y: 120}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1507647957
