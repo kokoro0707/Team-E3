@@ -21,6 +21,11 @@ public class SkillBlock : MonoBehaviour, IPointerEnterHandler,IPointerExitHandle
     [Header("最後のスキルの場合はここをtrueにする")]
     [SerializeField] bool isLeafSkill = false;
 
+    [Header("オーディオ関連")]
+    [SerializeField] private AudioSource seSource;
+    [SerializeField] private AudioClip holdClip;
+    [SerializeField] private AudioClip learnClip;
+
     private bool isHolding = false;
     private float holdCounter = 0;
 
@@ -75,6 +80,13 @@ public class SkillBlock : MonoBehaviour, IPointerEnterHandler,IPointerExitHandle
     {
         if(isHolding) return;
         Debug.Log("onPointerDown");
+
+        // 長押し中の音を鳴らす
+        if (seSource != null && holdClip != null)
+        {
+            seSource.PlayOneShot(holdClip);
+        }
+
         if (SkillManager.instance.HasSkill(skilltype)) return; // すでに取得済みなら無視
 
         if (!SkillManager.instance.CanLearnSkill(cost, skilltype))
@@ -92,6 +104,7 @@ public class SkillBlock : MonoBehaviour, IPointerEnterHandler,IPointerExitHandle
         Debug.Log("onPointerUp");
         isHolding = false;
         holdCounter = 0f;
+
         if(!SkillManager.instance.HasSkill(skilltype))
         {
             foreach (var line in nextLine)
@@ -112,6 +125,13 @@ public class SkillBlock : MonoBehaviour, IPointerEnterHandler,IPointerExitHandle
         // スキル習得
         SkillManager.instance.LearnSkill(skilltype);
         Debug.Log($"{ skilltype} 習得完了");
+
+        // 習得音再生
+        if(seSource != null && learnClip != null)
+        {
+            seSource.PlayOneShot(learnClip);
+        }
+
         ChangeLearnedBlock(Color.gray);
 
         // ラインを塗り切った状態に固定
