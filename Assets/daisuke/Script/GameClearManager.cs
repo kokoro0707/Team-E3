@@ -7,6 +7,8 @@ using UnityEditor;
 
 public class GameClearManager : MonoBehaviour
 {
+    public static GameClearManager instance { get; private set; }
+
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Transform player;
    
@@ -42,6 +44,10 @@ public class GameClearManager : MonoBehaviour
 
     private bool isClearing = false;
 
+    private void Awake()
+    {
+        instance = this;
+    }
     private void Start()
     {
         if(ClearCanvas != null)
