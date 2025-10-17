@@ -7,12 +7,12 @@ using UnityEngine.UI;
 public class StageManager01 : MonoBehaviour
 {
     [Header("UI設定")]
-    public Button startButton;
+    //public Button startButton;
     public Text phaseText;          // フェイズ表示用テキスト
     public Text enemyCountText;     // 敵数表示用テキスト（数字のみ）
 
     [Header("ゲーム全体オブジェクト")]
-    public GameObject gameObjectsGroup;
+    //public GameObject gameObjectsGroup;
 
     [Header("フェイズごとのスポナー設定")]
     public List<GameObject> phaseSpawners = new List<GameObject>();
@@ -29,26 +29,20 @@ public class StageManager01 : MonoBehaviour
         phaseText.gameObject.SetActive(false);
         enemyCountText.gameObject.SetActive(false);
 
-        if (gameObjectsGroup != null)
-            gameObjectsGroup.SetActive(false);
-
         foreach (var spawner in phaseSpawners)
         {
             if (spawner != null)
                 spawner.SetActive(false);
         }
 
-        startButton.onClick.AddListener(StartGame);
+        StartGame();
     }
 
     public void StartGame()
     {
-        startButton.gameObject.SetActive(false);
+       //startButton.gameObject.SetActive(false);
         phaseText.gameObject.SetActive(true);
         enemyCountText.gameObject.SetActive(true);
-
-        if (gameObjectsGroup != null)
-            gameObjectsGroup.SetActive(true);
 
         isPlaying = true;
         currentPhaseIndex = -1;
@@ -71,7 +65,6 @@ public class StageManager01 : MonoBehaviour
                 spawner.SetActive(false);
         }
 
-        DestroyAllEnemies();
 
         remainingEnemies = enemiesPerPhase[currentPhaseIndex];
 
@@ -81,6 +74,8 @@ public class StageManager01 : MonoBehaviour
         UpdateUI();
     }
 
+    private bool nextPhaseCalled = false;
+
     public void OnEnemyDestroyed()
     {
         if (remainingEnemies <= 0) return;
@@ -89,16 +84,17 @@ public class StageManager01 : MonoBehaviour
         UpdateUI();
         StartCoroutine(AnimateEnemyCountText());
 
-        if (remainingEnemies <= 0)
+        if (remainingEnemies <= 0 && !nextPhaseCalled)
         {
             remainingEnemies = 0;
+            nextPhaseCalled = true;  // ← これで一度だけ呼ばれる
             UpdateUI();
             StartCoroutine(AnimateEnemyCountText());
 
-            DestroyAllEnemies();
             Invoke(nameof(NextPhase), 2f);
         }
     }
+
 
     public void OnPlayerDead()
     {
@@ -125,7 +121,6 @@ public class StageManager01 : MonoBehaviour
             if (spawner != null)
                 spawner.SetActive(false);
         }
-
         Debug.Log("Game Clear!");
         // TODO: クリア画面追加予定
     }
@@ -136,14 +131,14 @@ public class StageManager01 : MonoBehaviour
         enemyCountText.text = remainingEnemies.ToString();
     }
 
-    void DestroyAllEnemies()
-    {
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        foreach (var enemy in enemies)
-        {
-            Destroy(enemy);
-        }
-    }
+    //void DestroyAllEnemies()
+    //{
+    //    GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+    //    foreach (var enemy in enemies)
+    //    {
+    //        Destroy(enemy);
+    //    }
+    //}
 
     IEnumerator AnimateEnemyCountText()
     {

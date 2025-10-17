@@ -47,12 +47,12 @@ public class PlayerController2D : MonoBehaviour
             }
             else
             {
-                Destroy(enemy.gameObject);
-                var manager = FindObjectOfType<StageManager01>();
-                if (manager != null)
-                {
-                    manager.OnEnemyDestroyed();
-                }
+                //Destroy(enemy.gameObject);
+                //var manager = FindObjectOfType<StageManager01>();
+                //if (manager != null)
+                //{
+                //    manager.OnEnemyDestroyed();
+                //}
             }
         }
     }
