@@ -1,25 +1,31 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
-public class Senenchang : MonoBehaviour
+using UnityEngine.SceneManagement; // シーン管理に必要
+
+public class SceneChanger : MonoBehaviour
 {
-    [SerializeField] private string LoadSene;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public GameObject canvasTitle;
+    public GameObject canvasTutorial;
+
+    public string gameSceneName = "arfa2";
+
+    private bool isTutorialActive = false; // 操作説明画面が表示中か
+
+    public void OnStartButtonPressed()
     {
-        
+        canvasTitle.SetActive(false);
+        canvasTutorial.SetActive(true);
+        isTutorialActive = true; // 操作説明画面を表示した状態に
     }
 
-    // Update is called once per frame
+
     void Update()
     {
-        SceneChang();
-    }
-    public void SceneChang()
-    {
-        if(Input.GetKeyDown(KeyCode.C))
+        // 操作説明画面が出てるときだけ左クリックでシーン遷移
+        if (isTutorialActive && Input.GetMouseButtonDown(0))
         {
-            Debug.Log("はんのう");
-            SceneManager.LoadScene(LoadSene);
+            SceneManager.LoadScene(gameSceneName);
         }
     }
 }
+
+

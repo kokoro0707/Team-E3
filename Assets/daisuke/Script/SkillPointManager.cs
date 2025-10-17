@@ -9,7 +9,7 @@ public class SkillPointManager : MonoBehaviour
     [SerializeField] private int skillPoints = 0;
     [SerializeField] private int killCount = 0;
     [SerializeField] private int totalKillCount = 0; //　合計キル数
-    [SerializeField] private int killsPoint = 2; // 2体で1ポイント
+    [SerializeField] private int killsPoint = 11; // 11体で1ポイント
 
     [SerializeField] private TextMeshProUGUI skillPointText;
 
@@ -25,7 +25,6 @@ public class SkillPointManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-            skillPoints = 9; // デバック用初期値
     }
 
     private void Start()

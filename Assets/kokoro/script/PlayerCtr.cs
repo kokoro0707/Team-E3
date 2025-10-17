@@ -18,18 +18,30 @@ public class PlayerClr : MonoBehaviour
     public float groundCheckRadius = 0.2f;
     private bool Invncble=false;
     private bool canThrowAttack = false;
+    private bool canThrowAttack2 = false;
+    private bool canThrowAttack3 = false;
+    private bool hasPowerUpSkill = false;
     public GameObject breakEffectPrefab;
     [Header("シールド")]
     public  GameObject targetSprite;
     [SerializeField] private Sprite Nomal;
     [SerializeField] private Sprite Shield;
     [SerializeField] private Sprite Shield2;
+    [SerializeField] private Sprite Shield3;
     public ParticleSystem Shieldeffect;
+
+    private bool hasShieldRepairSkill = false; // 永続スキル取得フラグ
+    public float shieldRepairInterval = 5f;   // 回復間隔（秒）
+    public float shieldRepairInterval2 = 3f;   // 回復間隔（秒）
+    public int shieldRepairAmount = 1;        // 回復量
+    private Coroutine shieldRepairCoroutine;
 
     [Header("攻撃設定")]
     public GameObject slashPrehab;
     public GameObject slashPrehab2;
     public Transform attackSpawn;
+    private int attackRangeLevel = 0;
+    private float currentRangeMultiplier = 1f;
 
     [Header("必殺技")]
     public GameObject specialSlashPrefab;
@@ -46,7 +58,6 @@ public class PlayerClr : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         Col = GetComponent<Collider2D>();
         SkillManager.instance.OnSkillLearned += ApplySkill;
-        canThrowAttack = true;
     }
 
     private void ApplySkill(SkillType skillType)
@@ -60,7 +71,7 @@ public class PlayerClr : MonoBehaviour
         if (skillType == SkillType.Shield2)
         {
             hp += 1;
-            if(hp==2)
+            if(hp==3)
             {
                 var spriteRenderer = targetSprite.GetComponent<SpriteRenderer>();
                 spriteRenderer.sprite = Shield2;
@@ -71,10 +82,109 @@ public class PlayerClr : MonoBehaviour
                 spriteRenderer.sprite = Shield;
             }
         }
+        if(skillType==SkillType.Shield3)
+        {
+            hp += 1;
+            if (hp==4)
+            {
+                var spriteRenderer = targetSprite.GetComponent<SpriteRenderer>();
+                spriteRenderer.sprite = Shield3;
+            }
+            else if(hp==3)
+            {
+                var spriteRenderer = targetSprite.GetComponent<SpriteRenderer>();
+                spriteRenderer.sprite = Shield2;
+            }
+            else
+            {
+                var spriteRenderer = targetSprite.GetComponent<SpriteRenderer>();
+                spriteRenderer.sprite = Shield;
+            }
+            
+        }
+        if(skillType==SkillType.ATTACKRANGE)
+        {
+            attackRangeLevel = Mathf.Max(attackRangeLevel, 1);
+            currentRangeMultiplier = 1.5f;
+            hasPowerUpSkill = true;
+        }
+        if(skillType==SkillType.ATTACKRANGE2)
+        {
+            attackRangeLevel = Mathf.Max(attackRangeLevel, 2);
+            currentRangeMultiplier = 3.0f;
+            hasPowerUpSkill = true;
+        }
         if(skillType==SkillType.ThrowAttack)
         {
             canThrowAttack = true;
         }
+        if(skillType==SkillType.ThrowAttack2)
+        {
+            canThrowAttack = false;
+            canThrowAttack2 = true;
+        }
+        if (skillType == SkillType.ThrowAttack3)
+        {
+            canThrowAttack2 = false;
+            canThrowAttack3 = true;
+        }
+        if(skillType==SkillType.ShieldRepair)
+        {
+            if (!hasShieldRepairSkill)
+            {
+                hasShieldRepairSkill = true;
+                // 永続回復Coroutine開始
+                shieldRepairCoroutine = StartCoroutine(ShieldRepairOverTime());
+            }
+        }
+        if (skillType == SkillType.ShieldRepairSpeed)
+        {
+            if (!hasShieldRepairSkill)
+            {
+                hasShieldRepairSkill = true;
+                // 永続回復Coroutine開始
+                shieldRepairCoroutine = StartCoroutine(ShieldRepairOverTime2());
+            }
+        }
+    }
+    //シールド関連
+    private IEnumerator ShieldRepairOverTime()
+    {
+        while (hasShieldRepairSkill)
+        {
+            yield return new WaitForSeconds(shieldRepairInterval);
+            RecoverShield();
+        }
+    }
+    private IEnumerator ShieldRepairOverTime2()
+    {
+        while (hasShieldRepairSkill)
+        {
+            yield return new WaitForSeconds(shieldRepairInterval2);
+            RecoverShield();
+        }
+    }
+    private void RecoverShield()
+    {
+        int maxHp = 4; // 最大HP
+        if (hp < maxHp)
+        {
+            hp = Mathf.Min(hp + shieldRepairAmount, maxHp);
+            UpdateShieldSprite();
+            PlayShieldEffect();
+        }
+    }
+    private void UpdateShieldSprite()
+    {
+        var spriteRenderer = targetSprite.GetComponent<SpriteRenderer>();
+        if (hp == 4)
+            spriteRenderer.sprite = Shield3;
+        else if (hp == 3)
+            spriteRenderer.sprite = Shield2;
+        else if (hp == 2)
+            spriteRenderer.sprite = Shield;
+        else
+            spriteRenderer.sprite = Nomal;
     }
 
     bool CheckGrounded()
@@ -124,6 +234,14 @@ public class PlayerClr : MonoBehaviour
             if(canThrowAttack)
             {
                 ThrowAttack();
+            }
+            if(canThrowAttack2)
+            {
+                ThrowAttack2();
+            }
+            if(canThrowAttack3)
+            {
+                ThrowAttack3();
             }
         }
         if (Input.GetButtonDown("Fire2"))
@@ -197,6 +315,21 @@ public class PlayerClr : MonoBehaviour
             Slash slashScript = slash.GetComponent<Slash>();
             slashScript.transform.SetParent(transform);//slashScript.target = transform;                // プレイヤーを追従対象に設定
             slashScript.offset = new Vector3(0, 1.0f, 0);  // 高さ調整
+
+            slashScript.rangeMultiplier = currentRangeMultiplier;
+            slashScript.isPoweredUp = hasPowerUpSkill;
+
+            // スキル取得時に範囲とサイズUP
+            if (hasPowerUpSkill)
+            {
+                slashScript.rangeMultiplier = 1.5f;
+                slashScript.isPoweredUp = true;
+            }
+            else
+            {
+                slashScript.rangeMultiplier = 1.0f;
+                slashScript.isPoweredUp = false;
+            }
         }
     }
     //斬撃
@@ -215,6 +348,52 @@ public class PlayerClr : MonoBehaviour
         slashScript.SetDirection(Vector2.up); // ← 真上に飛ぶ！
 
         // プレイヤーの子にしない（独立して飛ばす）
+    }
+
+    private void ThrowAttack2()
+    {
+        if (slashPrehab2 == null) return;
+
+        //発射位置
+        Vector3 spawnPos = transform.position + new Vector3(0, 1.0f, 0);
+
+        Vector2[] directions = new Vector2[]
+        {
+        Vector2.up,                       // 上
+        new Vector2(1, 1).normalized,     // 斜め右上
+        new Vector2(-1, 1).normalized     // 斜め左上
+        };
+
+        foreach (Vector2 dir in directions)
+        {
+            GameObject slash = Instantiate(slashPrehab2, spawnPos, Quaternion.identity);
+            ThrowSlash slashScript = slash.GetComponent<ThrowSlash>();
+            slashScript.SetDirection(dir);
+        }
+    }
+    //五方向
+    private void ThrowAttack3()
+    {
+        if (slashPrehab2 == null) return;
+
+        Vector3 spawnPos = transform.position + new Vector3(0, 1.0f, 0);
+
+        // 5方向（上・斜め左右上・斜め左右）
+        Vector2[] directions = new Vector2[]
+        {
+        Vector2.up,                       // 上
+        new Vector2(1, 1).normalized,     // 右上
+        new Vector2(-1, 1).normalized,    // 左上
+        new Vector2(1, 0.3f).normalized,  // 右少し上
+        new Vector2(-1, 0.3f).normalized  // 左少し上
+        };
+
+        foreach (Vector2 dir in directions)
+        {
+            GameObject slash = Instantiate(slashPrehab2, spawnPos, Quaternion.identity);
+            ThrowSlash slashScript = slash.GetComponent<ThrowSlash>();
+            slashScript.SetDirection(dir);
+        }
     }
 
 
@@ -264,17 +443,22 @@ public class PlayerClr : MonoBehaviour
         hp -= damage;
 
         var spriteRenderer = targetSprite.GetComponent<SpriteRenderer>();
-        if (hp == 2)
+        if (hp == 3)
+        {
+            spriteRenderer.sprite = Shield2;
+            PlayShieldEffect();
+        }
+        else if (hp == 2)
         {
             spriteRenderer.sprite = Shield;
             PlayShieldEffect();
         }
-        else if (hp == 1)
+        else if(hp==1)
         {
             spriteRenderer.sprite = Nomal;
             PlayShieldEffect();
         }
-        else if (hp <= 0)
+        else  
         {
             Die();
             return;
@@ -320,6 +504,8 @@ public class PlayerClr : MonoBehaviour
             GameObject effect = Instantiate(breakEffectPrefab, transform.position, Quaternion.identity);
             Destroy(effect, 2f); // エフェクトを自動削除
         }
+       // GameOverManager.Instance.SetPlayerDeathPosition(transform.position);
+        //GameOverManager.Instance.StartCoroutine(GameOverManager.Instance.StartGameOver());
 
         // プレイヤー削除
         Destroy(gameObject);

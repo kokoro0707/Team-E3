@@ -56,7 +56,12 @@ public class GameOverManager : MonoBehaviour
     [SerializeField] private float rotateSpeed = 180f;
     [SerializeField] private float rightOffset;
 
+    [Header("爆発エフェクト")]
     [SerializeField] private ParticleSystem explodeEffect;
+
+    [Header("オーディオ関連")]
+    [SerializeField] private AudioSource seSource;
+    [SerializeField] private AudioClip drumClip;
 
     private bool isClearing = false;
 
@@ -116,6 +121,14 @@ public class GameOverManager : MonoBehaviour
         isClearing = true;
         Time.timeScale = 0f; // ゲーム停止
 
+        // ==== オーディオ再生 ====
+        if (seSource != null && drumClip != null)
+        {
+            seSource.clip = drumClip;
+            seSource.loop = true;
+            seSource.Play();
+        }
+
         // ==== ズーム処理 ====
 
         Vector3 startPos = mainCamera.transform.position;
@@ -147,10 +160,6 @@ public class GameOverManager : MonoBehaviour
             yield return null;
         }
 
-        // ==== SE部分 ====
-
-      
-
         // ==== 新プレイヤー生成 ====
         GameObject newPlayer = null;
         if (clonePlayerobject != null)
@@ -167,32 +176,18 @@ public class GameOverManager : MonoBehaviour
         // ==== 回転演出 ====
         if (newPlayer != null)
         {
-            //float rotTime = 0f;
-            //while (rotTime < 2f)
-            //{
-            //    rotTime += Time.unscaledDeltaTime;
-            //    newPlayer.transform.Rotate(Vector3.up, rotateSpeed * Time.unscaledDeltaTime);
-            //    yield return null;
-            //}
 
             // 永続回転
             StartCoroutine(RotateForever(newPlayer));
             yield return new WaitForSecondsRealtime(1f);
 
-            if (gameOverText != null)
-            {
-                gameOverText.gameObject.SetActive(true);
-                Debug.Log("text表示");
-            }
-            if (spotLightImage != null)
-            {
-                spotLightImage.gameObject.SetActive(true);
-                Debug.Log("spotLight表示");
-            }
-            else {
-                Debug.Log("参照が切れている");
-            }
-                yield return new WaitForSecondsRealtime(0.5f);
+            //  ==== オーディオ停止 ====
+            if (seSource != null && seSource.isPlaying) seSource.Stop();
+
+            // ==== クリアテキストとスポットライト表示 ====
+            if (gameOverText != null)gameOverText.gameObject.SetActive(true);
+            if (spotLightImage != null)spotLightImage.gameObject.SetActive(true);
+            yield return new WaitForSecondsRealtime(0.5f);
 
             //// ==== 回転終了後に爆発
             if (explodeEffect != null)
@@ -277,10 +272,10 @@ public class GameOverManager : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
     }
 
-    public void OnCTitleButton()
+    public void OnTitleButton()
     {
         Time.timeScale = 1f;
-        //UnityEngine.SceneManagement.SceneManager.LoadScene("TitleScene");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Title");
         Debug.Log("タイトルに戻る");
     }
 }

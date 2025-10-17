@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 2145963254211712381}
   - component: {fileID: 2965445779110002307}
   - component: {fileID: -7682255819457575165}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Throw
-  m_TagString: Untagged
+  m_TagString: Saw
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

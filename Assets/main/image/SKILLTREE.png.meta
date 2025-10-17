@@ -1,0 +1,377 @@
+fileFormatVersion: 2
+guid: ecbcc64bb18b7ff47a148aacacc06f7c
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 4080724995068984774
+    second: "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_0"
+  - first:
+      213: 9136971648662842707
+    second: "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_1"
+  - first:
+      213: -2544971908435429119
+    second: "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_2"
+  - first:
+      213: -8743108267979645626
+    second: "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_3"
+  - first:
+      213: 1270890085166033414
+    second: "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_4"
+  - first:
+      213: -5468729876233679866
+    second: "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_5"
+  - first:
+      213: 662594446581217151
+    second: "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_6"
+  - first:
+      213: -2637706234192686899
+    second: "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_7"
+  - first:
+      213: -4777502236903343934
+    second: "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_8"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_0"
+      rect:
+        serializedVersion: 2
+        x: 1888
+        y: 2450
+        width: 174
+        height: 178
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6cdf42d23c5a1a830800000000000000
+      internalID: 4080724995068984774
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_1"
+      rect:
+        serializedVersion: 2
+        x: 2015
+        y: 2353
+        width: 215
+        height: 229
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35d2d510e4b0dce70800000000000000
+      internalID: 9136971648662842707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_2"
+      rect:
+        serializedVersion: 2
+        x: 2170
+        y: 2322
+        width: 131
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 109bb5a78817eacd0800000000000000
+      internalID: -2544971908435429119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_3"
+      rect:
+        serializedVersion: 2
+        x: 2252
+        y: 2258
+        width: 132
+        height: 211
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64dda4e6a5d3aa680800000000000000
+      internalID: -8743108267979645626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_4"
+      rect:
+        serializedVersion: 2
+        x: 2375
+        y: 2199
+        width: 132
+        height: 211
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60a23ea8ccb13a110800000000000000
+      internalID: 1270890085166033414
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_5"
+      rect:
+        serializedVersion: 2
+        x: 2586
+        y: 2123
+        width: 169
+        height: 205
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60c8682f62b2b14b0800000000000000
+      internalID: -5468729876233679866
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_6"
+      rect:
+        serializedVersion: 2
+        x: 2693
+        y: 2029
+        width: 194
+        height: 230
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f77be9a7322023900800000000000000
+      internalID: 662594446581217151
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_7"
+      rect:
+        serializedVersion: 2
+        x: 2852
+        y: 1971
+        width: 182
+        height: 212
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc09c19b72cf46bd0800000000000000
+      internalID: -2637706234192686899
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_8"
+      rect:
+        serializedVersion: 2
+        x: 2983
+        y: 1909
+        width: 182
+        height: 212
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c8fdbf1707e2bdb0800000000000000
+      internalID: -4777502236903343934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_0": 4080724995068984774
+      "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_1": 9136971648662842707
+      "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_2": -2544971908435429119
+      "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_3": -8743108267979645626
+      "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_4": 1270890085166033414
+      "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_5": -5468729876233679866
+      "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_6": 662594446581217151
+      "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_7": -2637706234192686899
+      "\u30BF\u30A4\u30C8\u30EB\u753B\u9762_SKILLTREE_8": -4777502236903343934
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
