@@ -217,7 +217,7 @@ public class GameClearManager : MonoBehaviour
     public void OnTitleButton()
     {
         Time.timeScale = 1f;
-        //UnityEngine.SceneManagement.SceneManager.LoadScene("Title");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Title");
         Debug.Log("ƒ^ƒCƒgƒ‹‚É–ß‚é");
     }
 }
