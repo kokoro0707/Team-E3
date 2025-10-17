@@ -62,6 +62,10 @@ public class GameOverManager : MonoBehaviour
     [Header("オーディオ関連")]
     [SerializeField] private AudioSource seSource;
     [SerializeField] private AudioClip drumClip;
+    [SerializeField] private AudioClip explsosionClip;
+    [SerializeField] private AudioClip scoreClip;
+    [SerializeField] private AudioClip retryClip;
+    [SerializeField] private AudioClip titleClip;
 
     private bool isClearing = false;
 
@@ -121,14 +125,6 @@ public class GameOverManager : MonoBehaviour
         isClearing = true;
         Time.timeScale = 0f; // ゲーム停止
 
-        // ==== オーディオ再生 ====
-        if (seSource != null && drumClip != null)
-        {
-            seSource.clip = drumClip;
-            seSource.loop = true;
-            seSource.Play();
-        }
-
         // ==== ズーム処理 ====
 
         Vector3 startPos = mainCamera.transform.position;
@@ -143,6 +139,14 @@ public class GameOverManager : MonoBehaviour
         }
 
         yield return new WaitForSecondsRealtime(0.3f);
+
+        // ==== オーディオ再生 ====
+        if (seSource != null && drumClip != null)
+        {
+            seSource.clip = drumClip;
+            seSource.loop = true;
+            seSource.Play();
+        }
 
         // ==== フェード処理 ====
         float f = 0f;
@@ -159,6 +163,7 @@ public class GameOverManager : MonoBehaviour
 
             yield return null;
         }
+     
 
         // ==== 新プレイヤー生成 ====
         GameObject newPlayer = null;
@@ -172,6 +177,7 @@ public class GameOverManager : MonoBehaviour
 
             newPlayer.transform.Rotate(20f, 40f, 0f, Space.Self);
         }
+
 
         // ==== 回転演出 ====
         if (newPlayer != null)
@@ -192,6 +198,10 @@ public class GameOverManager : MonoBehaviour
             //// ==== 回転終了後に爆発
             if (explodeEffect != null)
             {
+                if (seSource != null && explsosionClip != null)
+                {
+                    seSource.PlayOneShot(explsosionClip);
+                }
                 Time.timeScale = 1f;
                 // 爆発のプレイヤーの位置に生成＆再生
                 Vector3 explosionPos = newPlayer.transform.position - mainCamera.transform.forward * 0.5f;
@@ -219,13 +229,27 @@ public class GameOverManager : MonoBehaviour
         {
             score = SkillPointManager.instance.GetTotalKillCount();
         }
+        if (seSource != null && scoreClip != null)
+        {
+            seSource.PlayOneShot(scoreClip);
+        }
         ShowScore(score);
-        yield return new WaitForSecondsRealtime(0.5f);
+        yield return new WaitForSecondsRealtime(1f);
 
         // ==== リトライ・タイトルボタン表示
         if (retryButton != null) retryButton.gameObject.SetActive(true);
+        if (seSource != null && retryClip != null)
+        {
+            seSource.PlayOneShot(retryClip);
+        }
         yield return new WaitForSecondsRealtime(1f);
+
+
         if (titleButton != null) titleButton.gameObject.SetActive(true);
+        if (seSource != null && titleClip != null)
+        {
+            seSource.PlayOneShot(titleClip);
+        }
 
         Time.timeScale = 0f;
         isClearing = false;

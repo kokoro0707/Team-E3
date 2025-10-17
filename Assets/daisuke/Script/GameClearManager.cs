@@ -41,6 +41,9 @@ public class GameClearManager : MonoBehaviour
     [Header("オーディオ関連")]
     [SerializeField] private AudioSource seSource;
     [SerializeField] private AudioClip drumClip;
+    [SerializeField] private AudioClip scoreClip;
+    [SerializeField] private AudioClip retryClip;
+    [SerializeField] private AudioClip titleClip;
 
     private bool isClearing = false;
 
@@ -93,14 +96,6 @@ public class GameClearManager : MonoBehaviour
        isClearing = true;
         Time.timeScale = 0f; // ゲーム停止
 
-        // ==== オーディオ再生 ====
-        if(seSource != null  && drumClip != null)
-        {
-            seSource.clip = drumClip;
-            seSource.loop = true;
-            seSource.Play();
-        }
-
         // ==== ズーム処理 ====
 
         Vector3 startPos = mainCamera.transform.position;
@@ -115,6 +110,14 @@ public class GameClearManager : MonoBehaviour
         }
 
         yield return new WaitForSecondsRealtime(0.3f);
+
+        // ==== オーディオ再生 ====
+        if (seSource != null && drumClip != null)
+        {
+            seSource.clip = drumClip;
+            seSource.loop = true;
+            seSource.Play();
+        }
 
         // ==== フェード処理 ====
         float f = 0f;
@@ -152,22 +155,37 @@ public class GameClearManager : MonoBehaviour
             yield return new WaitForSecondsRealtime(1f);
         }
 
-        // ==== オーディオ停止 ====
-        if(seSource != null && seSource.isPlaying)seSource.Stop();
+        //// ==== オーディオ停止 ====
+        if (seSource != null && seSource.isPlaying) seSource.Stop();
 
         // ==== クリアテキストとスポットライト表示 ====
-        if(gameClearText != null) gameClearText.gameObject.SetActive(true);
+        if (gameClearText != null) gameClearText.gameObject.SetActive(true);
         if (spotLightImage != null) spotLightImage.gameObject.SetActive(true);
         yield return new WaitForSecondsRealtime(1f);
 
         // ==== スコア表示 ====
         ShowScore(100);
+        if (seSource != null && scoreClip != null)
+        {
+            seSource.PlayOneShot(scoreClip);
+        }
         yield return new WaitForSecondsRealtime(1f);
 
+
         // ==== リトライ・タイトルボタン表示
-        if(retryButton != null) retryButton.gameObject.SetActive(true);
+        if (retryButton != null) retryButton.gameObject.SetActive(true);
+        if (seSource != null && retryClip != null)
+        {
+            seSource.PlayOneShot(retryClip);
+        }
         yield return new WaitForSecondsRealtime(1f);
+
+
         if(titleButton != null) titleButton.gameObject.SetActive(true);
+        if (seSource != null && titleClip != null)
+        {
+            seSource.PlayOneShot(titleClip);
+        }
 
         Time.timeScale = 0f;
         isClearing = false;
@@ -175,9 +193,9 @@ public class GameClearManager : MonoBehaviour
 
     private IEnumerator RotateForever(GameObject target)
     {
-        while (target != null)
+        while (true)
         {
-            target.transform.Rotate(Vector3.forward, rotateSpeed * Time.unscaledDeltaTime);
+            target.transform.Rotate(Vector3.up * rotateSpeed * Time.unscaledDeltaTime);
             yield return null;
         }
     }
