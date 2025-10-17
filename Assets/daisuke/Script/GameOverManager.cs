@@ -197,6 +197,12 @@ public class GameOverManager : MonoBehaviour
                 Vector3 explosionPos = newPlayer.transform.position - mainCamera.transform.forward * 0.5f;
                 Quaternion explosionRot = Quaternion.identity;
                 ParticleSystem explosion = Instantiate(explodeEffect, explosionPos, explosionRot);
+                var renderer = explosion.GetComponent<ParticleSystemRenderer>();
+                if(renderer != null)
+                {
+                    renderer.sortingLayerName = "Default";
+                    renderer.sortingOrder = 500;
+                }
 
                 Instantiate(explodeEffect, explosionPos, explosionRot);
 

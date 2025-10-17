@@ -504,11 +504,11 @@ public class PlayerClr : MonoBehaviour
             GameObject effect = Instantiate(breakEffectPrefab, transform.position, Quaternion.identity);
             Destroy(effect, 2f); // エフェクトを自動削除
         }
-       // GameOverManager.Instance.SetPlayerDeathPosition(transform.position);
-        //GameOverManager.Instance.StartCoroutine(GameOverManager.Instance.StartGameOver());
-
         // プレイヤー削除
         Destroy(gameObject);
+         GameOverManager.Instance.SetPlayerDeathPosition(transform.position);
+        GameOverManager.Instance.StartCoroutine(GameOverManager.Instance.StartGameOver());
+
     }
 
 
