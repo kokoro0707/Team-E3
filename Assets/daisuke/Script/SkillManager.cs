@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
@@ -29,13 +30,14 @@ public class SkillManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
 
         skillBlocks = skillBlockPanel.GetComponentsInChildren<SkillBlock>();
     }
     void Start()
     {
+        CheckActiveBlocks();
     }
 
     // スキルを持っているか
@@ -133,6 +135,7 @@ public class SkillManager : MonoBehaviour
     // スキル習得済パネル確認
     public void CheckActiveBlocks()
     {
+        Debug.Log("checkblock実行");
         if (skillBlocks == null) return;
         foreach (SkillBlock skillBlock in skillBlocks)
         {
