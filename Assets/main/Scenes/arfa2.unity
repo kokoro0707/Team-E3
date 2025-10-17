@@ -5499,6 +5499,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1690613088}
     - target: {fileID: 731248925838384467, guid: cfb0bac4e248ced46a0f37a36461c280, type: 3}
+      propertyPath: killsPoint
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 731248925838384467, guid: cfb0bac4e248ced46a0f37a36461c280, type: 3}
       propertyPath: skillPointText
       value: 
       objectReference: {fileID: 1957454467}
@@ -7033,7 +7037,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0
+  m_Volume: 0.257
   m_Pitch: 1
   Loop: 0
   Mute: 0

@@ -100,7 +100,7 @@ public class GameClearManager : MonoBehaviour
         if(ClearCanvas != null) ClearCanvas.SetActive(true);
 
        isClearing = true;
-        //Time.timeScale = 0f; // ƒQ[ƒ€’â~
+        Time.timeScale = 0f; // ƒQ[ƒ€’â~
 
         // ==== ƒY[ƒ€ˆ— ====
 
