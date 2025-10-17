@@ -84,10 +84,9 @@ public class StageManager01 : MonoBehaviour
         UpdateUI();
         StartCoroutine(AnimateEnemyCountText());
 
-        if (remainingEnemies <= 0 && !nextPhaseCalled)
+        if(remainingEnemies<=0)
         {
             remainingEnemies = 0;
-            nextPhaseCalled = true;  // ← これで一度だけ呼ばれる
             UpdateUI();
             StartCoroutine(AnimateEnemyCountText());
 
@@ -123,6 +122,10 @@ public class StageManager01 : MonoBehaviour
         }
         Debug.Log("Game Clear!");
         // TODO: クリア画面追加予定
+        if(GameClearManager.instance!=null)
+        {
+            GameClearManager.instance.StartCoroutine(GameClearManager.instance.StartGameClear());
+        }
     }
 
     void UpdateUI()

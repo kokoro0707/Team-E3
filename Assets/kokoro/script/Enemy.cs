@@ -54,6 +54,7 @@ public class Enemy : MonoBehaviour
 
         SpecialGauge.instance.AddKill();
 
+
         if (effect != null)
             Instantiate(effect, transform.position, Quaternion.identity);
 

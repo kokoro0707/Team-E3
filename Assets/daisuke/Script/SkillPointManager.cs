@@ -18,7 +18,7 @@ public class SkillPointManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -51,6 +51,7 @@ public class SkillPointManager : MonoBehaviour
         if(killCount >= killsPoint) // キルカウントがキルポイントを上回ったらスキルポイント増加
         {
             killCount = 0;
+            Debug.Log("uu");
             AddSkillPoint(1);
         }
     }
