@@ -883,6 +883,34 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4713732925188136747, guid: 151c4a803a99ecc46880e04201bdc995, type: 3}
+      propertyPath: gravity
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4713732925188136747, guid: 151c4a803a99ecc46880e04201bdc995, type: 3}
+      propertyPath: cooldownTime
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4713732925188136747, guid: 151c4a803a99ecc46880e04201bdc995, type: 3}
+      propertyPath: maxShootSpeed
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4713732925188136747, guid: 151c4a803a99ecc46880e04201bdc995, type: 3}
+      propertyPath: minShootSpeed
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4713732925188136747, guid: 151c4a803a99ecc46880e04201bdc995, type: 3}
+      propertyPath: detectionRadius
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 4713732925188136747, guid: 151c4a803a99ecc46880e04201bdc995, type: 3}
+      propertyPath: shootAcceleration
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6464620356237207117, guid: 151c4a803a99ecc46880e04201bdc995, type: 3}
+      propertyPath: m_GravityScale
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8035088530445895683, guid: 151c4a803a99ecc46880e04201bdc995, type: 3}
       propertyPath: m_Name
       value: Triangle Image

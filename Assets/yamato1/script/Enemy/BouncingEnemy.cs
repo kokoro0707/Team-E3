@@ -4,13 +4,14 @@ public class BouncingEnemy : MonoBehaviour
 {
     public Vector2 velocity = new Vector2(2f, -3f);
     public float spawnScaleTime = 0.5f;
-    public float rotationSpeed = 360f; // ← 回転速度追加
+    public float rotationSpeed = 360f;
 
     private Vector2 minBounds;
     private Vector2 maxBounds;
     private Vector2 currentVelocity;
     private bool isActive = false;
     private float scaleTimer = 0f;
+    private bool isDestroyed = false; // ← 追加（多重破壊防止）
 
     void Start()
     {
@@ -30,7 +31,9 @@ public class BouncingEnemy : MonoBehaviour
 
     void Update()
     {
-        // ✅ 常に回転（見た目だけ）
+        if (isDestroyed) return;
+
+        // 回転アニメーション
         transform.Rotate(0f, 0f, rotationSpeed * Time.deltaTime);
 
         if (!isActive)
@@ -48,11 +51,12 @@ public class BouncingEnemy : MonoBehaviour
             return;
         }
 
-        // 移動処理（回転とは無関係）
-        transform.Translate(currentVelocity * Time.deltaTime, Space.World); // ← 念のためWorld指定
+        // 移動
+        transform.Translate(currentVelocity * Time.deltaTime, Space.World);
 
         Vector3 pos = transform.position;
 
+        // 画面端で跳ね返り
         if (pos.x < minBounds.x || pos.x > maxBounds.x)
         {
             currentVelocity.x *= -1;
@@ -62,5 +66,23 @@ public class BouncingEnemy : MonoBehaviour
         {
             currentVelocity.y *= -1;
         }
+    }
+
+    // ✅ 追加：敵を破壊する処理
+    public void DestroyEnemy()
+    {
+        if (isDestroyed) return;
+
+        isDestroyed = true;
+
+        // Killカウントを追加
+        if (SkillPointManager.instance != null)
+        {
+            SkillPointManager.instance.AddKillCount(1);
+        }
+
+        // ここで他の通知やエフェクトも入れられる
+
+        Destroy(gameObject);
     }
 }
