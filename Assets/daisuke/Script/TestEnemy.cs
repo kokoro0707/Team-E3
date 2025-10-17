@@ -11,8 +11,8 @@ public class TestEnemy : MonoBehaviour
             SkillPointManager.instance.AddKillCount(1);
 
             // ‚±‚Á‚¿‚ÍƒvƒŒƒCƒ„[€–S‚ÉŒÄ‚Ô
-            GameOverManager.Instance.SetPlayerDeathPosition(transform.position);
-            GameOverManager.Instance.StartCoroutine(GameOverManager.Instance.StartGameOver());
+            //GameOverManager.Instance.SetPlayerDeathPosition(transform.position);
+            //GameOverManager.Instance.StartCoroutine(GameOverManager.Instance.StartGameOver());
             Destroy(gameObject);
         }
     }

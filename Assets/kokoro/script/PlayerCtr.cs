@@ -2,11 +2,21 @@ using System;
 using System.Collections;
 using NUnit.Framework.Internal;
 using UnityEngine;
+using UnityEngine.Audio;
+using static Unity.VisualScripting.Metadata;
 
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerClr : MonoBehaviour
 {
+    [Header("サウンド")]
+    public AudioSource AudioSource;
+    public AudioClip AtaackSE;
+    public AudioClip ChildSE;
+    public AudioClip spesialSE;
+    public AudioClip janpSE;
+    public AudioClip dieSE;
+
     [Header("プレイヤー設定")]
     public float hp = 1;
     public float moveSpeed = 5f;
@@ -169,6 +179,7 @@ public class PlayerClr : MonoBehaviour
         int maxHp = 4; // 最大HP
         if (hp < maxHp)
         {
+            if (ChildSE != null) AudioSource.PlayOneShot(ChildSE);
             hp = Mathf.Min(hp + shieldRepairAmount, maxHp);
             UpdateShieldSprite();
             PlayShieldEffect();
@@ -224,12 +235,14 @@ public class PlayerClr : MonoBehaviour
 
         if (isGrounded && Input.GetButtonDown("Jump"))
         {
+            if (janpSE != null) AudioSource.PlayOneShot(janpSE);
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
 
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire2"))
         {
+            if (AtaackSE != null) AudioSource.PlayOneShot(AtaackSE);
             Attack();
             if(canThrowAttack)
             {
@@ -244,10 +257,11 @@ public class PlayerClr : MonoBehaviour
                 ThrowAttack3();
             }
         }
-        if (Input.GetButtonDown("Fire2"))
+        if (Input.GetButtonDown("Fire1"))
         {
             if(SpecialGauge.instance.IsFull())
             {
+                if (spesialSE != null) AudioSource.PlayOneShot(spesialSE);
                 StartCoroutine(DoSpecialAttack());
                 SpecialGauge.instance.ResetGauge();
             }
@@ -501,6 +515,7 @@ public class PlayerClr : MonoBehaviour
         // エフェクト再生
         if (breakEffectPrefab != null)
         {
+            if (dieSE != null) AudioSource.PlayOneShot(dieSE);
             GameObject effect = Instantiate(breakEffectPrefab, transform.position, Quaternion.identity);
             Destroy(effect, 2f); // エフェクトを自動削除
         }

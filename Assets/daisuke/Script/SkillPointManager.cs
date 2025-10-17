@@ -14,7 +14,7 @@ public class SkillPointManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI skillPointText;
 
     [SerializeField] private AudioSource seSource;
-    [SerializeField] private AudioClip drumClip;
+    [SerializeField] private AudioClip Clip;
 
     private void Awake()
     {
@@ -62,13 +62,14 @@ public class SkillPointManager : MonoBehaviour
     // スキルポイントを増やす
     private void AddSkillPoint(int amont)
     {
-        if (seSource != null && drumClip != null)
+        if (seSource != null && Clip != null)
         {
-            seSource.clip = drumClip;
-            seSource.Play();
+            seSource.PlayOneShot(Clip);
         }
         skillPoints += amont;
         UpdateSkillPointUI();
+
+        SkillManager.instance.CheckActiveBlocks();
     }
 
     // スキルポイント使用

@@ -129,7 +129,7 @@ public class SkillManager : MonoBehaviour
                 break;
             }
         }
-            CheckActiveBlocks();
+        CheckActiveBlocks();
     }
 
     // スキル習得済パネル確認
