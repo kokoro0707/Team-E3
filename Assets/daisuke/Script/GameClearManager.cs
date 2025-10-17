@@ -80,10 +80,10 @@ public class GameClearManager : MonoBehaviour
 
     private void Update()
     {
-        //if(Input.GetKeyDown(KeyCode.G)) // デバック用キー　Gキー
-        //{
-        //    StartCoroutine(StartGameClear());
-        //}
+        if (Input.GetKeyDown(KeyCode.G)) // デバック用キー　Gキー
+        {
+            StartCoroutine(StartGameClear());
+        }
     }
 
     public IEnumerator StartGameClear()

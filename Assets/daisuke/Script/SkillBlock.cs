@@ -167,15 +167,21 @@ public class SkillBlock : MonoBehaviour, IPointerEnterHandler,IPointerExitHandle
             return;
         }
 
-        // 習得済でない場合は、習得条件をチェック
-        if (SkillManager.instance.CanLearnSkill(cost, skilltype))
-        {
-            hidePanel.SetActive(false);
-        }
-        else
-        {
-            hidePanel.SetActive(true);
-        }
+        bool hasEnoughPoint = SkillPointManager.instance.GetSkillPoint() >= cost;
+        bool canlearn = SkillManager.instance.CanLearnSkill(cost , skilltype);
+        bool sholdShow = hasEnoughPoint && canlearn;
+
+        hidePanel.SetActive(!sholdShow);
+
+        //// 習得済でない場合は、習得条件をチェック
+        //if (SkillManager.instance.CanLearnSkill(cost, skilltype))
+        //{
+        //    hidePanel.SetActive(false);
+        //}
+        //else
+        //{
+        //    hidePanel.SetActive(true);
+        //}
     }
 
     void ChangeLearnedBlock(Color color)
