@@ -56,6 +56,9 @@ public class StageManager01 : MonoBehaviour
         isPlaying = true;
         currentPhaseIndex = -1;
         NextPhase();
+
+        if (BGMManager.instance != null)
+            BGMManager.instance.PlayBGM();
     }
 
     void NextPhase()
@@ -127,6 +130,9 @@ public class StageManager01 : MonoBehaviour
 
         Debug.Log("Game Over!");
         // TODO: ゲームオーバー画面追加予定
+
+        if(BGMManager.instance!=null)
+            BGMManager.instance.FadeOut(1f) ;
     }
 
     void GameClear()
@@ -140,7 +146,10 @@ public class StageManager01 : MonoBehaviour
         }
         Debug.Log("Game Clear!");
         // TODO: クリア画面追加予定
-        if(GameClearManager.instance!=null)
+        if (BGMManager.instance != null)
+            BGMManager.instance.FadeOut(1f);
+
+        if (GameClearManager.instance!=null)
         {
             GameClearManager.instance.StartCoroutine(GameClearManager.instance.StartGameClear());
         }
