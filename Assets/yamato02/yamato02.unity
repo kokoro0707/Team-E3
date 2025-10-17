@@ -883,6 +883,34 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4713732925188136747, guid: 151c4a803a99ecc46880e04201bdc995, type: 3}
+      propertyPath: gravity
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4713732925188136747, guid: 151c4a803a99ecc46880e04201bdc995, type: 3}
+      propertyPath: cooldownTime
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4713732925188136747, guid: 151c4a803a99ecc46880e04201bdc995, type: 3}
+      propertyPath: maxShootSpeed
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4713732925188136747, guid: 151c4a803a99ecc46880e04201bdc995, type: 3}
+      propertyPath: minShootSpeed
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4713732925188136747, guid: 151c4a803a99ecc46880e04201bdc995, type: 3}
+      propertyPath: detectionRadius
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 4713732925188136747, guid: 151c4a803a99ecc46880e04201bdc995, type: 3}
+      propertyPath: shootAcceleration
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6464620356237207117, guid: 151c4a803a99ecc46880e04201bdc995, type: 3}
+      propertyPath: m_GravityScale
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8035088530445895683, guid: 151c4a803a99ecc46880e04201bdc995, type: 3}
       propertyPath: m_Name
       value: Triangle Image
@@ -1244,6 +1272,7 @@ MonoBehaviour:
   detectionRadius: 30
   speed: 4
   verticalSpeed: 2
+  rotationSpeed: 360
 --- !u!1001 &1200086172
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1414,6 +1443,24 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &1264504468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1264504457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b8c41c44bfdac14cba526de7b959899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyPrefab: {fileID: 1264504457}
+  speed: 3
+  jumpHeight: 2
+  jumpOffsetY: 3
+  arcDuration: 0.5
+  splitOffsetX: 1.5
 --- !u!1001 &1277633007
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1470,9 +1517,7 @@ PrefabInstance:
       propertyPath: m_Name
       value: SplittingEnemy 1
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 8190371034588020858, guid: 84b5d27e23452bb45aa7c77e0adff221, type: 3}
-    - {fileID: 5733396306462664244, guid: 84b5d27e23452bb45aa7c77e0adff221, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -1485,6 +1530,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8253655274595937461, guid: 84b5d27e23452bb45aa7c77e0adff221, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1264504465}
+    - targetCorrespondingSourceObject: {fileID: 8253655274595937461, guid: 84b5d27e23452bb45aa7c77e0adff221, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1264504468}
   m_SourcePrefab: {fileID: 100100000, guid: 84b5d27e23452bb45aa7c77e0adff221, type: 3}
 --- !u!4 &1384677935 stripped
 Transform:

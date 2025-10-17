@@ -91,6 +91,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+
 --- !u!61 &8190371034588020858
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -5,17 +5,17 @@ public class EnemyShooter : MonoBehaviour
     public float detectionRadius = 5f;
 
     [Header("追尾の速度")]
-    public float minShootSpeed = 2f;        // 最低速度
-    public float maxShootSpeed = 8f;        // 最大速度
-    public float shootAcceleration = 3f;    // 加速度
+    public float minShootSpeed = 2f;
+    public float maxShootSpeed = 8f;
+    public float shootAcceleration = 3f;
 
     [Header("ジャンプ（上昇）の設定")]
-    public float jumpInitialSpeed = 15f;    // ジャンプ初速
-    public float gravity = 20f;             // 重力相当
+    public float jumpInitialSpeed = 15f;
+    public float gravity = 20f;
 
     [Header("挙動タイミング")]
-    public float cooldownTime = 1.5f;       // クールタイム（突進間隔）
-    public float stopDuration = 2f;         // 停止時間
+    public float cooldownTime = 1.5f;
+    public float stopDuration = 2f;
 
     private Transform player;
     private Rigidbody2D rb;
@@ -34,6 +34,7 @@ public class EnemyShooter : MonoBehaviour
     private float stopTimer = 0f;
     private float currentShootSpeed;
     private float verticalVelocity;
+    private bool isDestroyed = false; // ← 追加
 
     void Start()
     {
@@ -47,6 +48,8 @@ public class EnemyShooter : MonoBehaviour
 
     void Update()
     {
+        if (isDestroyed) return;
+
         if (player == null || rb == null) return;
 
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
@@ -101,9 +104,7 @@ public class EnemyShooter : MonoBehaviour
                     cooldownTimer = cooldownTime;
                 }
 
-                // 弧を描く演出として少し下方向に力を加える
                 rb.linearVelocity += Vector2.down * gravity * 0.05f * Time.deltaTime;
-
                 break;
 
             case State.Stopped:
@@ -120,13 +121,9 @@ public class EnemyShooter : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        // 同じ敵同士では反応しない
         if (collision.gameObject.CompareTag("Enemy")) return;
-
-        // ジャンプ中の衝突は無視（地面にぶつかっても止まらない）
         if (currentState == State.JumpingUp) return;
 
-        // 攻撃中にプレイヤーなどに衝突したら一時停止
         currentState = State.Stopped;
         rb.linearVelocity = Vector2.zero;
         stopTimer = stopDuration;
@@ -136,5 +133,22 @@ public class EnemyShooter : MonoBehaviour
     {
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
+    }
+
+    // ✅ 追加：敵が倒されたときに呼ぶ処理
+    public void DestroyEnemy()
+    {
+        if (isDestroyed) return;
+        isDestroyed = true;
+
+        // Killカウント加算
+        if (SkillPointManager.instance != null)
+        {
+            SkillPointManager.instance.AddKillCount(1);
+        }
+
+        // 必要なら他の処理もここに（爆発、ドロップ、通知など）
+
+        Destroy(gameObject);
     }
 }
