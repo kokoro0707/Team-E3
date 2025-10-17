@@ -11,6 +11,11 @@ public class StageManager01 : MonoBehaviour
     public Text phaseText;          // フェイズ表示用テキスト
     public Text enemyCountText;     // 敵数表示用テキスト（数字のみ）
 
+
+    [Header("フェイズ用画像")]
+    public Image phaseImage;               // フェイズ表示用Image
+    public List<Sprite> phaseSprites;     // フェイズごとのスプライトリスト
+
     [Header("ゲーム全体オブジェクト")]
     //public GameObject gameObjectsGroup;
 
@@ -26,7 +31,7 @@ public class StageManager01 : MonoBehaviour
 
     void Start()
     {
-        phaseText.gameObject.SetActive(false);
+        //phaseText.gameObject.SetActive(false);
         enemyCountText.gameObject.SetActive(false);
 
         foreach (var spawner in phaseSpawners)
@@ -40,6 +45,7 @@ public class StageManager01 : MonoBehaviour
 
     public void StartGame()
     {
+
        //startButton.gameObject.SetActive(false);
         phaseText.gameObject.SetActive(true);
         enemyCountText.gameObject.SetActive(true);
@@ -130,8 +136,19 @@ public class StageManager01 : MonoBehaviour
 
     void UpdateUI()
     {
-        phaseText.text = "フェイズ " + (currentPhaseIndex + 1);
+        // テキスト表示は不要なら非表示にするか、そのままでもOK
+        // phaseText.text = "フェイズ " + (currentPhaseIndex + 1);
         enemyCountText.text = remainingEnemies.ToString();
+
+        if (phaseSprites != null && currentPhaseIndex < phaseSprites.Count)
+        {
+            phaseImage.sprite = phaseSprites[currentPhaseIndex];
+            phaseImage.gameObject.SetActive(true);
+        }
+        else
+        {
+            phaseImage.gameObject.SetActive(false);
+        }
     }
 
     //void DestroyAllEnemies()
