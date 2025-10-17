@@ -27,6 +27,7 @@ public class SceneChanger : MonoBehaviour
         // 操作説明画面が出てるときだけ左クリックでシーン遷移
         if (isTutorialActive && Input.GetMouseButtonDown(0))
         {
+            if (poi != null) AudioSource.PlayOneShot(poi);
             SceneManager.LoadScene(gameSceneName);
         }
     }

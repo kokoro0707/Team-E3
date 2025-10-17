@@ -7,6 +7,8 @@ using UnityEditor;
 
 public class GameClearManager : MonoBehaviour
 {
+    [SerializeField] public GameObject clearUI;
+    [SerializeField] public GameObject playerObject;
     public static GameClearManager instance { get; private set; }
 
     [SerializeField] private Camera mainCamera;
@@ -87,6 +89,10 @@ public class GameClearManager : MonoBehaviour
         {
             StartCoroutine(StartGameClear());
         }
+        if (retryButton != null && retryButton.activeInHierarchy)
+        {
+            Debug.Log("Retryボタンが表示中。Raycast Target: " + fadeimage.raycastTarget);
+        }
     }
 
     public IEnumerator StartGameClear()
@@ -139,13 +145,31 @@ public class GameClearManager : MonoBehaviour
         GameObject newPlayer = null;
         if (clonePlayerobject != null && player != null)
         {
-            Vector3 rightDir = player.right * rightOffset;
-            Vector3 spawnPos = player.position + rightDir;
-            quaternion spawanRot = player.rotation;
-            newPlayer = Instantiate(clonePlayerobject, spawnPos, spawanRot);
-            newPlayer.layer = LayerMask.NameToLayer("ClearPlayer");
+            // スポットライトのスクリーン座標を取得
+            Vector3 spotlightScreenPos = RectTransformUtility.WorldToScreenPoint(mainCamera, spotLightImage.rectTransform.position);
 
-            newPlayer.transform.Rotate(20f, 40f, 0f,Space.Self);
+            // ここでスクリーン座標をワールド座標に変換
+            Vector3 worldPos;
+            if (RectTransformUtility.ScreenPointToWorldPointInRectangle(
+                spotLightImage.rectTransform,
+                spotlightScreenPos,
+                mainCamera,
+                out worldPos))
+            {
+                // 少し下にずらす（画像の下側に出す）
+                worldPos += new Vector3(0f, -2f, 2f); // ←zはカメラの距離調整に応じて調整
+
+                // クローン生成（固定回転）
+                Quaternion fixedRot = Quaternion.Euler(20f, 40f, 0f);
+                newPlayer = Instantiate(clonePlayerobject, worldPos, fixedRot);
+                newPlayer.layer = LayerMask.NameToLayer("ClearPlayer");
+            }
+            // ==== プレイヤー削除 ====
+            GameObject scenePlayer = GameObject.FindWithTag("Player");
+            if (scenePlayer != null)
+            {
+                Destroy(scenePlayer);
+            }
         }
 
         // ==== 回転演出 ====
@@ -171,23 +195,26 @@ public class GameClearManager : MonoBehaviour
         }
         yield return new WaitForSecondsRealtime(1f);
 
-
+        Time.timeScale = 1f;
         // ==== リトライ・タイトルボタン表示
         if (retryButton != null) retryButton.gameObject.SetActive(true);
         if (seSource != null && retryClip != null)
         {
             seSource.PlayOneShot(retryClip);
         }
+
         yield return new WaitForSecondsRealtime(1f);
 
-
-        if(titleButton != null) titleButton.gameObject.SetActive(true);
+        if (titleButton != null) titleButton.gameObject.SetActive(true);
         if (seSource != null && titleClip != null)
         {
             seSource.PlayOneShot(titleClip);
         }
 
-        Time.timeScale = 0f;
+        // 1フレーム待って EventSystem を更新
+        yield return null;
+
+
         isClearing = false;
     }
 
@@ -243,5 +270,25 @@ public class GameClearManager : MonoBehaviour
         Time.timeScale = 1f;
         UnityEngine.SceneManagement.SceneManager.LoadScene("Title");
         Debug.Log("タイトルに戻る");
+    }
+
+    void ShowClearUI()
+    {
+        clearUI.SetActive(true);
+
+        // プレイヤーの動きを完全に停止
+        if (playerObject != null)
+        {
+            var rb = playerObject.GetComponent<Rigidbody2D>();
+            if (rb != null) rb.linearVelocity = Vector2.zero;
+
+            // 物理的に止める
+            rb.simulated = false;
+
+            // スクリプト無効化（PlayerClrを止める）
+            var playerScript = playerObject.GetComponent<PlayerClr>();
+            if (playerScript != null)
+                playerScript.enabled = false;
+        }
     }
 }
