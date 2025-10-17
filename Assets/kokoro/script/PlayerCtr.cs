@@ -240,7 +240,7 @@ public class PlayerClr : MonoBehaviour
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
 
-        if (Input.GetButtonDown("Fire2"))
+        if (Input.GetButtonDown("Fire1"))
         {
             if (AtaackSE != null) AudioSource.PlayOneShot(AtaackSE);
             Attack();
@@ -257,7 +257,7 @@ public class PlayerClr : MonoBehaviour
                 ThrowAttack3();
             }
         }
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire2"))
         {
             if(SpecialGauge.instance.IsFull())
             {
@@ -518,6 +518,12 @@ public class PlayerClr : MonoBehaviour
             if (dieSE != null) AudioSource.PlayOneShot(dieSE);
             GameObject effect = Instantiate(breakEffectPrefab, transform.position, Quaternion.identity);
             Destroy(effect, 2f); // エフェクトを自動削除
+        }
+
+        if (BGMManager.instance != null)
+        {
+            //BGMManager.instance.FadeOut(1f); // フェードアウト停止（ゆっくり消える）
+            BGMManager.instance.StopBGM();
         }
         // プレイヤー削除
         Destroy(gameObject);
