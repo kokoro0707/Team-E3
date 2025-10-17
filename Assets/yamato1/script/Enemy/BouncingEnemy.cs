@@ -40,7 +40,8 @@ public class BouncingEnemy : MonoBehaviour
         {
             scaleTimer += Time.deltaTime;
             float t = Mathf.Clamp01(scaleTimer / spawnScaleTime);
-            transform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one, t);
+            float targetScale = 0.5f;  // 1/2のサイズにするため
+            transform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one * targetScale, t);
 
             if (t >= 0.5f)
             {

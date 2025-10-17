@@ -31,8 +31,8 @@ public class BounceSpawner : MonoBehaviour
     {
         if (bouncePrefab == null) return;
 
-        float x = Random.Range(-8f, 8f);
-        Vector3 pos = new Vector3(x, 8f, 0f); // 画面内にスポーン
+        float x = Random.Range(4f, -4f);
+        Vector3 pos = new Vector3(x, 4f, 0f); // 画面内にスポーン
 
         GameObject enemy = Instantiate(bouncePrefab, pos, Quaternion.identity);
 

@@ -25,7 +25,7 @@ public class StraightEnemy : MonoBehaviour
 
     IEnumerator ScaleIn()
     {
-        Vector3 targetScale = Vector3.one;
+        Vector3 targetScale = Vector3.one * 0.7f;
         float elapsed = 0f;
 
         while (elapsed < spawnScaleTime)

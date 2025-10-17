@@ -8,7 +8,7 @@ public class HorizontalSpawner : MonoBehaviour
     public float interval = 2f;
     public float spawnScaleTime = 0.3f; // Šg‘åŠÔ
     public float spawnDelay = 0.2f;     // ˆê‘Ì‚¸‚Âo‚·ŠÔŠu
-    public float spacing = 1.8f;        // © “G‚Ìc•ûŒü‚ÌŠÔŠui‚±‚±‚ğ’²®Ij
+    public float spacing = 0.8f;        // © “G‚Ìc•ûŒü‚ÌŠÔŠui‚±‚±‚ğ’²®Ij
 
     public static HorizontalSpawner Instance;
 
@@ -36,9 +36,10 @@ public class HorizontalSpawner : MonoBehaviour
     {
         if (horizontalPrefab == null) return;
 
-        float centerY = Random.Range(-8f, -1f);
-        bool spawnLeft = Random.value < 0.5f;
-        float x = spawnLeft ? -16f : 15f;
+        float minCenterY = -5f + spacing;      // spacing‚ğl—¶‚µ‚ÄÅ’áYÀ•W‚ğ’²®
+        float centerY = Random.Range(minCenterY, 0f);  // ’n–Ê‚©‚ç‰æ–Ê’†‰›‚Ü‚Å‚Ì”ÍˆÍ
+        bool spawnLeft = Random.value < 0.3f;
+        float x = spawnLeft ? -9f : 9f;
 
         StartCoroutine(SpawnSequentially(new Vector3(x, centerY, 0f), spawnLeft));
     }
@@ -69,6 +70,7 @@ public class HorizontalSpawner : MonoBehaviour
                 move.direction = spawnLeft ? Vector2.right : Vector2.left;
                 move.spawnScaleTime = spawnScaleTime;
                 move.canMove = false; // Šg‘å’†‚Í“®‚©‚È‚¢
+           
                 enemies.Add(move);
             }
 
