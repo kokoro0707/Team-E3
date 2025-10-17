@@ -31,8 +31,8 @@ public class ShooterSpawner : MonoBehaviour
     {
         if (shooterPrefab == null) return;
 
-        float x = Random.Range(-10f, 10f);       // 横方向ランダム
-        float y = Random.Range(8f, 12f);         // 上から出現
+        float x = Random.Range(-4f, 4f);       // 横方向ランダム
+        float y = Random.Range(5f,6f);         // 上から出現
         Vector3 pos = new Vector3(x, y, 0f);
 
         GameObject enemy = Instantiate(shooterPrefab, pos, Quaternion.identity);
