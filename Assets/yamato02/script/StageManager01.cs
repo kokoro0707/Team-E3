@@ -29,6 +29,9 @@ public class StageManager01 : MonoBehaviour
     private int remainingEnemies;
     private bool isPlaying = false;
 
+    Coroutine enemyCountAnimCoroutine;
+    float targetScaleMultiplier = 1f;
+
     void Start()
     {
         //phaseText.gameObject.SetActive(false);
@@ -88,13 +91,22 @@ public class StageManager01 : MonoBehaviour
 
         remainingEnemies--;
         UpdateUI();
-        StartCoroutine(AnimateEnemyCountText());
 
-        if(remainingEnemies<=0)
+        // ---- アニメーション処理 ----
+        // 拡大のトリガーを重ねても自然に反応
+        targetScaleMultiplier = 1.3f; // もう少し大きくしてもOK
+
+        if (enemyCountAnimCoroutine == null)
+            enemyCountAnimCoroutine = StartCoroutine(AnimateEnemyCountText());
+        // ----------------------------
+
+        if (remainingEnemies <= 0)
         {
             remainingEnemies = 0;
             UpdateUI();
-            StartCoroutine(AnimateEnemyCountText());
+            targetScaleMultiplier = 1.3f;
+            if (enemyCountAnimCoroutine == null)
+                enemyCountAnimCoroutine = StartCoroutine(AnimateEnemyCountText());
 
             Invoke(nameof(NextPhase), 2f);
         }
@@ -162,30 +174,37 @@ public class StageManager01 : MonoBehaviour
 
     IEnumerator AnimateEnemyCountText()
     {
-        float duration = 0.2f;
-        Vector3 originalScale = enemyCountText.transform.localScale;
-        Vector3 targetScale = originalScale * 1.3f;
+        float duration = 0.15f;
+        Vector3 baseScale = Vector3.one;
+        float currentTime = 0f;
 
-        float timer = 0f;
-
-        // 拡大アニメーション
-        while (timer < duration)
+        while (true)
         {
-            enemyCountText.transform.localScale = Vector3.Lerp(originalScale, targetScale, timer / duration);
-            timer += Time.deltaTime;
+            // スムーズにtargetScaleMultiplierへ補間
+            Vector3 targetScale = baseScale * targetScaleMultiplier;
+            enemyCountText.transform.localScale = Vector3.Lerp(
+                enemyCountText.transform.localScale,
+                targetScale,
+                Time.deltaTime * 10f // ← スムーズさ調整
+            );
+
+            currentTime += Time.deltaTime;
+
+            // 徐々に倍率を1fに戻す
+            targetScaleMultiplier = Mathf.Lerp(targetScaleMultiplier, 1f, Time.deltaTime * 2f);
+
+            // 一定時間スケールが元に戻ったら終了
+            if (Mathf.Abs(targetScaleMultiplier - 1f) < 0.01f &&
+                Vector3.Distance(enemyCountText.transform.localScale, baseScale) < 0.01f)
+            {
+                enemyCountText.transform.localScale = baseScale;
+                break;
+            }
+
             yield return null;
         }
-        enemyCountText.transform.localScale = targetScale;
 
-        // 縮小アニメーション
-        timer = 0f;
-        while (timer < duration)
-        {
-            enemyCountText.transform.localScale = Vector3.Lerp(targetScale, originalScale, timer / duration);
-            timer += Time.deltaTime;
-            yield return null;
-        }
-        enemyCountText.transform.localScale = originalScale;
+        enemyCountAnimCoroutine = null;
     }
 
     public void AddEnemies(int count)
