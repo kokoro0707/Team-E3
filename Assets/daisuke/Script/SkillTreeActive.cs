@@ -33,6 +33,7 @@ public class SkillTreeActive : MonoBehaviour
         {
             SkillTreePanel.gameObject.SetActive(true);
             Time.timeScale = 0f; // ƒQ[ƒ€‚Ìˆê’â~
+            SkillManager.instance.CheckActiveBlocks();
         }
         else
         {
