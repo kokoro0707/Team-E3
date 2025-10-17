@@ -240,7 +240,7 @@ public class PlayerClr : MonoBehaviour
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
 
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire2"))
         {
             if (AtaackSE != null) AudioSource.PlayOneShot(AtaackSE);
             Attack();
@@ -257,7 +257,7 @@ public class PlayerClr : MonoBehaviour
                 ThrowAttack3();
             }
         }
-        if (Input.GetButtonDown("Fire2"))
+        if (Input.GetButtonDown("Fire1"))
         {
             if(SpecialGauge.instance.IsFull())
             {
