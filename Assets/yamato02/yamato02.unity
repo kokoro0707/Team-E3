@@ -2145,14 +2145,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b620e210b72cb04892f2f2e0236a55b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startButton: {fileID: 189928306}
+  phaseText: {fileID: 1563650222}
   enemyCountText: {fileID: 384450188}
   phaseImage: {fileID: 35833024}
   phaseSprites:
   - {fileID: 21300000, guid: 7358cb33136f1914cb0879daf86a8b0a, type: 3}
   - {fileID: 21300000, guid: 33ff68959e7d65344a2eccd5c242b37d, type: 3}
   - {fileID: 21300000, guid: 8a09ed317dcc52749b9f35ed6d5dd76b, type: 3}
-  gameObjectsGroup: {fileID: 62349538}
   phaseSpawners:
   - {fileID: 1033761464}
   - {fileID: 862947110}
