@@ -2,6 +2,10 @@
 
 public class Enemy : MonoBehaviour
 {
+    public AudioSource EnemySE;
+    public AudioClip Down;
+
+
     [Header("敵ステータス")]
     public int maxHP = 1;
     private int currentHP;
@@ -37,6 +41,9 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
+        if (Down != null) EnemySE.PlayOneShot(Down);
+        
+
         // ✅ すでにカウント済みならスキップ
         if (isCounted) return;
         isCounted = true;
