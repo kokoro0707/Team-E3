@@ -47,5 +47,7 @@ MonoBehaviour:
   skillPoints: 0
   killCount: 0
   totalKillCount: 0
-  killsPoint: 2
+  killsPoint: 11
   skillPointText: {fileID: 0}
+  seSource: {fileID: 0}
+  Clip: {fileID: 0}

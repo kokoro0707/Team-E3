@@ -6,7 +6,9 @@ public class SpecialGauge : MonoBehaviour
     public static SpecialGauge instance; // シングルトン
     public Slider gaugeSlider;
 
-    private int currentKills = 18;
+    public AudioSource AudioSource;
+    public AudioClip tamaru;
+    private int currentKills = 0;
     private int maxKills = 20;
 
     void Awake()
@@ -27,6 +29,7 @@ public class SpecialGauge : MonoBehaviour
 
         if (currentKills >= maxKills)
         {
+            if (tamaru != null) AudioSource.PlayOneShot(tamaru);
             gaugeSlider.value = maxKills;
             Debug.Log("必殺ゲージMAX!");
         }
