@@ -49,7 +49,7 @@ public class SkillTreeActive : MonoBehaviour
         SkillTreePanel.anchoredPosition = Vector2.Lerp(SkillTreePanel.anchoredPosition, targetPosition, Time.unscaledDeltaTime * slideSpeed);
 
         // キーボード入力時にも表示
-        if (Input.GetKeyDown(KeyCode.M))
+        if (Input.GetKeyDown(KeyCode.R))
         {
             ActiveSkillTree();
         }
