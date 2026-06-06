@@ -1,4 +1,4 @@
-# Slash UP
+# Slash
 
 ## 作品概要
 
