@@ -19,7 +19,7 @@ public class HorizontalSpawner : MonoBehaviour
 
     void Start()
     {
-        SpawnRandomSide(); // ゲーム開始時にスポーン
+        /*SpawnRandomSide();*/ // ゲーム開始時にスポーン
     }
 
     void Update()
@@ -36,7 +36,7 @@ public class HorizontalSpawner : MonoBehaviour
     {
         if (horizontalPrefab == null) return;
 
-        float minCenterY = -5f + spacing;      // spacingを考慮して最低Y座標を調整
+        float minCenterY = -4.3f + spacing;      // spacingを考慮して最低Y座標を調整
         float centerY = Random.Range(minCenterY, 0f);  // 地面から画面中央までの範囲
         bool spawnLeft = Random.value < 0.3f;
         float x = spawnLeft ? -9f : 9f;

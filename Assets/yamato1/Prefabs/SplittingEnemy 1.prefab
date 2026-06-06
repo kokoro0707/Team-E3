@@ -91,7 +91,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
-
 --- !u!61 &8190371034588020858
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -195,5 +194,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bac9cc4ca477a0247bcb83a4db36bd08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EnemySE: {fileID: 4626667821487893073, guid: 4e582679d71a89b49afba426c53942b4, type: 3}
+  Down: {fileID: 8300000, guid: 6212be2fd0c322944a995928bbddf3dc, type: 3}
   maxHP: 1
   effect: {fileID: 6372842992514843614, guid: 6339029df1657fc4e8e7dc68ab742ac4, type: 3}

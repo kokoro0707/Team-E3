@@ -105,12 +105,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detectionRadius: 25
-  minShootSpeed: 2
-  maxShootSpeed: 8
-  shootAcceleration: 3
+  minShootSpeed: 6
+  maxShootSpeed: 10
+  shootAcceleration: 5
   jumpInitialSpeed: 15
   gravity: 20
-  cooldownTime: 1.5
+  cooldownTime: 6
   stopDuration: 2
 --- !u!50 &6464620356237207117
 Rigidbody2D:
@@ -127,7 +127,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -233,6 +233,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bac9cc4ca477a0247bcb83a4db36bd08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EnemySE: {fileID: 4626667821487893073, guid: 4e582679d71a89b49afba426c53942b4, type: 3}
+  DownSE: {fileID: 0}
   maxHP: 1
   effect: {fileID: 6372842992514843614, guid: 6339029df1657fc4e8e7dc68ab742ac4, type: 3}
 --- !u!1001 &6973626956619778042

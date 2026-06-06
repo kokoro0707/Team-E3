@@ -3,7 +3,7 @@
 public class Enemy : MonoBehaviour
 {
     public AudioSource EnemySE;
-    public AudioClip Down;
+    public AudioClip DownSE;
 
 
     [Header("敵ステータス")]
@@ -17,15 +17,15 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         currentHP = maxHP;
-    }
 
-    // 攻撃（Saw）に当たったらダメージ
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Saw"))
+        // 攻撃（Saw）に当たったらダメージ
+        void OnTriggerEnter2D(Collider2D other)
         {
-            Debug.Log("敵に攻撃がヒット");
-            TakeDamage(1);
+            if (other.CompareTag("Saw"))
+            {
+                Debug.Log("敵に攻撃がヒット");
+                TakeDamage(1);
+            }
         }
     }
 
@@ -41,9 +41,6 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
-        if (Down != null) EnemySE.PlayOneShot(Down);
-        
-
         // ✅ すでにカウント済みならスキップ
         if (isCounted) return;
         isCounted = true;
@@ -61,10 +58,20 @@ public class Enemy : MonoBehaviour
 
         SpecialGauge.instance.AddKill();
 
+        // AudioSource が有効か確認
+        if (EnemySE != null && EnemySE.enabled && DownSE != null)
+        {
+            EnemySE.PlayOneShot(DownSE);
+        }
+        else
+        {
+            Debug.LogWarning("EnemySE または DownSE が正しく設定されていません");
+        }
 
         if (effect != null)
             Instantiate(effect, transform.position, Quaternion.identity);
 
         Destroy(gameObject);
     }
+
 }

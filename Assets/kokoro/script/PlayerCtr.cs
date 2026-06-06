@@ -3,7 +3,6 @@ using System.Collections;
 using NUnit.Framework.Internal;
 using UnityEngine;
 using UnityEngine.Audio;
-using static Unity.VisualScripting.Metadata;
 
 
 [RequireComponent(typeof(Rigidbody2D))]
